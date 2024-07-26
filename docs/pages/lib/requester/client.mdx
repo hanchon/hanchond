@@ -1,0 +1,53 @@
+# Client
+
+## Builder
+
+To interact with web3 and cosmos endpoints we need a client:
+
+```go
+client := requester.NewClient()
+```
+
+:::info
+The client defaults to Evmos Mainnet
+:::
+
+The client exposes a set of setters to change the default endpoints:
+
+- `WithUnsecureWeb3Endpoint(endpoint string)`
+- `WithUnsecureCosmosRestEndpoint(endpoint string)`
+- `WithSecureWeb3Endpoint(endpoint string, auth string)`
+- `WithSecureCosmosRestEndpoint(endpoint string, auth string)`
+
+:::info
+The auth string should be the string that goes after the `Authorization` string in the HTTP request, i.e., `Bearer 1337`
+:::
+
+## General Requests
+
+### Get
+
+There are two functions exposed, they are mostly used internally:
+
+- `c.SendGetRequestEasyJSON(endpoint, url, res, auth)`: It uses a `easyjson.Unmarshaller` to quickly decode the response
+- `c.SendGetRequest(endpoint, url, auth)`: It returns the response as a byte array if the status code is 200
+
+### Post
+
+There is a function exposed, it is mostly used internally:
+
+- `c.SendPostRequestEasyJSON(endpoint, url, res, auth)`: It uses a `easyjson.Unmarshaller` to quickly decode the response
+
+:::info
+To unmarshall responses in a quick way with `easyjson`, it requires running the program against the file that has the struct and it'll create the `_easyjson.go` next to it with the required functions.
+
+```sh
+easyjson --all lib/types/cosmos/block_cosmos.go
+```
+
+:::
+
+## Blockchain Requests
+
+- [Web3 Requests](/lib/requester/web3)
+- [Cosmos Requests](/lib/requester/cosmos)

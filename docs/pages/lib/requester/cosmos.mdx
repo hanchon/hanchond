@@ -1,0 +1,19 @@
+# Cosmos Requester
+
+List of supported rest calls to the Cosmos Rest endpoint
+
+## GetBlockByNumber
+
+Sending the height returns the block data.
+
+```go
+c.GetBlockCosmos(height)
+```
+
+## GetTransaction
+
+Sending the transaction hash returns the transaction data
+
+```go
+c.GetCosmosTx(hash string)
+```

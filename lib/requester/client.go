@@ -7,18 +7,18 @@ import (
 )
 
 type Client struct {
-	Client       *fasthttp.Client
-	Web3Endpoint string
-	RestEndpoint string
-	Web3Auth     string
-	RestAuth     string
+	Client             *fasthttp.Client
+	Web3Endpoint       string
+	CosmosRestEndpoint string
+	Web3Auth           string
+	CosmosRestAuth     string
 }
 
 const (
-	defaultWeb3Endpoint = "https://proxy.evmos.org/web3"
-	defaultRestEndpoint = "https://proxy.evmos.org/cosmos"
-	defaultWeb3Auth     = ""
-	defaultRestAuth     = ""
+	defaultWeb3Endpoint       = "https://proxy.evmos.org/web3"
+	defaultCosmosRestEndpoint = "https://proxy.evmos.org/cosmos"
+	defaultWeb3Auth           = ""
+	defaultCosmosRestAuth     = ""
 
 	defaultRequestTimeout = time.Minute
 	defaultReadTimeout    = time.Minute
@@ -40,11 +40,11 @@ func NewClient() Client {
 		}).Dial,
 	}
 	return Client{
-		Client:       client,
-		Web3Endpoint: defaultWeb3Endpoint,
-		RestEndpoint: defaultRestEndpoint,
-		Web3Auth:     defaultWeb3Auth,
-		RestAuth:     defaultRestAuth,
+		Client:             client,
+		Web3Endpoint:       defaultWeb3Endpoint,
+		CosmosRestEndpoint: defaultCosmosRestEndpoint,
+		Web3Auth:           defaultWeb3Auth,
+		CosmosRestAuth:     defaultCosmosRestAuth,
 	}
 }
 
@@ -55,8 +55,8 @@ func (c *Client) WithUnsecureWeb3Endpoint(endpoint string) *Client {
 }
 
 func (c *Client) WithUnsecureRestEndpoint(endpoint string) *Client {
-	c.RestEndpoint = endpoint
-	c.RestAuth = ""
+	c.CosmosRestEndpoint = endpoint
+	c.CosmosRestAuth = ""
 	return c
 }
 
@@ -67,7 +67,7 @@ func (c *Client) WithSecureWeb3Endpoint(endpoint string, auth string) *Client {
 }
 
 func (c *Client) WithSecureRestEndpoint(endpoint string, auth string) *Client {
-	c.RestEndpoint = endpoint
-	c.RestAuth = auth
+	c.CosmosRestEndpoint = endpoint
+	c.CosmosRestAuth = auth
 	return c
 }

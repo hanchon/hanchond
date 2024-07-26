@@ -1,0 +1,27 @@
+# Web3 Requester
+
+List of supported rest calls to the Web3 endpoint
+
+## GetBlockByNumber
+
+Sending the height and if you need the transactions or not will return the block data.
+
+```go
+c.GetBlockByNumber(height, withTransactions)
+```
+
+## GetTransactionTrace
+
+Defaults the tracer to `callTracer`
+
+```go
+c.GetTransactionTrace(hash)
+```
+
+## GetTransactionReceipt
+
+Get the receipt for a given transaction hash
+
+```go
+c.GetTransactionReceipt(hash)
+```

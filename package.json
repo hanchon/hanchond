@@ -1,0 +1,12 @@
+{
+  "name": "docs",
+  "type": "module",
+  "dependencies": {
+    "vocs": "^1.0.0-alpha.55"
+  },
+  "scripts": {
+    "docs:dev": "vocs dev",
+    "docs:build": "vocs build",
+    "docs:preview": "vocs preview"
+  }
+}
