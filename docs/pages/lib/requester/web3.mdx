@@ -4,7 +4,7 @@ List of supported rest calls to the Web3 endpoint
 
 ## GetBlockByNumber
 
-Sending the height and if you need the transactions or not will return the block data.
+Sending the height and whether you need the transactions or not will return the block data.
 
 ```go
 c.GetBlockByNumber(height, withTransactions)
@@ -24,4 +24,15 @@ Get the receipt for a given transaction hash
 
 ```go
 c.GetTransactionReceipt(hash)
+```
+
+## ERC20 Integration
+
+The web3 requester integrates with the [`ERC20` module](/lib/smartcontract/erc20)
+
+The `GetTotalSupply` and `GetContractBalance` can be used directly from the `Client`
+
+```go
+supply, err := c.GetTotalSupply(contractAddress, height)
+balance, err := c.GetContractBalance(contractAddress, wallet, height)
 ```

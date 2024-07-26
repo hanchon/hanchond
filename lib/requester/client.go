@@ -3,6 +3,7 @@ package requester
 import (
 	"time"
 
+	"github.com/hanchon/vivi/lib/smartcontract/erc20"
 	"github.com/valyala/fasthttp"
 )
 
@@ -12,6 +13,8 @@ type Client struct {
 	CosmosRestEndpoint string
 	Web3Auth           string
 	CosmosRestAuth     string
+
+	ERC20Client *erc20.ERC20
 }
 
 const (
@@ -45,6 +48,8 @@ func NewClient() Client {
 		CosmosRestEndpoint: defaultCosmosRestEndpoint,
 		Web3Auth:           defaultWeb3Auth,
 		CosmosRestAuth:     defaultCosmosRestAuth,
+
+		ERC20Client: nil,
 	}
 }
 
