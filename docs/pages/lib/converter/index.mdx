@@ -1,0 +1,38 @@
+# Converter
+
+List of commonly used convert functions
+
+## Base64 to Hex
+
+After getting the Cosmos Block information from the Rest API, the information is encoded using `base64`, but normally the explorers display the information in hex format.
+
+To convert from the API response to the encoding that is usually seen in explorers and wallets, the `Base64ToHexString` function can be used.
+
+```go
+proposer, _ := converter.Base64ToHexString(val.Block.Header.ProposerAddress)
+hash, _ := converter.Base64ToHexString(val.BlockID.Hash)
+```
+
+## Generate Transaction Hash
+
+When reading the API response for a Cosmos Block, you will get every tranasction included the block.
+
+The transaction list is just the content of the transaction encoded using `base64`.
+
+If you want to use the API endpoint to get the transaction logs, you will need the transaction hash.
+
+If you already have the transactions bytes, the `GenerateCosmosTxHash` function can be used.
+
+```go
+hash := converter.GenerateCosmosTxHash(txBytes)
+```
+
+If the transaction is in `base64`, you can use the function `GenerateCosmosTxHashWithBase64`
+
+```go
+hash, err := converter.GenerateCosmosTxHashWithBase64(txBytes)
+```
+
+:::info
+Note that if you send the transaction in `base64`, the function can error while changing the encoding, so that is why it also returns a possible error
+:::

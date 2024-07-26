@@ -13,14 +13,25 @@ export default defineConfig({
         {
           text: "Requester",
           link: "/lib/requester/client",
+          collapsed: true,
+          items: [
+            {
+              text: "Web3 Requests",
+              link: "/lib/requester/web3",
+            },
+            {
+              text: "Cosmos Requests",
+              link: "/lib/requester/cosmos",
+            },
+          ],
         },
         {
-          text: "Web3 Requests",
-          link: "/lib/requester/web3",
+          text: "Converter",
+          link: "/lib/converter",
         },
         {
-          text: "Cosmos Requests",
-          link: "/lib/requester/cosmos",
+          text: "Proto Encoder",
+          link: "/lib/encoder",
         },
       ],
     },

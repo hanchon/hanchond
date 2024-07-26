@@ -1,0 +1,28 @@
+# Proto Encoder
+
+Helper that includes all the needed interfaces to decode the proto messages included inside the cosmos transactions.
+
+## Decode proto messages
+
+To decode a proto message you just need to instantiate your message object and directly use the `Encoder` object from the `codec` package.
+
+```go
+var m authz.MsgExec
+err := codec.Encoder.Unmarshal(value, &m)
+```
+
+## Decode a complete transaction
+
+To convert the bytes from a transaction to the proto objects, the `BytesToTx` function is included in the `codec` package.
+
+```go
+tx, err := codec.BytesToTx(txBytes)
+```
+
+### Transaction From the Rest API
+
+If you go the transaction using the Rest endpoint, it will be encoded in `base64`, the function `Base64ToTx` can consume that format directly.
+
+```go
+tx, err := codec.Base64ToTx(txInBase64)
+```
