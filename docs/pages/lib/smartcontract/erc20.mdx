@@ -1,0 +1,41 @@
+# ERC20
+
+This section is meant to be used inside the `requester.Client`, but it can be directly called from the `erc20` package.
+
+## Constructor
+
+To avoid passing the endpoint to each smart contract call, an `ERC20` struct is used
+
+```go
+client := erc20.NewERC20("https://proxy.evmos.org/web3")
+```
+
+## Getters
+
+The `ERC20` object exposes a couple of functions to get on-chain data:
+
+:::info
+All the getters require a height to query the state of the smart contract.
+
+If you need the latest data, use `erc20.Latest` as the height value.
+:::
+
+### Total Supply
+
+Total supply returns the total supply of a given smart contract.
+
+```go
+supply, err := client.GetTotalSupply(contractAddress, height)
+```
+
+### Get Balance
+
+The function `GetContractBalance` returns the token balance of a given wallet.
+
+```go
+balance, err := client.GetContractBalance(contractAddress, wallet, height)
+```
+
+:::info
+You can use the address with and without the `0x` prefix while interacting with these functions.
+:::

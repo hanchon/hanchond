@@ -26,6 +26,16 @@ export default defineConfig({
           ],
         },
         {
+          text: "Smart Contracts",
+          link: "/lib/smartcontract",
+          items: [
+            {
+              text: "ERC20",
+              link: "/lib/smartcontract/erc20",
+            },
+          ],
+        },
+        {
           text: "Converter",
           link: "/lib/converter",
         },

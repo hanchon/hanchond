@@ -36,3 +36,17 @@ hash, err := converter.GenerateCosmosTxHashWithBase64(txBytes)
 :::info
 Note that if you send the transaction in `base64`, the function can error while changing the encoding, so that is why it also returns a possible error
 :::
+
+## Remove 0x Prefix from Address
+
+Sometimes when encoding addresses to interact with contracts, you need the value without the `0x` prefix.
+
+The `RemoveHexPrefixFromAddress` function removes the prefix if it's needed.
+
+```go
+converter.RemoveHexPrefixFromAddress("0xc5e00d3b04563950941f7137b5afa3a534f0d6d6")
+```
+
+:::info
+Sending an address without the `0x` prefix will return the same value without any modification
+:::
