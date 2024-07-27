@@ -2,7 +2,8 @@
   "name": "docs",
   "type": "module",
   "dependencies": {
-    "vocs": "^1.0.0-alpha.55"
+    "vocs": "^1.0.0-alpha.55",
+    "react": "^18.2.0"
   },
   "scripts": {
     "docs:dev": "vocs dev",

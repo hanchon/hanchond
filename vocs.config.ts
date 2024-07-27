@@ -1,6 +1,18 @@
+import * as React from "react";
+
 import { defineConfig } from "vocs";
 
 export default defineConfig({
+  title: "Hanchond",
+  description:
+    "Hanchon's toolkit to avoid rewritting the same code one million times.",
+  head() {
+    return React.createElement("script", {
+      defer: true,
+      "data-domain": "hanchond",
+      src: "https://plausible.hanchon.me/js/script.js",
+    });
+  },
   sidebar: [
     {
       text: "Home",
@@ -46,7 +58,4 @@ export default defineConfig({
       ],
     },
   ],
-  description:
-    "Hanchon's toolkit to avoid rewritting the same code one million times.",
-  title: "Hanchond",
 });
