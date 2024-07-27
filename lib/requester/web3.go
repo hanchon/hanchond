@@ -3,7 +3,7 @@ package requester
 import (
 	"fmt"
 
-	web3types "github.com/hanchon/vivi/lib/types/web3"
+	web3types "github.com/hanchon/hanchond/lib/types/web3"
 )
 
 func (c *Client) GetBlockByNumber(height string, withTransactions bool) (*web3types.BlockByNumberWithTransactions, error) {

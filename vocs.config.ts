@@ -48,5 +48,5 @@ export default defineConfig({
   ],
   description:
     "Hanchon's toolkit to avoid rewritting the same code one million times.",
-  title: "Vivi",
+  title: "Hanchond",
 });

@@ -3,7 +3,7 @@ package requester
 import (
 	"time"
 
-	"github.com/hanchon/vivi/lib/smartcontract/erc20"
+	"github.com/hanchon/hanchond/lib/smartcontract/erc20"
 	"github.com/valyala/fasthttp"
 )
 

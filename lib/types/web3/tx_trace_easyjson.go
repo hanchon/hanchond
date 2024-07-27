@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson3942445eDecodeGithubComHanchonViviLibTypesWeb3(in *jlexer.Lexer, out *TraceTransactionResult) {
+func easyjson3942445eDecodeGithubComHanchonHanchondLibTypesWeb3(in *jlexer.Lexer, out *TraceTransactionResult) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -52,7 +52,7 @@ func easyjson3942445eDecodeGithubComHanchonViviLibTypesWeb3(in *jlexer.Lexer, ou
 		in.Consumed()
 	}
 }
-func easyjson3942445eEncodeGithubComHanchonViviLibTypesWeb3(out *jwriter.Writer, in TraceTransactionResult) {
+func easyjson3942445eEncodeGithubComHanchonHanchondLibTypesWeb3(out *jwriter.Writer, in TraceTransactionResult) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -77,27 +77,27 @@ func easyjson3942445eEncodeGithubComHanchonViviLibTypesWeb3(out *jwriter.Writer,
 // MarshalJSON supports json.Marshaler interface
 func (v TraceTransactionResult) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson3942445eEncodeGithubComHanchonViviLibTypesWeb3(&w, v)
+	easyjson3942445eEncodeGithubComHanchonHanchondLibTypesWeb3(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v TraceTransactionResult) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson3942445eEncodeGithubComHanchonViviLibTypesWeb3(w, v)
+	easyjson3942445eEncodeGithubComHanchonHanchondLibTypesWeb3(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *TraceTransactionResult) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson3942445eDecodeGithubComHanchonViviLibTypesWeb3(&r, v)
+	easyjson3942445eDecodeGithubComHanchonHanchondLibTypesWeb3(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *TraceTransactionResult) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson3942445eDecodeGithubComHanchonViviLibTypesWeb3(l, v)
+	easyjson3942445eDecodeGithubComHanchonHanchondLibTypesWeb3(l, v)
 }
-func easyjson3942445eDecodeGithubComHanchonViviLibTypesWeb31(in *jlexer.Lexer, out *Calls) {
+func easyjson3942445eDecodeGithubComHanchonHanchondLibTypesWeb31(in *jlexer.Lexer, out *Calls) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -167,7 +167,7 @@ func easyjson3942445eDecodeGithubComHanchonViviLibTypesWeb31(in *jlexer.Lexer, o
 		in.Consumed()
 	}
 }
-func easyjson3942445eEncodeGithubComHanchonViviLibTypesWeb31(out *jwriter.Writer, in Calls) {
+func easyjson3942445eEncodeGithubComHanchonHanchondLibTypesWeb31(out *jwriter.Writer, in Calls) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -238,23 +238,23 @@ func easyjson3942445eEncodeGithubComHanchonViviLibTypesWeb31(out *jwriter.Writer
 // MarshalJSON supports json.Marshaler interface
 func (v Calls) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson3942445eEncodeGithubComHanchonViviLibTypesWeb31(&w, v)
+	easyjson3942445eEncodeGithubComHanchonHanchondLibTypesWeb31(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Calls) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson3942445eEncodeGithubComHanchonViviLibTypesWeb31(w, v)
+	easyjson3942445eEncodeGithubComHanchonHanchondLibTypesWeb31(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Calls) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson3942445eDecodeGithubComHanchonViviLibTypesWeb31(&r, v)
+	easyjson3942445eDecodeGithubComHanchonHanchondLibTypesWeb31(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Calls) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson3942445eDecodeGithubComHanchonViviLibTypesWeb31(l, v)
+	easyjson3942445eDecodeGithubComHanchonHanchondLibTypesWeb31(l, v)
 }

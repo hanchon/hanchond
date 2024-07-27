@@ -1,7 +1,7 @@
 package requester
 
 import (
-	cosmostypes "github.com/hanchon/vivi/lib/types/cosmos"
+	cosmostypes "github.com/hanchon/hanchond/lib/types/cosmos"
 )
 
 func (c *Client) GetBlockCosmos(height string) (*cosmostypes.CosmosBlockResult, error) {

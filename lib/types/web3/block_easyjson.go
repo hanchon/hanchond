@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson2ff71951DecodeGithubComHanchonViviLibTypesWeb3(in *jlexer.Lexer, out *BlockByNumberWithTransactions) {
+func easyjson2ff71951DecodeGithubComHanchonHanchondLibTypesWeb3(in *jlexer.Lexer, out *BlockByNumberWithTransactions) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -52,7 +52,7 @@ func easyjson2ff71951DecodeGithubComHanchonViviLibTypesWeb3(in *jlexer.Lexer, ou
 		in.Consumed()
 	}
 }
-func easyjson2ff71951EncodeGithubComHanchonViviLibTypesWeb3(out *jwriter.Writer, in BlockByNumberWithTransactions) {
+func easyjson2ff71951EncodeGithubComHanchonHanchondLibTypesWeb3(out *jwriter.Writer, in BlockByNumberWithTransactions) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -77,25 +77,25 @@ func easyjson2ff71951EncodeGithubComHanchonViviLibTypesWeb3(out *jwriter.Writer,
 // MarshalJSON supports json.Marshaler interface
 func (v BlockByNumberWithTransactions) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson2ff71951EncodeGithubComHanchonViviLibTypesWeb3(&w, v)
+	easyjson2ff71951EncodeGithubComHanchonHanchondLibTypesWeb3(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v BlockByNumberWithTransactions) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson2ff71951EncodeGithubComHanchonViviLibTypesWeb3(w, v)
+	easyjson2ff71951EncodeGithubComHanchonHanchondLibTypesWeb3(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *BlockByNumberWithTransactions) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson2ff71951DecodeGithubComHanchonViviLibTypesWeb3(&r, v)
+	easyjson2ff71951DecodeGithubComHanchonHanchondLibTypesWeb3(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *BlockByNumberWithTransactions) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson2ff71951DecodeGithubComHanchonViviLibTypesWeb3(l, v)
+	easyjson2ff71951DecodeGithubComHanchonHanchondLibTypesWeb3(l, v)
 }
 func easyjson2ff71951Decode(in *jlexer.Lexer, out *struct {
 	BaseFeePerGas   string `json:"baseFeePerGas"`
@@ -665,7 +665,7 @@ func easyjson2ff71951Encode1(out *jwriter.Writer, in struct {
 	}
 	out.RawByte('}')
 }
-func easyjson2ff71951DecodeGithubComHanchonViviLibTypesWeb31(in *jlexer.Lexer, out *BlockByNumber) {
+func easyjson2ff71951DecodeGithubComHanchonHanchondLibTypesWeb31(in *jlexer.Lexer, out *BlockByNumber) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -700,7 +700,7 @@ func easyjson2ff71951DecodeGithubComHanchonViviLibTypesWeb31(in *jlexer.Lexer, o
 		in.Consumed()
 	}
 }
-func easyjson2ff71951EncodeGithubComHanchonViviLibTypesWeb31(out *jwriter.Writer, in BlockByNumber) {
+func easyjson2ff71951EncodeGithubComHanchonHanchondLibTypesWeb31(out *jwriter.Writer, in BlockByNumber) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -725,25 +725,25 @@ func easyjson2ff71951EncodeGithubComHanchonViviLibTypesWeb31(out *jwriter.Writer
 // MarshalJSON supports json.Marshaler interface
 func (v BlockByNumber) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson2ff71951EncodeGithubComHanchonViviLibTypesWeb31(&w, v)
+	easyjson2ff71951EncodeGithubComHanchonHanchondLibTypesWeb31(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v BlockByNumber) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson2ff71951EncodeGithubComHanchonViviLibTypesWeb31(w, v)
+	easyjson2ff71951EncodeGithubComHanchonHanchondLibTypesWeb31(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *BlockByNumber) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson2ff71951DecodeGithubComHanchonViviLibTypesWeb31(&r, v)
+	easyjson2ff71951DecodeGithubComHanchonHanchondLibTypesWeb31(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *BlockByNumber) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson2ff71951DecodeGithubComHanchonViviLibTypesWeb31(l, v)
+	easyjson2ff71951DecodeGithubComHanchonHanchondLibTypesWeb31(l, v)
 }
 func easyjson2ff71951Decode2(in *jlexer.Lexer, out *struct {
 	BaseFeePerGas    string        `json:"baseFeePerGas"`

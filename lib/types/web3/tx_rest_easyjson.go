@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson6467d33bDecodeGithubComHanchonViviLibTypesWeb3(in *jlexer.Lexer, out *TxRestResponseForEvents) {
+func easyjson6467d33bDecodeGithubComHanchonHanchondLibTypesWeb3(in *jlexer.Lexer, out *TxRestResponseForEvents) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -48,7 +48,7 @@ func easyjson6467d33bDecodeGithubComHanchonViviLibTypesWeb3(in *jlexer.Lexer, ou
 		in.Consumed()
 	}
 }
-func easyjson6467d33bEncodeGithubComHanchonViviLibTypesWeb3(out *jwriter.Writer, in TxRestResponseForEvents) {
+func easyjson6467d33bEncodeGithubComHanchonHanchondLibTypesWeb3(out *jwriter.Writer, in TxRestResponseForEvents) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -63,25 +63,25 @@ func easyjson6467d33bEncodeGithubComHanchonViviLibTypesWeb3(out *jwriter.Writer,
 // MarshalJSON supports json.Marshaler interface
 func (v TxRestResponseForEvents) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson6467d33bEncodeGithubComHanchonViviLibTypesWeb3(&w, v)
+	easyjson6467d33bEncodeGithubComHanchonHanchondLibTypesWeb3(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v TxRestResponseForEvents) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson6467d33bEncodeGithubComHanchonViviLibTypesWeb3(w, v)
+	easyjson6467d33bEncodeGithubComHanchonHanchondLibTypesWeb3(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *TxRestResponseForEvents) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson6467d33bDecodeGithubComHanchonViviLibTypesWeb3(&r, v)
+	easyjson6467d33bDecodeGithubComHanchonHanchondLibTypesWeb3(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *TxRestResponseForEvents) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson6467d33bDecodeGithubComHanchonViviLibTypesWeb3(l, v)
+	easyjson6467d33bDecodeGithubComHanchonHanchondLibTypesWeb3(l, v)
 }
 func easyjson6467d33bDecode(in *jlexer.Lexer, out *struct {
 	Height string `json:"height"`

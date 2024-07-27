@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/types/tx"
-	protocoltypes "github.com/hanchon/vivi/lib/types/protocol"
+	protocoltypes "github.com/hanchon/hanchond/lib/types/protocol"
 )
 
 func BytesToTx(txBytes []byte) (*protocoltypes.CosmosTx, error) {

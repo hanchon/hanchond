@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjsonE114f9b1DecodeGithubComHanchonViviLibTypesCosmos(in *jlexer.Lexer, out *TxRestResponseForEvents) {
+func easyjsonE114f9b1DecodeGithubComHanchonHanchondLibTypesCosmos(in *jlexer.Lexer, out *TxRestResponseForEvents) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -48,7 +48,7 @@ func easyjsonE114f9b1DecodeGithubComHanchonViviLibTypesCosmos(in *jlexer.Lexer, 
 		in.Consumed()
 	}
 }
-func easyjsonE114f9b1EncodeGithubComHanchonViviLibTypesCosmos(out *jwriter.Writer, in TxRestResponseForEvents) {
+func easyjsonE114f9b1EncodeGithubComHanchonHanchondLibTypesCosmos(out *jwriter.Writer, in TxRestResponseForEvents) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -63,25 +63,25 @@ func easyjsonE114f9b1EncodeGithubComHanchonViviLibTypesCosmos(out *jwriter.Write
 // MarshalJSON supports json.Marshaler interface
 func (v TxRestResponseForEvents) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonE114f9b1EncodeGithubComHanchonViviLibTypesCosmos(&w, v)
+	easyjsonE114f9b1EncodeGithubComHanchonHanchondLibTypesCosmos(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v TxRestResponseForEvents) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonE114f9b1EncodeGithubComHanchonViviLibTypesCosmos(w, v)
+	easyjsonE114f9b1EncodeGithubComHanchonHanchondLibTypesCosmos(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *TxRestResponseForEvents) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonE114f9b1DecodeGithubComHanchonViviLibTypesCosmos(&r, v)
+	easyjsonE114f9b1DecodeGithubComHanchonHanchondLibTypesCosmos(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *TxRestResponseForEvents) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonE114f9b1DecodeGithubComHanchonViviLibTypesCosmos(l, v)
+	easyjsonE114f9b1DecodeGithubComHanchonHanchondLibTypesCosmos(l, v)
 }
 func easyjsonE114f9b1Decode(in *jlexer.Lexer, out *struct {
 	Height string `json:"height"`

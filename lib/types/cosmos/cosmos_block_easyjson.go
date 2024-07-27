@@ -18,7 +18,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson31c5d66DecodeGithubComHanchonViviLibTypesCosmos(in *jlexer.Lexer, out *CosmosBlockResult) {
+func easyjson31c5d66DecodeGithubComHanchonHanchondLibTypesCosmos(in *jlexer.Lexer, out *CosmosBlockResult) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -53,7 +53,7 @@ func easyjson31c5d66DecodeGithubComHanchonViviLibTypesCosmos(in *jlexer.Lexer, o
 		in.Consumed()
 	}
 }
-func easyjson31c5d66EncodeGithubComHanchonViviLibTypesCosmos(out *jwriter.Writer, in CosmosBlockResult) {
+func easyjson31c5d66EncodeGithubComHanchonHanchondLibTypesCosmos(out *jwriter.Writer, in CosmosBlockResult) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -78,25 +78,25 @@ func easyjson31c5d66EncodeGithubComHanchonViviLibTypesCosmos(out *jwriter.Writer
 // MarshalJSON supports json.Marshaler interface
 func (v CosmosBlockResult) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson31c5d66EncodeGithubComHanchonViviLibTypesCosmos(&w, v)
+	easyjson31c5d66EncodeGithubComHanchonHanchondLibTypesCosmos(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v CosmosBlockResult) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson31c5d66EncodeGithubComHanchonViviLibTypesCosmos(w, v)
+	easyjson31c5d66EncodeGithubComHanchonHanchondLibTypesCosmos(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *CosmosBlockResult) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson31c5d66DecodeGithubComHanchonViviLibTypesCosmos(&r, v)
+	easyjson31c5d66DecodeGithubComHanchonHanchondLibTypesCosmos(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *CosmosBlockResult) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson31c5d66DecodeGithubComHanchonViviLibTypesCosmos(l, v)
+	easyjson31c5d66DecodeGithubComHanchonHanchondLibTypesCosmos(l, v)
 }
 func easyjson31c5d66Decode2(in *jlexer.Lexer, out *struct {
 	NextKey interface{} `json:"next_key"`

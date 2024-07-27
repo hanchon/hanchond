@@ -1,4 +1,4 @@
-module github.com/hanchon/vivi
+module github.com/hanchon/hanchond
 
 go 1.22.2
 

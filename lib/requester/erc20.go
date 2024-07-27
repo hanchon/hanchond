@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/hanchon/vivi/lib/smartcontract/erc20"
+	"github.com/hanchon/hanchond/lib/smartcontract/erc20"
 )
 
 func (c *Client) GetERC20Client() (*erc20.ERC20, error) {
