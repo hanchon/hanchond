@@ -50,3 +50,25 @@ converter.RemoveHexPrefixFromAddress("0xc5e00d3b04563950941f7137b5afa3a534f0d6d6
 :::info
 Sending an address without the `0x` prefix will return the same value without any modification.
 :::
+
+## Numbers converter
+
+### Hex String to Decimal
+
+The `HexStringToDecimal` assumes that the value is a valid hex string, with or without the prefix and returns the decimal number in string format.
+
+```go
+decimal := converter.HexStringToDecimal("0x1234")
+```
+
+### Decimal to Hex String
+
+`DecimalStringToHex` is the inverse process to `HexStringToDecimal`
+
+:::info
+The returned value has the `0x` prefix included
+:::
+
+```go
+hex := converter.DecimalStringToHex("1234")
+```

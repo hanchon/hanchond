@@ -19,13 +19,29 @@ export default defineConfig({
       link: "/",
     },
     {
+      text: "Hanchond",
+      collapsed: false,
+      items: [
+        {
+          text: "Converter",
+          collapsed: false,
+          items: [
+            {
+              text: "Numbers",
+              link: "/hanchond/converter/numbers",
+            },
+          ],
+        },
+      ],
+    },
+    {
       text: "Go Library",
       collapsed: false,
       items: [
         {
           text: "Requester",
           link: "/lib/requester/client",
-          collapsed: true,
+          collapsed: false,
           items: [
             {
               text: "Web3 Requests",
@@ -42,14 +58,27 @@ export default defineConfig({
           collapsed: false,
           items: [
             {
+              text: "Builder",
+              link: "/lib/txbuilder/txbuilder",
+            },
+            {
+              text: "Transaction",
+              link: "/lib/txbuilder/transaction",
+            },
+            {
               text: "Wallet",
               link: "/lib/txbuilder/wallet",
+            },
+            {
+              text: "Contract",
+              link: "/lib/txbuilder/contract",
             },
           ],
         },
         {
           text: "Smart Contracts",
           link: "/lib/smartcontract",
+          collapsed: false,
           items: [
             {
               text: "ERC20",
