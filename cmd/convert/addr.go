@@ -1,4 +1,4 @@
-package converter
+package convert
 
 import (
 	"fmt"
@@ -40,6 +40,6 @@ var AddrCmd = &cobra.Command{
 }
 
 func init() {
-	ConverterCmd.AddCommand(AddrCmd)
+	ConvertCmd.AddCommand(AddrCmd)
 	AddrCmd.Flags().StringP("prefix", "p", "evmos", "bech32 prefix")
 }

@@ -38,11 +38,11 @@ export default defineConfig({
           items: [
             {
               text: "Address",
-              link: "/hanchond/converter/address",
+              link: "/hanchond/convert/address",
             },
             {
               text: "Numbers",
-              link: "/hanchond/converter/numbers",
+              link: "/hanchond/convert/numbers",
             },
           ],
         },

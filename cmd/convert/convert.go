@@ -1,4 +1,4 @@
-package converter
+package convert
 
 import (
 	"os"
@@ -6,9 +6,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ConverterCmd represents the converter command
-var ConverterCmd = &cobra.Command{
-	Use:   "converter",
+// ConvertCmd represents the converter command
+var ConvertCmd = &cobra.Command{
+	Use:   "convert",
 	Short: "converter utils",
 	Long:  `Convert wallets, coins and numbers`,
 	Run: func(cmd *cobra.Command, args []string) {

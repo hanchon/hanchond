@@ -1,4 +1,4 @@
-package converter
+package convert
 
 import (
 	"fmt"
@@ -26,5 +26,5 @@ var numberCmd = &cobra.Command{
 }
 
 func init() {
-	ConverterCmd.AddCommand(numberCmd)
+	ConvertCmd.AddCommand(numberCmd)
 }
