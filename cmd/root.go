@@ -4,6 +4,8 @@ import (
 	"os"
 
 	converter "github.com/hanchon/hanchond/cmd/converter"
+	playground "github.com/hanchon/hanchond/cmd/playground"
+
 	"github.com/spf13/cobra"
 )
 
@@ -35,4 +37,5 @@ func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	rootCmd.AddCommand(converter.ConverterCmd)
+	rootCmd.AddCommand(playground.PlaygroundCmd)
 }
