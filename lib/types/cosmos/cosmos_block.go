@@ -2,7 +2,7 @@ package cosmos
 
 import "time"
 
-type CosmosBlockResult struct {
+type CosmosBlockResult struct { //nolint: revive
 	// Is the field "Txs" used?
 	// Txs     []any `json:"txs"`
 	BlockID struct {

@@ -16,5 +16,5 @@ func GenerateCosmosTxHashWithBase64(txInBase64 string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return GenerateCosmosTxHash([]byte(txBytes)), nil
+	return GenerateCosmosTxHash(txBytes), nil
 }

@@ -10,7 +10,6 @@ require (
 	github.com/mailru/easyjson v0.7.7
 	github.com/miguelmota/go-ethereum-hdwallet v0.1.1
 	github.com/valyala/fasthttp v1.55.0
-
 )
 
 require (
@@ -47,7 +46,7 @@ require (
 	github.com/cosmos/btcutil v1.0.5 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-beta.5 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
-	github.com/cosmos/gogoproto v1.4.10 // indirect
+	github.com/cosmos/gogoproto v1.4.12 // indirect
 	github.com/cosmos/iavl v0.21.0-alpha.1.0.20230904092046-df3db2d96583 // indirect
 	github.com/cosmos/ics23/go v0.10.0 // indirect
 	github.com/cosmos/ledger-cosmos-go v0.12.4 // indirect
@@ -144,7 +143,7 @@ require (
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/crypto v0.24.0 // indirect
-	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
+	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
 	golang.org/x/net v0.26.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.21.0 // indirect
@@ -164,7 +163,6 @@ require (
 )
 
 replace (
-
 	// the go-ethereum-hdwallet uses an old version of the btcutil lib, should replace in the future
 	github.com/btcsuite/btcutil => github.com/btcsuite/btcd/btcutil v1.1.5
 	github.com/cosmos/cosmos-sdk => github.com/evmos/cosmos-sdk v0.47.8-evmos

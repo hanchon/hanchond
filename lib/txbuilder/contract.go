@@ -1,8 +1,6 @@
 package txbuilder
 
 import (
-	"math/big"
-
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 )

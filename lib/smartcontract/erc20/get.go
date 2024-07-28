@@ -1,9 +1,8 @@
 package erc20
 
 import (
-	"fmt"
-
 	"encoding/hex"
+	"fmt"
 	"math"
 	"math/big"
 

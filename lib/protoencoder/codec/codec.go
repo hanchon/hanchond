@@ -34,7 +34,6 @@ import (
 	revenue "github.com/evmos/evmos/v18/x/revenue/v1/types"
 	vesting "github.com/evmos/evmos/v18/x/vesting/types"
 
-	"github.com/cosmos/cosmos-sdk/types/tx"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authTx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 )
