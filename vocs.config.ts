@@ -23,6 +23,16 @@ export default defineConfig({
       collapsed: false,
       items: [
         {
+          text: "Playground",
+          collapsed: false,
+          items: [
+            {
+              text: "Config",
+              link: "/hanchond/playground/config",
+            },
+          ],
+        },
+        {
           text: "Converter",
           collapsed: false,
           items: [
