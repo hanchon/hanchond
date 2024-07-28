@@ -8,7 +8,9 @@ require (
 	github.com/ethereum/go-ethereum v1.11.5
 	github.com/evmos/evmos/v18 v18.1.0
 	github.com/mailru/easyjson v0.7.7
+	github.com/mattn/go-sqlite3 v1.11.0
 	github.com/miguelmota/go-ethereum-hdwallet v0.1.1
+	github.com/spf13/cobra v1.8.1
 	github.com/valyala/fasthttp v1.55.0
 )
 
@@ -121,7 +123,6 @@ require (
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
-	github.com/spf13/cobra v1.8.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.18.2 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect
