@@ -38,6 +38,16 @@ export default defineConfig({
           ],
         },
         {
+          text: "Tx Builder",
+          collapsed: false,
+          items: [
+            {
+              text: "Wallet",
+              link: "/lib/txbuilder/wallet",
+            },
+          ],
+        },
+        {
           text: "Smart Contracts",
           link: "/lib/smartcontract",
           items: [

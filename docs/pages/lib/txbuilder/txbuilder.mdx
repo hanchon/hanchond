@@ -1,0 +1,23 @@
+# Transaction Builder
+
+To create a transaction first you need to create a TxBuilder object.
+
+## Constructor
+
+Using the `NewTxBuilder` you can instantiate the TxBuilder.
+
+```go
+builder :=  NexTxBuilder(
+	contracts: map[string]Contract{"erc20": NewContract{address, abi}},
+	mnemonic: mnemonic,
+	customGasLimit: map[string]uint64{},
+	defaultGasLimit: uint64(200_000),
+	requester: requester.NewClient().WithUnsecureWeb3Endpoint("https://proxy.evmos.org/web3"),
+)
+```
+
+:::info
+`customGasLimit` allows you to set a custom gas limit for different `methods`, i.e. `map[string]uint64{"transfer":uint64(20_000)}`
+:::
+
+After having the builder instantiated, you can send [transactions](/lib/txbuilder/transaction)

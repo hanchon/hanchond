@@ -2,6 +2,17 @@
 
 List of supported rest calls to the Web3 endpoint
 
+## ERC20 Integration
+
+The web3 requester integrates with the [`ERC20` module](/lib/smartcontract/erc20)
+
+The `GetTotalSupply` and `GetContractBalance` can be used directly from the `Client`
+
+```go
+supply, err := c.GetTotalSupply(contractAddress, height)
+balance, err := c.GetContractBalance(contractAddress, wallet, height)
+```
+
 ## GetBlockByNumber
 
 Sending the height and whether you need the transactions or not will return the block data.
@@ -20,19 +31,40 @@ c.GetTransactionTrace(hash)
 
 ## GetTransactionReceipt
 
-Get the receipt for a given transaction hash
+Gets the receipt for a given transaction hash
 
 ```go
 c.GetTransactionReceipt(hash)
 ```
 
-## ERC20 Integration
+## Get Nonce
 
-The web3 requester integrates with the [`ERC20` module](/lib/smartcontract/erc20)
-
-The `GetTotalSupply` and `GetContractBalance` can be used directly from the `Client`
+Gets the current nonce for an account
 
 ```go
-supply, err := c.GetTotalSupply(contractAddress, height)
-balance, err := c.GetContractBalance(contractAddress, wallet, height)
+nonce, err := c.GetNonce(address)
+```
+
+## GasPrice
+
+Gets current network's gas price
+
+```go
+gasPrice, err := c.GasPrice()
+```
+
+## NetworkID
+
+Gets network's chain ID
+
+```go
+chainID, err := c.ChainID()
+```
+
+## Send Transaction
+
+Broadcast the transaction object
+
+```go
+txHash, err := c.BroadcastTX(tx)
 ```

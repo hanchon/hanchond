@@ -1,0 +1,29 @@
+# Transaction
+
+To create and send transactions, we need some on-chain info, encode the data correctly and broadcast the transaction to the network.
+
+## Send Transaction
+
+The `SendTransaction` function takes care of building the correct transaction and broadcasting it.
+
+```go
+txHash, err := t.SendTransaction(contractName, address, privateKey, value, message, args)
+```
+
+:::info
+This function is meant to be used just internally by the `InteractWithContract` function.
+:::
+
+## Send Transaction to Smart Contracts
+
+This helper function makes it easy to send a transaction to a smart contract, it automatically instantie your wallet based on the `TxBuilder` mnemonic and the account ID.
+
+```go
+txHash, err := t.InteractWithContract(contractName, accountID, value, message, args)
+```
+
+:::info
+The `contractName` variable is the string set in the TxBuilder constructor for the contract.
+
+The `accountID` is the id related to the path of the `mnemonic` usually you just need to use the id `0`
+:::

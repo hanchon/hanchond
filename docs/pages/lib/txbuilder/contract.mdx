@@ -1,0 +1,11 @@
+# Contract
+
+The contract struct is used internally to associate an address and an ABI, so we can easily interact with the deployed contract.
+
+## New Contract
+
+This function is used mostly to instantiate the TxBuilder with the list of contracts that can be interacted with.
+
+```go
+contract := NewContract(address, abi)
+```
