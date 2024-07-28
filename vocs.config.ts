@@ -27,6 +27,10 @@ export default defineConfig({
           collapsed: false,
           items: [
             {
+              text: "Address",
+              link: "/hanchond/converter/address",
+            },
+            {
               text: "Numbers",
               link: "/hanchond/converter/numbers",
             },

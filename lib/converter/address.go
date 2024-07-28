@@ -1,7 +1,11 @@
 package converter
 
 import (
-	"math/big"
+	"fmt"
+	"strings"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/ethereum/go-ethereum/common"
 )
 
 // RemoveHexPrefixFromAddress returns a new string without the 0x prefix, does not modify the original string
@@ -17,25 +21,26 @@ func Has0xPrefix(str string) bool {
 	return len(str) >= 2 && str[0] == '0' && (str[1] == 'x' || str[1] == 'X')
 }
 
-// HexStringToDecimal assumes that value is a valid hex string
-func HexStringToDecimal(value string) string {
-	bigValue := new(big.Int)
-	if Has0xPrefix(value) {
-		value = value[2:]
+// HexToBech32 converts from Ethereum addresses to cosmos address
+func HexToBech32(address, prefix string) (string, error) {
+	addr := common.HexToAddress(address)
+	bech32addr, err := sdk.Bech32ifyAddressBytes(prefix, addr.Bytes())
+	if err != nil {
+		return "", err
 	}
-	_, ok := bigValue.SetString(value, 16)
-	if !ok {
-		return ""
-	}
-	return bigValue.Text(10)
+	return bech32addr, nil
 }
 
-// DecimalStringToHex assumes that value is a valid decimal string
-func DecimalStringToHex(value string) string {
-	bigValue := new(big.Int)
-	_, ok := bigValue.SetString(value, 10)
-	if !ok {
-		return ""
+// Bech32ToHex converts from cosmos address to Ethereum addresses
+func Bech32ToHex(address string) (string, error) {
+	bech32Prefix := strings.SplitN(address, "1", 2)[0]
+	if bech32Prefix == address {
+		// It was not a bech32 encoded wallet
+		return "", fmt.Errorf("the wallet was not bech32 encoded")
 	}
-	return "0x" + bigValue.Text(16)
+	addressBz, err := sdk.GetFromBech32(address, bech32Prefix)
+	if err != nil {
+		return "", err
+	}
+	return common.BytesToAddress(addressBz).Hex(), nil
 }
