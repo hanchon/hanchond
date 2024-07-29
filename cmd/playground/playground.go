@@ -23,6 +23,7 @@ var PlaygroundCmd = &cobra.Command{
 	Long:  `Tooling to set up your local cosmos network.`,
 	Run: func(cmd *cobra.Command, _ []string) {
 		filesmanager.SetHomeFolderFromCobraFlags(cmd)
-		fmt.Println("playground called", filesmanager.GetBaseDir())
+		_ = cmd.Help()
+		os.Exit(0)
 	},
 }
