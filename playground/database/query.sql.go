@@ -116,6 +116,30 @@ func (q *Queries) GetNodePorts(ctx context.Context, nodeID int64) (Port, error) 
 	return i, err
 }
 
+const getRelayer = `-- name: GetRelayer :one
+SELECT id, process_id, is_running FROM relayer WHERE id = 1
+`
+
+func (q *Queries) GetRelayer(ctx context.Context) (Relayer, error) {
+	row := q.db.QueryRowContext(ctx, getRelayer)
+	var i Relayer
+	err := row.Scan(&i.ID, &i.ProcessID, &i.IsRunning)
+	return i, err
+}
+
+const initRelayer = `-- name: InitRelayer :exec
+INSERT INTO relayer(
+    process_id, is_running
+) VALUES (
+    0,0
+)
+`
+
+func (q *Queries) InitRelayer(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, initRelayer)
+	return err
+}
+
 const insertChain = `-- name: InsertChain :one
 INSERT INTO chain(
     name, chain_id, binary_version
@@ -264,5 +288,19 @@ type SetProcessIDParams struct {
 
 func (q *Queries) SetProcessID(ctx context.Context, arg SetProcessIDParams) error {
 	_, err := q.db.ExecContext(ctx, setProcessID, arg.ProcessID, arg.IsRunning, arg.ID)
+	return err
+}
+
+const updateRelayer = `-- name: UpdateRelayer :exec
+UPDATE relayer SET process_id = ?, is_running = ? WHERE id = 1
+`
+
+type UpdateRelayerParams struct {
+	ProcessID int64
+	IsRunning int64
+}
+
+func (q *Queries) UpdateRelayer(ctx context.Context, arg UpdateRelayerParams) error {
+	_, err := q.db.ExecContext(ctx, updateRelayer, arg.ProcessID, arg.IsRunning)
 	return err
 }

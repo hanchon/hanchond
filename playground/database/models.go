@@ -41,3 +41,9 @@ type Port struct {
 	P26656 int64
 	P26660 int64
 }
+
+type Relayer struct {
+	ID        int64
+	ProcessID int64
+	IsRunning int64
+}

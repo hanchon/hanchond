@@ -62,3 +62,16 @@ SELECT * FROM ports;
 -- name: GetChain :one
 SELECT * FROM chain where id =? LIMIT 1;
 
+
+-- name: InitRelayer :exec
+INSERT INTO relayer(
+    process_id, is_running
+) VALUES (
+    0,0
+);
+
+-- name: GetRelayer :one
+SELECT * FROM relayer WHERE id = 1;
+
+-- name: UpdateRelayer :exec
+UPDATE relayer SET process_id = ?, is_running = ? WHERE id = 1;

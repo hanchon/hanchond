@@ -66,6 +66,10 @@ export default defineConfig({
                   text: "Add a New Channel",
                   link: "/hanchond/playground/hermesAddChannel",
                 },
+                {
+                  text: "Hermes Start",
+                  link: "/hanchond/playground/hermesStart",
+                },
               ],
             },
           ],
