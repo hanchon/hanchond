@@ -31,17 +31,35 @@ export default defineConfig({
               link: "/hanchond/playground/config",
             },
             {
-              text: "Build Evmos",
-              link: "/hanchond/playground/buildEvmos",
+              text: "Evmos",
+              items: [
+                {
+                  text: "Build Evmos",
+                  link: "/hanchond/playground/buildEvmos",
+                },
+                {
+                  text: "Init Genesis",
+                  link: "/hanchond/playground/initGenesis",
+                },
+                {
+                  text: "Start node",
+                  link: "/hanchond/playground/startNode",
+                },
+                {
+                  text: "Stop node",
+                  link: "/hanchond/playground/stopNode",
+                },
+              ],
             },
             {
-              text: "Init Genesis",
-              link: "/hanchond/playground/initGenesis",
+              text: "Hermes",
+              items: [
+                {
+                  text: "Build Hermes",
+                  link: "/hanchond/playground/buildHermes",
+                },
+              ],
             },
-            {
-                text:"Start node",
-                link:"/hanchond/playground/startNode",
-            }
           ],
         },
         {

@@ -1,0 +1,23 @@
+# Build Hermes
+
+To run two networks via IBC, you first need to set up a relater. The `build-hermes` command allows you to build the relayer from the source code.
+
+:::warning
+This process assumes that you have all the Hermes dependencies already installed in your system.
+:::
+
+## Build the Relayer
+
+The `build-hermes` command supports the flag `--version` to build an specific tag. It defaults to version `v1.9.0`.
+
+```sh
+hanchond playground build-hermes
+Cloning hermes version: v1.9.0
+Building hermes...
+Moving built binary...
+Cleaning up...
+```
+
+:::info
+The playground only supports one version of Hermes at the time, so if you build more than one relayer, the binaries will be overwritten.
+:::
