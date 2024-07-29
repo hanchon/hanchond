@@ -35,6 +35,10 @@ export default defineConfig({
               link: "/hanchond/playground/removeData",
             },
             {
+              text: "List Binaries",
+              link: "/hanchond/playground/listBinaries",
+            },
+            {
               text: "Evmos",
               items: [
                 {
