@@ -14,7 +14,7 @@ func SetBaseDir(path string) {
 	baseDir = path
 }
 
-func SetHomeFolderFromCobraFlags(cmd *cobra.Command) {
+func SetHomeFolderFromCobraFlags(cmd *cobra.Command) string {
 	home, err := cmd.Flags().GetString("home")
 	if err != nil {
 		fmt.Println(err.Error())
@@ -22,6 +22,39 @@ func SetHomeFolderFromCobraFlags(cmd *cobra.Command) {
 	}
 	home, _ = strings.CutSuffix(home, "/")
 	SetBaseDir(home)
+	// Ensure that the folder exists
+	if _, err := os.Stat(home); os.IsNotExist(err) {
+		if err := os.Mkdir(home, os.ModePerm); err != nil {
+			// We panic here because if we can not create the folder we should inmediately stop
+			panic(err)
+		}
+	}
+	return home
+}
+
+func GetDataFolder() string {
+	return fmt.Sprintf("%s/data", GetBaseDir())
+}
+
+func getNodeHomePath(chainID int64) string {
+	return fmt.Sprintf("%s/%d", GetDataFolder(), chainID)
+}
+
+func GetNodeHomeFolder(chainID int64) string {
+	if _, err := os.Stat(GetDataFolder()); os.IsNotExist(err) {
+		if err := os.Mkdir(GetDataFolder(), os.ModePerm); err != nil {
+			// We panic here because if we can not create the folder we should inmediately stop
+			panic(err)
+		}
+	}
+	return getNodeHomePath(chainID)
+}
+
+func IsNodeHomeFolderInitialized(chainID int64) bool {
+	if _, err := os.Stat(getNodeHomePath(chainID)); os.IsNotExist(err) {
+		return false
+	}
+	return true
 }
 
 func GetBaseDir() string {
@@ -42,6 +75,10 @@ func GetBranchFolder(version string) string {
 
 func GetEvmosdPath(version string) string {
 	return GetBuildsDir() + "/evmosd" + version
+}
+
+func DoesEvmosdPathExist(version string) bool {
+	return DoesFileExist(GetBuildsDir() + "/evmosd" + version)
 }
 
 func GetHermesBinary() string {

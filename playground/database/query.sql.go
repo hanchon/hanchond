@@ -122,7 +122,7 @@ INSERT INTO chain(
 ) VALUES (
     ?,?,?
 )
-RETURNING ID
+RETURNING id, name, chain_id, binary_version
 `
 
 type InsertChainParams struct {
@@ -131,11 +131,16 @@ type InsertChainParams struct {
 	BinaryVersion string
 }
 
-func (q *Queries) InsertChain(ctx context.Context, arg InsertChainParams) (int64, error) {
+func (q *Queries) InsertChain(ctx context.Context, arg InsertChainParams) (Chain, error) {
 	row := q.db.QueryRowContext(ctx, insertChain, arg.Name, arg.ChainID, arg.BinaryVersion)
-	var id int64
-	err := row.Scan(&id)
-	return id, err
+	var i Chain
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.ChainID,
+		&i.BinaryVersion,
+	)
+	return i, err
 }
 
 const insertNode = `-- name: InsertNode :one

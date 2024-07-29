@@ -26,6 +26,8 @@ func BuildEvmos(path string) error {
 }
 
 func SaveEvmosBuiltVersion(version string) error {
+	// Ensure the path exists
+	_ = CreateBuildsDir()
 	return CopyFile(GetBranchFolder(version)+"/build/evmosd", GetEvmosdPath(version))
 }
 

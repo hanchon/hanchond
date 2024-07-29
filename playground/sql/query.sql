@@ -4,7 +4,7 @@ INSERT INTO chain(
 ) VALUES (
     ?,?,?
 )
-RETURNING ID;
+RETURNING *;
 
 -- name: InsertNode :one
 INSERT INTO node(
@@ -61,3 +61,4 @@ SELECT * FROM ports;
 
 -- name: GetChain :one
 SELECT * FROM chain where id =? LIMIT 1;
+

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 
 	_ "embed"
+
 	// blank import to support sqlite3
 	_ "github.com/mattn/go-sqlite3"
 )

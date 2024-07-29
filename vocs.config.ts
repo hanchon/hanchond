@@ -30,6 +30,14 @@ export default defineConfig({
               text: "Config",
               link: "/hanchond/playground/config",
             },
+            {
+              text: "Build Evmos",
+              link: "/hanchond/playground/buildEvmos",
+            },
+            {
+              text: "Init Genesis",
+              link: "/hanchond/playground/initGenesis",
+            },
           ],
         },
         {

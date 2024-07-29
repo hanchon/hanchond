@@ -1,0 +1,28 @@
+# Build Evmos
+
+To run a network, you first need to chain binary. The command `build-evmos` allows you to build from tags
+
+## Build from Github tags
+
+Passing the version tag will automatically download the Github repo, build the binary and move the built binary to the playground data folder.
+
+```sh
+hanchond playground build-evmos v18.1.0
+Cloning evmos version: v18.1.0
+Building evmos...
+Moving built binary...
+```
+
+## Build from a local repository
+
+If you pass the `--path` flag, it will build your local Evmos and tag it for internal usage as `local`
+
+```sh
+hanchond playground build-evmos --path /Users/hanchon/devel/evmos/evmos
+Building evmos...
+Moving built binary..
+```
+
+:::info
+Make sure that you are using the `local` version while interacting with the playground to use the Evmos built with the `--path` flag
+:::
