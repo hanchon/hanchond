@@ -100,9 +100,12 @@ export default defineConfig({
       items: [
         {
           text: "Requester",
-          link: "/lib/requester/client",
           collapsed: false,
           items: [
+            {
+              text: "Client",
+              link: "/lib/requester/client",
+            },
             {
               text: "Web3 Requests",
               link: "/lib/requester/web3",
