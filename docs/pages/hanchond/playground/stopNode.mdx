@@ -1,0 +1,14 @@
+# Stop node
+
+To stop a running node, the command `stop-node` can be used
+
+```sh
+hanchond playground stop-node 1
+Node is no longer running
+```
+
+:::info
+If the node is not running but still in the database, the command will remove the entry from the database and exit correctly.
+
+If the node is set as not active in the database and the `stop-node` command is called, the process will exit with exit-code 1.
+:::
