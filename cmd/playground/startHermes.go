@@ -11,9 +11,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// hermesStartCmd represents the hermesStart command
-var hermesStartCmd = &cobra.Command{
-	Use:   "hermes-start",
+// startHermesCmd represents the start-hermes command
+var startHermesCmd = &cobra.Command{
+	Use:   "start-hermes",
 	Short: "Starts the relayer",
 	Long:  `The command assumes that the relayer was already built and that there is a channel enabled between 2 chains`,
 	Run: func(cmd *cobra.Command, _ []string) {
@@ -50,5 +50,5 @@ var hermesStartCmd = &cobra.Command{
 }
 
 func init() {
-	PlaygroundCmd.AddCommand(hermesStartCmd)
+	PlaygroundCmd.AddCommand(startHermesCmd)
 }

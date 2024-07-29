@@ -70,6 +70,10 @@ export default defineConfig({
                   text: "Hermes Start",
                   link: "/hanchond/playground/hermesStart",
                 },
+                {
+                  text: "Hermes Stop",
+                  link: "/hanchond/playground/hermesStop",
+                },
               ],
             },
           ],
