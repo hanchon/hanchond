@@ -38,6 +38,10 @@ export default defineConfig({
               text: "Init Genesis",
               link: "/hanchond/playground/initGenesis",
             },
+            {
+                text:"Start node",
+                link:"/hanchond/playground/startNode",
+            }
           ],
         },
         {

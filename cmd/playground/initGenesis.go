@@ -9,21 +9,12 @@ import (
 	"github.com/hanchon/hanchond/playground/database"
 	"github.com/hanchon/hanchond/playground/evmos"
 	"github.com/hanchon/hanchond/playground/filesmanager"
-	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
 
-func initDB(dbPath string) (*database.Queries, error) {
-	db, err := sql.InitDatabase(context.Background(), dbPath+"/playground.db")
-	if err != nil {
-		return nil, err
-	}
-	return database.New(db), nil
-}
-
 // initGenesisCmd represents the initGenesis command
 var initGenesisCmd = &cobra.Command{
-	Use:   "init-genesis",
+	Use:   "init-genesis id",
 	Args:  cobra.ExactArgs(1),
 	Short: "Init the genesis file for a new chain",
 	Long:  `Set up the data and config folder for the new chain`,
