@@ -3,8 +3,8 @@ module github.com/hanchon/hanchond
 go 1.22.2
 
 require (
-	github.com/cosmos/cosmos-sdk v0.47.12
-	github.com/cosmos/ibc-go/v7 v7.6.0
+	github.com/cosmos/cosmos-sdk v0.47.13
+	github.com/cosmos/ibc-go/v7 v7.7.0
 	github.com/ethereum/go-ethereum v1.11.5
 	github.com/evmos/evmos/v18 v18.1.0
 	github.com/mailru/easyjson v0.7.7
