@@ -16,7 +16,7 @@ var stopHermesCmd = &cobra.Command{
 	Use:   "stop-hermes",
 	Short: "Stop the relayer",
 	Long:  `It gets the PID from the database and send the kill signal to the process`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		queries := initDBFromCmd(cmd)
 		relayer, err := queries.GetRelayer(context.Background())
 		if err != nil {
@@ -25,15 +25,11 @@ var stopHermesCmd = &cobra.Command{
 		}
 
 		// TODO: check if the process is running checking the PID
-		if relayer.IsRunning == 0 {
-			fmt.Println("the relayer is already running")
-			os.Exit(1)
-		}
-
 		if relayer.IsRunning != 1 {
 			fmt.Println("the relayer is not running")
 			os.Exit(1)
 		}
+
 		command := exec.Command( //nolint:gosec
 			"kill",
 			fmt.Sprintf("%d", relayer.ProcessID),
@@ -48,7 +44,7 @@ var stopHermesCmd = &cobra.Command{
 		}
 
 		if err := queries.UpdateRelayer(context.Background(), database.UpdateRelayerParams{
-			ProcessID: relayer.ProcessID,
+			ProcessID: 0,
 			IsRunning: 0,
 		}); err != nil {
 			fmt.Println("could not update the relayer database", err.Error())
