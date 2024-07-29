@@ -60,7 +60,6 @@ address_type = { derivation = 'ethermint', proto_type = { pk_type = '/ethermint.
 }
 
 func (h *Hermes) initHermesConfig() {
-	fmt.Println(h.GetConfigFile())
 	// Init the file only if it does not exist
 	if filesmanager.DoesFileExist(h.GetConfigFile()) {
 		return

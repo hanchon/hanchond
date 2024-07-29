@@ -8,7 +8,6 @@ import (
 
 	"github.com/hanchon/hanchond/playground/database"
 	"github.com/hanchon/hanchond/playground/evmos"
-	"github.com/hanchon/hanchond/playground/filesmanager"
 	"github.com/spf13/cobra"
 )
 
@@ -19,12 +18,7 @@ var startNodeCmd = &cobra.Command{
 	Short: "Starts a node with the given ID",
 	Long:  `It will run the node in a subprocess, saving the pid in the database in case it needs to be stoped in the future`,
 	Run: func(cmd *cobra.Command, args []string) {
-		home := filesmanager.SetHomeFolderFromCobraFlags(cmd)
-		queries, err := initDB(home)
-		if err != nil {
-			fmt.Println("could not init database", err.Error())
-			os.Exit(1)
-		}
+		queries := initDBFromCmd(cmd)
 
 		id := args[0]
 		idNumber, err := strconv.ParseInt(id, 10, 64)

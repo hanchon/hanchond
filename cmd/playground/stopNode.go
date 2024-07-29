@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/hanchon/hanchond/playground/database"
-	"github.com/hanchon/hanchond/playground/filesmanager"
 	"github.com/spf13/cobra"
 )
 
@@ -20,12 +19,7 @@ var stopNodeCmd = &cobra.Command{
 	Short: "Stops a running node with the given ID",
 	Long:  `Stops the node using the PID stored in the database`,
 	Run: func(cmd *cobra.Command, args []string) {
-		home := filesmanager.SetHomeFolderFromCobraFlags(cmd)
-		queries, err := initDB(home)
-		if err != nil {
-			fmt.Println("could not init database", err.Error())
-			os.Exit(1)
-		}
+		queries := initDBFromCmd(cmd)
 
 		id := args[0]
 		idNumber, err := strconv.ParseInt(id, 10, 64)

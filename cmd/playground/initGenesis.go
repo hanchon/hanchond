@@ -19,12 +19,7 @@ var initGenesisCmd = &cobra.Command{
 	Short: "Init the genesis file for a new chain",
 	Long:  `Set up the data and config folder for the new chain`,
 	Run: func(cmd *cobra.Command, args []string) {
-		home := filesmanager.SetHomeFolderFromCobraFlags(cmd)
-		queries, err := initDB(home)
-		if err != nil {
-			fmt.Println("could not init database", err.Error())
-			os.Exit(1)
-		}
+		queries := initDBFromCmd(cmd)
 
 		version, err := cmd.Flags().GetString("version")
 		if err != nil {

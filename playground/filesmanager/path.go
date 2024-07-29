@@ -32,6 +32,10 @@ func SetHomeFolderFromCobraFlags(cmd *cobra.Command) string {
 	return home
 }
 
+func GetDatabaseFile() string {
+	return fmt.Sprintf("%s/playground.db", GetBaseDir())
+}
+
 func GetDataFolder() string {
 	return fmt.Sprintf("%s/data", GetBaseDir())
 }
@@ -106,4 +110,9 @@ func CreateHermesFolder() error {
 
 func CleanUpTempFolder() error {
 	return os.RemoveAll(GetTempDir())
+}
+
+func CleanUpData() error {
+	_ = os.RemoveAll(GetDatabaseFile())
+	return os.RemoveAll(GetDataFolder())
 }

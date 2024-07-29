@@ -1,0 +1,27 @@
+# Add a New Channel
+
+To connect two Cosmos networks, you need to create an IBC channel between them.
+
+:::warning
+This command assumes that you have already built a [Hermes binary](/hanchond/playground/buildHermes)
+:::
+
+## Command
+
+The `hermes-add-channel` command takes two arguments, which are the chain IDs for both networks that you want to connect.
+
+```sh
+hanchond playground hermes-add-channel 1 2
+Getting first node data...
+Getting second node data...
+Both chains are running
+Relayer initialized
+First chain added
+Second chain added
+Calling create channel
+Channel created
+```
+
+:::info
+Creating a channel will take around one minute because the relayer needs to send some transactions between the two chains.
+:::

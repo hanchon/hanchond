@@ -31,6 +31,10 @@ export default defineConfig({
               link: "/hanchond/playground/config",
             },
             {
+              text: "Remove Data",
+              link: "/hanchond/playground/removeData",
+            },
+            {
               text: "Evmos",
               items: [
                 {
@@ -57,6 +61,10 @@ export default defineConfig({
                 {
                   text: "Build Hermes",
                   link: "/hanchond/playground/buildHermes",
+                },
+                {
+                  text: "Add a New Channel",
+                  link: "/hanchond/playground/hermesAddChannel",
                 },
               ],
             },
