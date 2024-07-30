@@ -97,6 +97,10 @@ export default defineConfig({
                   link: "/hanchond/playground/tx/ibc",
                 },
                 {
+                  text: "Vote",
+                  link: "/hanchond/playground/tx/vote",
+                },
+                {
                   text: "STRv1 Proposal",
                   link: "/hanchond/playground/tx/str",
                 },

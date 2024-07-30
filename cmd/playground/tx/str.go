@@ -26,11 +26,6 @@ var strV1ProposalCmd = &cobra.Command{
 
 		denom := args[0]
 
-		ibcTransferCmd.Flags().IntP("exponent", "e", 18, "Exponents of the token")
-		ibcTransferCmd.Flags().StringP("alias", "a", "tokenalias", "Token alias")
-		ibcTransferCmd.Flags().StringP("name", "n", "tokenname", "Token name")
-		ibcTransferCmd.Flags().StringP("symbol", "s", "tokensymbol", "Token symbol")
-
 		exponent, err := cmd.Flags().GetInt("exponent")
 		if err != nil {
 			fmt.Println("exponent not set")
