@@ -9,6 +9,7 @@ import (
 	"github.com/hanchon/hanchond/playground/database"
 	"github.com/hanchon/hanchond/playground/evmos"
 	"github.com/hanchon/hanchond/playground/filesmanager"
+	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +20,7 @@ var initGenesisCmd = &cobra.Command{
 	Short: "Init the genesis file for a new chain",
 	Long:  `Set up the data and config folder for the new chain`,
 	Run: func(cmd *cobra.Command, args []string) {
-		queries := initDBFromCmd(cmd)
+		queries := sql.InitDBFromCmd(cmd)
 
 		version, err := cmd.Flags().GetString("version")
 		if err != nil {

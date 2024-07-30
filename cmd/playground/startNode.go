@@ -8,6 +8,7 @@ import (
 
 	"github.com/hanchon/hanchond/playground/database"
 	"github.com/hanchon/hanchond/playground/evmos"
+	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +19,7 @@ var startNodeCmd = &cobra.Command{
 	Short: "Starts a node with the given ID",
 	Long:  `It will run the node in a subprocess, saving the pid in the database in case it needs to be stoped in the future`,
 	Run: func(cmd *cobra.Command, args []string) {
-		queries := initDBFromCmd(cmd)
+		queries := sql.InitDBFromCmd(cmd)
 
 		id := args[0]
 		idNumber, err := strconv.ParseInt(id, 10, 64)

@@ -3,11 +3,16 @@ package sql
 import (
 	"context"
 	"database/sql"
-
 	_ "embed"
+	"fmt"
+	"os"
 
 	// blank import to support sqlite3
 	_ "github.com/mattn/go-sqlite3"
+
+	"github.com/hanchon/hanchond/playground/database"
+	"github.com/hanchon/hanchond/playground/filesmanager"
+	"github.com/spf13/cobra"
 )
 
 //go:embed schema.sql
@@ -24,4 +29,23 @@ func InitDatabase(ctx context.Context, path string) (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func initDB(dbPath string) (*database.Queries, error) {
+	// TODO: move the database path to the filesmanager
+	db, err := InitDatabase(context.Background(), dbPath+"/playground.db")
+	if err != nil {
+		return nil, err
+	}
+	return database.New(db), nil
+}
+
+func InitDBFromCmd(cmd *cobra.Command) *database.Queries {
+	home := filesmanager.SetHomeFolderFromCobraFlags(cmd)
+	queries, err := initDB(home)
+	if err != nil {
+		fmt.Println("could not init database", err.Error())
+		os.Exit(1)
+	}
+	return queries
 }

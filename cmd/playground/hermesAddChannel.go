@@ -6,6 +6,7 @@ import (
 
 	"github.com/hanchon/hanchond/playground/evmos"
 	"github.com/hanchon/hanchond/playground/hermes"
+	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +17,7 @@ var hermesAddChannelCmd = &cobra.Command{
 	Short: "It uses the hermes client to open an IBC channel between two chains",
 	Long:  `This command requires that Hermes was already built and at least one node for each chain running.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		queries := initDBFromCmd(cmd)
+		queries := sql.InitDBFromCmd(cmd)
 
 		node1 := args[0]
 		node2 := args[1]

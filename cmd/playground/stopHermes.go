@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/hanchon/hanchond/playground/database"
+	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +18,7 @@ var stopHermesCmd = &cobra.Command{
 	Short: "Stop the relayer",
 	Long:  `It gets the PID from the database and send the kill signal to the process`,
 	Run: func(cmd *cobra.Command, _ []string) {
-		queries := initDBFromCmd(cmd)
+		queries := sql.InitDBFromCmd(cmd)
 		relayer, err := queries.GetRelayer(context.Background())
 		if err != nil {
 			fmt.Println("the relayer is not in the database", err.Error())

@@ -8,6 +8,7 @@ import (
 
 	"github.com/hanchon/hanchond/playground/database"
 	"github.com/hanchon/hanchond/playground/hermes"
+	localsql "github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +18,7 @@ var startHermesCmd = &cobra.Command{
 	Short: "Starts the relayer",
 	Long:  `The command assumes that the relayer was already built and that there is a channel enabled between 2 chains`,
 	Run: func(cmd *cobra.Command, _ []string) {
-		queries := initDBFromCmd(cmd)
+		queries := localsql.InitDBFromCmd(cmd)
 		relayer, err := queries.GetRelayer(context.Background())
 		if err == sql.ErrNoRows {
 			if err := queries.InitRelayer(context.Background()); err != nil {

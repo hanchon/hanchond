@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/hanchon/hanchond/cmd/playground/tx"
 	"github.com/hanchon/hanchond/playground/filesmanager"
 	"github.com/spf13/cobra"
 )
@@ -18,12 +19,17 @@ func init() {
 
 // PlaygroundCmd represents the playground command
 var PlaygroundCmd = &cobra.Command{
-	Use:   "playground",
-	Short: "Cosmos chain runner",
-	Long:  `Tooling to set up your local cosmos network.`,
+	Use:     "playground",
+	Aliases: []string{"q"},
+	Short:   "Cosmos chain runner",
+	Long:    `Tooling to set up your local cosmos network.`,
 	Run: func(cmd *cobra.Command, _ []string) {
 		filesmanager.SetHomeFolderFromCobraFlags(cmd)
 		_ = cmd.Help()
 		os.Exit(0)
 	},
+}
+
+func init() {
+	PlaygroundCmd.AddCommand(tx.TxCmd)
 }

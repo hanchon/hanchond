@@ -27,16 +27,21 @@ export default defineConfig({
           collapsed: false,
           items: [
             {
-              text: "Config",
-              link: "/hanchond/playground/config",
-            },
-            {
-              text: "Remove Data",
-              link: "/hanchond/playground/removeData",
-            },
-            {
-              text: "List Binaries",
-              link: "/hanchond/playground/listBinaries",
+              text: "Utils",
+              items: [
+                {
+                  text: "Config",
+                  link: "/hanchond/playground/config",
+                },
+                {
+                  text: "Remove Data",
+                  link: "/hanchond/playground/removeData",
+                },
+                {
+                  text: "List Binaries",
+                  link: "/hanchond/playground/listBinaries",
+                },
+              ],
             },
             {
               text: "Evmos",
@@ -77,6 +82,19 @@ export default defineConfig({
                 {
                   text: "Hermes Stop",
                   link: "/hanchond/playground/hermesStop",
+                },
+              ],
+            },
+            {
+              text: "Transactions",
+              items: [
+                {
+                  text: "General Flags",
+                  link: "/hanchond/playground/tx/flags",
+                },
+                {
+                  text: "IBC Transfer",
+                  link: "/hanchond/playground/tx/ibc",
                 },
               ],
             },
