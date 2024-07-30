@@ -101,6 +101,10 @@ export default defineConfig({
                   link: "/hanchond/playground/tx/vote",
                 },
                 {
+                  text: "Upgrade Proposal",
+                  link: "/hanchond/playground/tx/upgrade",
+                },
+                {
                   text: "STRv1 Proposal",
                   link: "/hanchond/playground/tx/str",
                 },

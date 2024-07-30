@@ -162,14 +162,14 @@ func (e *Evmos) VoteOnAllTheProposals(option string) ([]string, error) {
 	return res, nil
 }
 
-func (e *Evmos) CreateUpgradeProposal(upgradeHeight string) error {
+func (e *Evmos) CreateUpgradeProposal(versionName string, upgradeHeight string) (string, error) {
 	command := exec.Command( //nolint:gosec
 		filesmanager.GetEvmosdPath(e.Version),
 		"tx",
 		"gov",
 		"submit-legacy-proposal",
 		"software-upgrade",
-		"v19.0.0",
+		versionName,
 		"--title",
 		"proposal",
 		"--description",
@@ -197,6 +197,17 @@ func (e *Evmos) CreateUpgradeProposal(upgradeHeight string) error {
 	)
 
 	out, err := command.CombinedOutput()
-	fmt.Println(string(out))
-	return err
+	if err != nil {
+		return "", err
+	}
+
+	resp := string(out)
+	if !strings.Contains(resp, "code: 0") {
+		return "", fmt.Errorf("transaction failed:%s", resp)
+	}
+	hash := strings.Split(resp, "txhash: ")
+	if len(hash) > 1 {
+		hash[1] = strings.TrimSpace(hash[1])
+	}
+	return hash[1], nil
 }
