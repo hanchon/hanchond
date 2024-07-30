@@ -3,6 +3,7 @@ package tx
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/hanchon/hanchond/playground/evmos"
 	"github.com/hanchon/hanchond/playground/sql"
@@ -42,12 +43,21 @@ var ibcTransferCmd = &cobra.Command{
 		if denom == "" {
 			denom = e.BaseDenom
 		}
-
-		if err := e.SendIBC("transfer", channel, dstWallet, amount+denom); err != nil {
+		out, err := e.SendIBC("transfer", channel, dstWallet, amount+denom)
+		if err != nil {
 			fmt.Println("error sending the transaction:", err.Error())
 			os.Exit(1)
 		}
-		fmt.Println("trnsaction sent!")
+		if !strings.Contains(out, "code: 0") {
+			fmt.Println("transaction failed!")
+			fmt.Println(out)
+			os.Exit(1)
+		}
+		hash := strings.Split(out, "txhash: ")
+		if len(hash) > 1 {
+			hash[1] = strings.TrimSpace(hash[1])
+		}
+		fmt.Println(hash[1])
 	},
 }
 

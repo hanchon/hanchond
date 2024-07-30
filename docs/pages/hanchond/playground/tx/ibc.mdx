@@ -4,6 +4,7 @@ The command `ibc-transfer` can be used to send IBC coins between two chains.
 
 ```sh
 hanchond playground tx ibc-transfer evmos1dh0j0cppe0uktzl8reukddztkcygzrh7t5fx0n 1
+37A2F48060D264039A98FC89083B98AA1DFF65D64A15C936147C17AB4B61098B
 ```
 
 The command has 2 flags that can be set:
@@ -12,5 +13,9 @@ The command has 2 flags that can be set:
 - Denom: it's the denomination of the token that you want to send. It defaults to the `base denom` of the chain.
 
 :::info
-The sender of the IBC transaction is the validator key of the node
+The sender of the IBC transaction is the validator key of the node.
+:::
+
+:::warning
+If the transaction fails, it will print the complete output of the command instead of the transaction hash
 :::

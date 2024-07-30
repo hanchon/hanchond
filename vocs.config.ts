@@ -98,6 +98,23 @@ export default defineConfig({
                 },
               ],
             },
+            {
+              text: "Queries",
+              items: [
+                {
+                  text: "General Flags",
+                  link: "/hanchond/playground/queries/flags",
+                },
+                {
+                  text: "Bank Balances",
+                  link: "/hanchond/playground/queries/balances",
+                },
+                {
+                  text: "Transaction",
+                  link: "/hanchond/playground/queries/transaction",
+                },
+              ],
+            },
           ],
         },
         {

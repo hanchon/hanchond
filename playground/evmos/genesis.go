@@ -99,7 +99,8 @@ func (e *Evmos) InitGenesis() error {
 	if err != nil {
 		return err
 	}
-	configFile = e.UpdateConfigFile(configFile)
+	// TODO: renable this if we want slow blocks
+	// configFile = e.UpdateConfigFile(configFile)
 	if err := e.saveConfigFile(configFile); err != nil {
 		return err
 	}

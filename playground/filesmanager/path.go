@@ -90,7 +90,7 @@ func GetHermesBinary() string {
 }
 
 func GetHermesPath() string {
-	return GetTempDir() + "/hermes"
+	return GetDataFolder() + "/hermes"
 }
 
 func CreateBuildsDir() error {
