@@ -96,6 +96,10 @@ export default defineConfig({
                   text: "IBC Transfer",
                   link: "/hanchond/playground/tx/ibc",
                 },
+                {
+                  text: "STRv1 Proposal",
+                  link: "/hanchond/playground/tx/str",
+                },
               ],
             },
             {

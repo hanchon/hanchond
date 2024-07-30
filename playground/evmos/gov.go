@@ -10,9 +10,16 @@ import (
 	"github.com/hanchon/hanchond/playground/filesmanager"
 )
 
-func (e *Evmos) CreateSTRv1Proposal() error {
-	// TODO: do not hardcode values here
-	metadata := `
+type STRv1 struct {
+	Denom    string
+	Exponent int
+	Alias    string
+	Name     string
+	Symbol   string
+}
+
+func (e *Evmos) CreateSTRv1Proposal(params STRv1) (string, error) {
+	metadata := fmt.Sprintf(`
 {
   "messages": [
     {
@@ -25,32 +32,33 @@ func (e *Evmos) CreateSTRv1Proposal() error {
         {
             "denom_units": [
               {
-                "denom": "ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E",
-                "exponent": 18,
+                "denom": "%s",
+                "exponent": %d,
                 "aliases": [
-                  "ibcevmos2"
+                  "%s"
                 ]
               }
             ],
-            "base": "ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E",
-            "display": "ibcevmos2",
-            "name": "Evmos2",
-            "symbol": "evmos-2"
+            "base": "%s",
+            "display": "%s",
+            "name": "%s",
+            "symbol": "%s"
       }
       ]
       }
     }
   ],
-  "deposit": "1000000000` + e.BaseDenom + `",
-  "title": "a",
-  "summary": "a."
-}
-`
+  "deposit": "1000000000`+e.BaseDenom+`",
+  "title": "STRv1 proposal",
+  "summary": "Registering a new coin."
+}`, params.Denom, params.Exponent, params.Alias, params.Denom, params.Alias, params.Name, params.Symbol)
+
 	path := "/tmp/metadata.json"
 	filesmanager.DoesFileExist(path)
 	if err := filesmanager.SaveFile([]byte(metadata), path); err != nil {
-		panic("could not save the proposal to disk")
+		return "", fmt.Errorf("could not save the proposal to disk:%s", err.Error())
 	}
+
 	command := exec.Command( //nolint:gosec
 		filesmanager.GetEvmosdPath(e.Version),
 		"tx",
@@ -75,8 +83,7 @@ func (e *Evmos) CreateSTRv1Proposal() error {
 	)
 
 	out, err := command.CombinedOutput()
-	fmt.Println(string(out))
-	return err
+	return string(out), err
 }
 
 func (e *Evmos) VoteOnProposal(proposalID string) error {

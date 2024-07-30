@@ -27,7 +27,7 @@ var txCmd = &cobra.Command{
 		e := evmos.NewEvmosFromDB(queries, nodeID)
 		resp, err := e.GetTransaction(txhash)
 		if err != nil {
-			fmt.Println("could not get the balance:", err.Error())
+			fmt.Println("error sending the request:", err.Error())
 			os.Exit(1)
 		}
 		fmt.Println(resp)
