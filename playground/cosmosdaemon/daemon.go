@@ -2,7 +2,7 @@ package cosmosdaemon
 
 import "github.com/hanchon/hanchond/lib/txbuilder"
 
-type Dameon struct {
+type Daemon struct {
 	ValKeyName  string
 	ValMnemonic string
 	KeyType     string
@@ -21,6 +21,8 @@ type Dameon struct {
 	ValidatorInitialSupply string
 
 	Ports Ports
+
+	BinaryPath string
 }
 
 const (
@@ -29,9 +31,9 @@ const (
 	CosmosAlgo = "secp256k1"
 )
 
-func NewDameon(version string, homeDir string, chainID string, keyName string, algo string, denom string) *Dameon {
+func NewDameon(version string, homeDir string, chainID string, keyName string, algo string, denom string) *Daemon {
 	mnemonic, _ := txbuilder.NewMnemonic()
-	return &Dameon{
+	return &Daemon{
 		ValKeyName:  keyName,
 		ValMnemonic: mnemonic,
 		KeyType:     algo,
@@ -52,4 +54,8 @@ func NewDameon(version string, homeDir string, chainID string, keyName string, a
 
 		Ports: *NewPorts(),
 	}
+}
+
+func (d *Daemon) SetBinaryPath(path string) {
+	d.BinaryPath = path
 }

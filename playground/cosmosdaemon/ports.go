@@ -130,7 +130,7 @@ OUTER:
 	}
 }
 
-func (d *Dameon) RestorePortsFromDB(port database.Port) {
+func (d *Daemon) RestorePortsFromDB(port database.Port) {
 	d.Ports = Ports{
 		P1317:  int(port.P1317),
 		P8080:  int(port.P8080),

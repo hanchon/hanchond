@@ -18,6 +18,7 @@ type Node struct {
 	Moniker          string
 	ValidatorKey     string
 	ValidatorKeyName string
+	KeyType          string
 	BinaryVersion    string
 	ProcessID        int64
 	IsValidator      int64
