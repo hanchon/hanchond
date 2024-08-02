@@ -81,6 +81,10 @@ func GetEvmosdPath(version string) string {
 	return GetBuildsDir() + "/evmosd" + version
 }
 
+func GetGaiadPath() string {
+	return GetBuildsDir() + "/gaiad"
+}
+
 func DoesEvmosdPathExist(version string) bool {
 	return DoesFileExist(GetBuildsDir() + "/evmosd" + version)
 }

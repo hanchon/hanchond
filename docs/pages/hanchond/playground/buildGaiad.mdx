@@ -1,0 +1,17 @@
+# Build Gaiad
+
+To run a cosmos-hub node the `gaiad` binary is required.
+
+:::info
+Instead of building from the source code, the process gets the release from the GitHub release page.
+:::
+
+## Download the binary
+
+The `build-gaiad` command supports the flag `--version` to build a specific tag. It defaults to version `v18.1.0`. It also supports the `--is-darwin` flag to download the binary for MacOS `arm` or Debian `amd64` (it defaults to `true`)
+
+```sh
+hanchond playground build-gaiad
+Downloading gaiad from github: v18.1.0
+Gaiad is now available
+```

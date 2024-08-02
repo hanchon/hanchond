@@ -13,13 +13,14 @@ INSERT INTO node(
     moniker,
     validator_key,
     validator_key_name,
+    key_type,
     binary_version,
     process_id,
     is_validator,
     is_archive,
     is_running
 ) VALUES (
-    ?,?,?,?,?,?,?,?,?,?
+    ?,?,?,?,?,?,?,?,?,?,?
 )
 RETURNING ID;
 
