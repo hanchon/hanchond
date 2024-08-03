@@ -49,11 +49,11 @@ func (e *ERC20) GetBalance(contractAddress string, wallet string, height int) (*
 	var args []interface{}
 	args = append(args, req)
 
-	// NOTE: latest is the default so we can simple ignore the param
+	heightInHex := "latest"
 	if height != Latest {
-		heightInHex := fmt.Sprintf("0x%x", height)
-		args = append(args, heightInHex)
+		heightInHex = fmt.Sprintf("0x%x", height)
 	}
+	args = append(args, heightInHex)
 
 	if err := e.Client.Call(&result, ethCall, args...); err != nil {
 		return nil, err
