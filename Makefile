@@ -18,3 +18,9 @@ install-deps:
 lint:
 	golangci-lint run --fix --out-format=line-number --issues-exit-code=0 --config .golangci.yml --color always ./...
 
+release-dry:
+	@goreleaser release --snapshot --clean
+
+release:
+	@goreleaser release --skip-validate --clean
+
