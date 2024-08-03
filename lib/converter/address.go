@@ -44,3 +44,11 @@ func Bech32ToHex(address string) (string, error) {
 	}
 	return common.BytesToAddress(addressBz).Hex(), nil
 }
+
+// NormalizeAddressToHex converts from Bech32 if the address does not have the 0x prefix
+func NormalizeAddressToHex(input string) (string, error) {
+	if Has0xPrefix(input) {
+		return input, nil
+	}
+	return Bech32ToHex(input)
+}
