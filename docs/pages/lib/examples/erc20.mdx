@@ -1,0 +1,33 @@
+# ERC20 Example
+
+## Query an Account Balance
+
+```go [main.go]
+package main
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/hanchon/hanchond/lib/requester"
+	"github.com/hanchon/hanchond/lib/smartcontract/erc20"
+)
+
+func main() {
+	client := requester.NewClient().WithUnsecureWeb3Endpoint(
+		"https://localhost:8545",
+	)
+
+	balance, err := client.GetBalanceERC20(
+		"0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd",
+		"0x4c4CF206465AbFE5cECb3b581fa1b508Ec514692",
+		erc20.Latest,
+	)
+
+	if err != nil {
+		log.Panic("could not get the erc20 balance:", err.Error())
+	}
+
+	fmt.Println("the account has a balance of:", balance.String())
+}
+```
