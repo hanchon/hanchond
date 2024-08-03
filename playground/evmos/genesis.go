@@ -36,7 +36,7 @@ func (e *Evmos) InitArchiveNode(origin *Evmos) error {
 	}
 	appFile = e.SetPruningInAppFile(false, appFile)
 	// Enable API
-	appFile = e.EnableAPI(appFile)
+	appFile = e.EnableWeb3API(appFile)
 	if err := e.saveAppFile(appFile); err != nil {
 		return err
 	}
@@ -112,6 +112,8 @@ func (e *Evmos) InitGenesis() error {
 	}
 	// NOTE: Running with pruning `nothing` to query old blocks data while debugging
 	appFile = e.SetPruningInAppFile(false, appFile)
+	// Enable API
+	appFile = e.EnableWeb3API(appFile)
 	if err := e.saveAppFile(appFile); err != nil {
 		return err
 	}
@@ -226,7 +228,7 @@ func (e *Evmos) UpdateConfigFile(config []byte) []byte {
 	return []byte(configValues)
 }
 
-func (e *Evmos) EnableAPI(config []byte) []byte {
+func (e *Evmos) EnableWeb3API(config []byte) []byte {
 	configValues := string(config)
 	configValues = strings.Replace(
 		configValues,
