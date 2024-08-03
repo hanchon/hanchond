@@ -6,11 +6,11 @@ List of supported rest calls to the Web3 endpoint
 
 The web3 requester integrates with the [`ERC20` module](/lib/smartcontract/erc20)
 
-The `GetTotalSupply` and `GetContractBalance` can be used directly from the `Client`
+The `GetTotalSupply` and `GetBalanceERC20` can be used directly from the `Client`
 
 ```go
 supply, err := c.GetTotalSupply(contractAddress, height)
-balance, err := c.GetContractBalance(contractAddress, wallet, height)
+balance, err := c.GetBalanceERC20(contractAddress, wallet, height)
 ```
 
 ## GetBlockByNumber

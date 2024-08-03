@@ -36,7 +36,7 @@ func (e *ERC20) GetTotalSupply(contractAddress string, height int) (*big.Int, er
 	return supply, nil
 }
 
-func (e *ERC20) GetContractBalance(contractAddress string, wallet string, height int) (*big.Int, error) {
+func (e *ERC20) GetBalance(contractAddress string, wallet string, height int) (*big.Int, error) {
 	contractAddress = converter.RemoveHexPrefixFromAddress(contractAddress)
 	wallet = converter.RemoveHexPrefixFromAddress(wallet)
 

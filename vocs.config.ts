@@ -137,6 +137,20 @@ export default defineConfig({
                   text: "Transaction",
                   link: "/hanchond/playground/queries/transaction",
                 },
+
+                {
+                  text: "ERC20",
+                  items: [
+                    {
+                      text: "Supply",
+                      link: "/hanchond/playground/queries/erc20/supply",
+                    },
+                    {
+                      text: "Balance",
+                      link: "/hanchond/playground/queries/erc20/balance",
+                    },
+                  ],
+                },
               ],
             },
           ],
