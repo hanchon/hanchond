@@ -216,6 +216,10 @@ export default defineConfig({
               text: "Cosmos Requests",
               link: "/lib/requester/cosmos",
             },
+            {
+              text: "Tendermint Requests",
+              link: "/lib/requester/tendermint",
+            },
           ],
         },
         {
