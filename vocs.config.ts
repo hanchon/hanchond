@@ -55,12 +55,20 @@ export default defineConfig({
                   link: "/hanchond/playground/initGenesis",
                 },
                 {
-                  text: "Start node",
+                  text: "Start Node",
                   link: "/hanchond/playground/startNode",
                 },
                 {
-                  text: "Stop node",
+                  text: "Get Node Info",
+                  link: "/hanchond/playground/getNode",
+                },
+                {
+                  text: "Stop Node",
                   link: "/hanchond/playground/stopNode",
+                },
+                {
+                  text: "Change Binary Version",
+                  link: "/hanchond/playground/changeBinaryVersion",
                 },
               ],
             },
@@ -107,6 +115,10 @@ export default defineConfig({
                 {
                   text: "STRv1 Proposal",
                   link: "/hanchond/playground/tx/str",
+                },
+                {
+                  text: "Rate Limit Proposal",
+                  link: "/hanchond/playground/tx/ratelimit",
                 },
               ],
             },

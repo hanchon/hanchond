@@ -110,7 +110,8 @@ func (e *Evmos) InitGenesis() error {
 	if err != nil {
 		return err
 	}
-	appFile = e.SetPruningInAppFile(true, appFile)
+	// NOTE: Running with pruning `nothing` to query old blocks data while debugging
+	appFile = e.SetPruningInAppFile(false, appFile)
 	if err := e.saveAppFile(appFile); err != nil {
 		return err
 	}

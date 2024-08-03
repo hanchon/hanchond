@@ -25,10 +25,8 @@ func (e *Evmos) SendIBC(port, channel, receiver, amount string) (string, error) 
 		fmt.Sprintf("http://localhost:%d", e.Ports.P26657),
 		"--from",
 		e.ValKeyName,
-		"--gas-prices",
-		fmt.Sprintf("100%s", e.BaseDenom),
-		"--gas-adjustment",
-		"4",
+		"--fees",
+		fmt.Sprintf("1000000000000%s", e.BaseDenom),
 		"-y",
 	)
 

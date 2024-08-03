@@ -4,10 +4,13 @@ To start a new playground, you first need to remove old data.
 
 ```sh
 hanchond playground remove-data
+Stoping all the running nodes...
+Stoping the relayer...
+Cleaning up the data...
 ```
 
 The `remove-data` command will remove the data folder for your playground, the only files that are kept are the built binaries.
 
-:::danger
-Removing the data will not stop the currently running processes. Make sure that you stop your processes before running the `remove-data` command.
+:::info
+Removing the data will try to STOP the currently running processes before deleting the disk data.
 :::
