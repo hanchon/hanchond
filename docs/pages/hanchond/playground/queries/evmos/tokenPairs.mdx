@@ -1,0 +1,22 @@
+# STR Token Pairs
+
+The command `token-pairs` returns a list of all the registered pairs.
+
+```sh
+hanchond p q evmos token-pairs -n 2 | jq .
+[
+  {
+    "erc20_address": "0xD4949664cD82660AaE99bEdc034a0deA8A0bd517",
+    "denom": "aevmos",
+    "enabled": true,
+    "contract_owner": "OWNER_MODULE"
+  },
+  {
+    "erc20_address": "0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd",
+    "denom": "ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E",
+    "enabled": true,
+    "contract_owner": "OWNER_MODULE"
+  }
+]
+
+```

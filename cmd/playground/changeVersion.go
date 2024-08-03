@@ -42,7 +42,7 @@ var changeVersionCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		fmt.Printf("Node %d update to version %s\n", idNumber, args[1])
+		fmt.Printf("Node %d updated to version %s\n", idNumber, args[1])
 	},
 }
 

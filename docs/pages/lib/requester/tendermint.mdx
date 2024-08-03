@@ -1,0 +1,19 @@
+# Tendermint Requester
+
+List of supported rest calls to the Tendermint Rest endpoint
+
+## Get Chain Status
+
+Returns the status of the node, it's the same as calling the `/status` endpoint
+
+```go
+status, err := c.GetChainStatus()
+```
+
+## Get Chain Height
+
+Using the `GetChainStatus` function returns the chain height
+
+```go
+height, err := c.GetCurrentHeight()
+```

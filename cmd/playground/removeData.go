@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"time"
 
 	"github.com/hanchon/hanchond/playground/filesmanager"
 	"github.com/hanchon/hanchond/playground/sql"
@@ -21,10 +22,12 @@ var removeDataCmd = &cobra.Command{
 
 		// Stop all nodes
 		fmt.Println("Stoping all the running nodes...")
+		stopping := false
 		if nodes, err := queries.GetAllNodes(context.Background()); err == nil {
 			// Database is initialized
 			for _, node := range nodes {
 				if node.IsRunning == 1 {
+					stopping = true
 					command := exec.Command( //nolint:gosec
 						"kill",
 						fmt.Sprintf("%d", node.ProcessID),
@@ -39,12 +42,18 @@ var removeDataCmd = &cobra.Command{
 		if relayer, err := queries.GetRelayer(context.Background()); err == nil {
 			// The relayer is runnning
 			if relayer.IsRunning == 1 {
+				stopping = true
 				command := exec.Command( //nolint:gosec
 					"kill",
 					fmt.Sprintf("%d", relayer.ProcessID),
 				)
 				_, _ = command.CombinedOutput()
 			}
+		}
+
+		// If we killed a process, wait 2 secods before deleting the files so the directory is not being used
+		if stopping {
+			time.Sleep(2 * time.Second)
 		}
 
 		// Clean up disk data

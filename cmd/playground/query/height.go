@@ -23,7 +23,7 @@ var heightCmd = &cobra.Command{
 		}
 
 		e := evmos.NewEvmosFromDB(queries, nodeID)
-		client := requester.NewClient().WithUnsecureRestEndpoint(fmt.Sprintf("http://localhost:%d", e.Ports.P26657))
+		client := requester.NewClient().WithUnsecureTendermintEndpoint(fmt.Sprintf("http://localhost:%d", e.Ports.P26657))
 		height, err := client.GetCurrentHeight()
 		if err != nil {
 			fmt.Println("could not query the current height:", err.Error())

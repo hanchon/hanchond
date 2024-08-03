@@ -141,7 +141,6 @@ export default defineConfig({
                   text: "Transaction",
                   link: "/hanchond/playground/queries/transaction",
                 },
-
                 {
                   text: "ERC20",
                   items: [
@@ -154,6 +153,28 @@ export default defineConfig({
                       link: "/hanchond/playground/queries/erc20/balance",
                     },
                   ],
+                },
+                {
+                  text: "Evmos",
+                  items: [
+                    {
+                      text: "Token Pairs",
+                      link: "/hanchond/playground/queries/evmos/tokenPairs",
+                    },
+                    {
+                      text: "IBC Rate Limit",
+                      link: "/hanchond/playground/queries/evmos/rateLimit",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              text: "Examples",
+              items: [
+                {
+                  text: "v19.1.0 Upgrade",
+                  link: "/hanchond/playground/examples/upgradev19",
                 },
               ],
             },

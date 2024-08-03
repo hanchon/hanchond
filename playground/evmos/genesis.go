@@ -110,6 +110,7 @@ func (e *Evmos) InitGenesis() error {
 	if err != nil {
 		return err
 	}
+
 	// NOTE: Running with pruning `nothing` to query old blocks data while debugging
 	appFile = e.SetPruningInAppFile(false, appFile)
 	// Enable API
@@ -170,8 +171,8 @@ func (e *Evmos) SetGenesisBaseFee(genesis map[string]interface{}) {
 
 func (e *Evmos) SetGenesisFastProposals(genesis map[string]interface{}) {
 	appState := genesis["app_state"].(map[string]interface{})
-	appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["max_deposit_period"] = "30s"
-	appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["voting_period"] = "30s"
+	appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["max_deposit_period"] = "10s"
+	appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["voting_period"] = "15s"
 }
 
 func (e *Evmos) UpdateConfigFile(config []byte) []byte {
