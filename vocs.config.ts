@@ -259,6 +259,15 @@ export default defineConfig({
           text: "Proto Encoder",
           link: "/lib/encoder",
         },
+        {
+          text: "Examples",
+          items: [
+            {
+              text: "ERC20 Example",
+              link: "/hanchond/lib/examples/erc20",
+            },
+          ],
+        },
       ],
     },
   ],
