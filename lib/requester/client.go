@@ -29,7 +29,7 @@ const (
 	defaultMaxIdleConn    = time.Hour
 )
 
-func NewClient() Client {
+func NewClient() *Client {
 	client := &fasthttp.Client{
 		ReadTimeout:                   defaultReadTimeout,
 		WriteTimeout:                  defaultWriteTimeout,
@@ -42,7 +42,7 @@ func NewClient() Client {
 			DNSCacheDuration: time.Hour,
 		}).Dial,
 	}
-	return Client{
+	return &Client{
 		Client:             client,
 		Web3Endpoint:       defaultWeb3Endpoint,
 		CosmosRestEndpoint: defaultCosmosRestEndpoint,

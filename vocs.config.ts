@@ -62,6 +62,10 @@ export default defineConfig({
                   text: "Stop node",
                   link: "/hanchond/playground/stopNode",
                 },
+                {
+                  text: "Change Binary Version",
+                  link: "/hanchond/playground/changeBinaryVersion",
+                },
               ],
             },
             {
@@ -107,6 +111,10 @@ export default defineConfig({
                 {
                   text: "STRv1 Proposal",
                   link: "/hanchond/playground/tx/str",
+                },
+                {
+                  text: "Rate Limit Proposal",
+                  link: "/hanchond/playground/tx/ratelimit",
                 },
               ],
             },
