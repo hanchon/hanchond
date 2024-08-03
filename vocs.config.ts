@@ -55,11 +55,15 @@ export default defineConfig({
                   link: "/hanchond/playground/initGenesis",
                 },
                 {
-                  text: "Start node",
+                  text: "Start Node",
                   link: "/hanchond/playground/startNode",
                 },
                 {
-                  text: "Stop node",
+                  text: "Get Node Info",
+                  link: "/hanchond/playground/getNode",
+                },
+                {
+                  text: "Stop Node",
                   link: "/hanchond/playground/stopNode",
                 },
                 {

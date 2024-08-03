@@ -37,7 +37,6 @@ var changeVersionCmd = &cobra.Command{
 			BinaryVersion: strings.TrimSpace(args[1]),
 			ID:            idNumber,
 		})
-
 		if err != nil {
 			fmt.Println("could not update the binary version:", err.Error())
 			os.Exit(1)

@@ -25,9 +25,6 @@ var balanceCmd = &cobra.Command{
 		wallet := args[0]
 
 		e := evmos.NewEvmosFromDB(queries, nodeID)
-		fmt.Println(e.Ports.P26657)
-		fmt.Println(e.Ports.P26656)
-		fmt.Println(e.Ports.P8545)
 		balance, err := e.CheckBalance(wallet)
 		if err != nil {
 			fmt.Println("could not get the balance:", err.Error())
