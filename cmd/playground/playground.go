@@ -21,7 +21,7 @@ func init() {
 // PlaygroundCmd represents the playground command
 var PlaygroundCmd = &cobra.Command{
 	Use:     "playground",
-	Aliases: []string{"q"},
+	Aliases: []string{"p"},
 	Short:   "Cosmos chain runner",
 	Long:    `Tooling to set up your local cosmos network.`,
 	Run: func(cmd *cobra.Command, _ []string) {

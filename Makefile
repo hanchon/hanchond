@@ -1,5 +1,8 @@
 .phony: build docs
 
+install:
+	@go install
+
 dev-docs:
 	@source /opt/homebrew/opt/nvm/nvm.sh && nvm use && npm run docs:dev
 
@@ -14,4 +17,10 @@ install-deps:
 
 lint:
 	golangci-lint run --fix --out-format=line-number --issues-exit-code=0 --config .golangci.yml --color always ./...
+
+release-dry:
+	@goreleaser release --snapshot --clean
+
+release:
+	@goreleaser release --skip-validate --clean
 

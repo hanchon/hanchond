@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -191,6 +192,79 @@ func (e *Evmos) CreateUpgradeProposal(versionName string, upgradeHeight string) 
 		fmt.Sprintf("100%s", e.BaseDenom),
 		"--gas-adjustment",
 		"4",
+		"--gas",
+		"2000000",
+		"-y",
+	)
+
+	out, err := command.CombinedOutput()
+	if err != nil {
+		return "", err
+	}
+
+	resp := string(out)
+	if !strings.Contains(resp, "code: 0") {
+		return "", fmt.Errorf("transaction failed:%s", resp)
+	}
+	hash := strings.Split(resp, "txhash: ")
+	if len(hash) > 1 {
+		hash[1] = strings.TrimSpace(hash[1])
+	}
+	return hash[1], nil
+}
+
+type RateLimitParams struct {
+	Channel  string
+	Denom    string
+	MaxSend  string
+	MaxRecv  string
+	Duration string
+}
+
+func (e *Evmos) CreateRateLimitProposal(params RateLimitParams) (string, error) {
+	metadata := fmt.Sprintf(`{
+    "messages": [
+        {
+            "@type": "/ratelimit.v1.MsgAddRateLimit",
+            "authority": "evmos10d07y265gmmuvt4z0w9aw880jnsr700jcrztvm",
+            "denom": "%s",
+            "channel_id": "%s",
+            "max_percent_send": "%s",
+            "max_percent_recv": "%s",
+            "duration_hours": "%s"
+        }
+    ],
+    "metadata": "ipfs://CID",
+    "deposit": "1000000000`+e.BaseDenom+`",
+    "title": "add rate limit",
+    "summary": "add rate limit"
+}`, params.Denom, params.Channel, params.MaxSend, params.MaxRecv, params.Duration)
+
+	path := "/tmp/metadata.json"
+	if filesmanager.DoesFileExist(path) {
+		os.RemoveAll(path)
+	}
+
+	if err := filesmanager.SaveFile([]byte(metadata), path); err != nil {
+		return "", fmt.Errorf("could not save the proposal to disk:%s", err.Error())
+	}
+
+	command := exec.Command( //nolint:gosec
+		filesmanager.GetEvmosdPath(e.Version),
+		"tx",
+		"gov",
+		"submit-proposal",
+		path,
+		"--keyring-backend",
+		e.KeyringBackend,
+		"--home",
+		e.HomeDir,
+		"--node",
+		fmt.Sprintf("http://localhost:%d", e.Ports.P26657),
+		"--from",
+		e.ValKeyName,
+		"--gas-prices",
+		fmt.Sprintf("200000000%s", e.BaseDenom),
 		"--gas",
 		"2000000",
 		"-y",

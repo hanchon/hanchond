@@ -51,6 +51,13 @@ WHERE (
     id = ?
 );
 
+-- name: SetBinaryVersion :exec
+UPDATE node SET
+    binary_version = ?
+WHERE (
+    id = ?
+);
+
 -- name: GetNode :one
 SELECT * FROM node where id =? LIMIT 1;
 
@@ -63,6 +70,8 @@ SELECT * FROM ports;
 -- name: GetChain :one
 SELECT * FROM chain where id =? LIMIT 1;
 
+-- name: GetAllNodes :many
+SELECT * FROM node;
 
 -- name: InitRelayer :exec
 INSERT INTO relayer(
@@ -76,3 +85,4 @@ SELECT * FROM relayer WHERE id = 1;
 
 -- name: UpdateRelayer :exec
 UPDATE relayer SET process_id = ?, is_running = ? WHERE id = 1;
+

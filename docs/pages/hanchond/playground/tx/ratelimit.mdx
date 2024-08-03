@@ -1,0 +1,17 @@
+# Rate Limit Proposal
+
+## Create an IBC Rate Limit Proposal
+
+The only required argument is the coin denomination that you want to rate limit.
+
+```sh
+hanchond playground tx rate-limit-proposal ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E
+6ED735C25684DA7457E9A86DB4C8684A2C7A7D155CDF8E20CD8782B1E6337C8D
+```
+
+There are four available flags:
+
+- `channel`: defaults to `channel-0`
+- `duration`: defaults to `24`
+- `max-send`: defaults to `10`
+- `max-recv`: defaults to `10`

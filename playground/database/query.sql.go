@@ -9,6 +9,45 @@ import (
 	"context"
 )
 
+const getAllNodes = `-- name: GetAllNodes :many
+SELECT id, chain_id, config_folder, moniker, validator_key, validator_key_name, binary_version, process_id, is_validator, is_archive, is_running FROM node
+`
+
+func (q *Queries) GetAllNodes(ctx context.Context) ([]Node, error) {
+	rows, err := q.db.QueryContext(ctx, getAllNodes)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Node
+	for rows.Next() {
+		var i Node
+		if err := rows.Scan(
+			&i.ID,
+			&i.ChainID,
+			&i.ConfigFolder,
+			&i.Moniker,
+			&i.ValidatorKey,
+			&i.ValidatorKeyName,
+			&i.BinaryVersion,
+			&i.ProcessID,
+			&i.IsValidator,
+			&i.IsArchive,
+			&i.IsRunning,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getAllPorts = `-- name: GetAllPorts :many
 SELECT id, node_id, p1317, p8080, p9090, p9091, p8545, p8546, p6065, p26658, p26657, p6060, p26656, p26660 FROM ports
 `
@@ -272,6 +311,24 @@ func (q *Queries) InsertPorts(ctx context.Context, arg InsertPortsParams) error 
 		arg.P26656,
 		arg.P26660,
 	)
+	return err
+}
+
+const setBinaryVersion = `-- name: SetBinaryVersion :exec
+UPDATE node SET
+    binary_version = ?
+WHERE (
+    id = ?
+)
+`
+
+type SetBinaryVersionParams struct {
+	BinaryVersion string
+	ID            int64
+}
+
+func (q *Queries) SetBinaryVersion(ctx context.Context, arg SetBinaryVersionParams) error {
+	_, err := q.db.ExecContext(ctx, setBinaryVersion, arg.BinaryVersion, arg.ID)
 	return err
 }
 

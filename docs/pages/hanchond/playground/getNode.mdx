@@ -1,0 +1,23 @@
+# Get Node
+
+The `get-node` command provides the information related to the node that is stored in the database.
+
+This is useful mostly to double-check the node's current version and the ports in case you need to connect your node to an external app.
+
+```sh
+hanchond playground get-node 1
+Node: 1
+General Configuration:
+    - Binary: v18.1.0
+    - ChainID: evmos_9001-1
+Process:
+    - IsRunning: 0
+    - ProcessID: 0
+Keys:
+    - KeyName: mykey1
+    - Mnemonic: gesture inject test cycle original hollow east ridge hen combine junk child bacon zero hope comfort vacuum milk pitch cage oppose unhappy lunar seat
+Ports:
+    - 8545(web3): 55975
+    - 26657(cli/tendermint): 55979
+    - 1317(cosmos rest): 55980
+```

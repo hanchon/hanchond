@@ -55,12 +55,20 @@ export default defineConfig({
                   link: "/hanchond/playground/initGenesis",
                 },
                 {
-                  text: "Start node",
+                  text: "Start Node",
                   link: "/hanchond/playground/startNode",
                 },
                 {
-                  text: "Stop node",
+                  text: "Get Node Info",
+                  link: "/hanchond/playground/getNode",
+                },
+                {
+                  text: "Stop Node",
                   link: "/hanchond/playground/stopNode",
+                },
+                {
+                  text: "Change Binary Version",
+                  link: "/hanchond/playground/changeBinaryVersion",
                 },
               ],
             },
@@ -108,6 +116,10 @@ export default defineConfig({
                   text: "STRv1 Proposal",
                   link: "/hanchond/playground/tx/str",
                 },
+                {
+                  text: "Rate Limit Proposal",
+                  link: "/hanchond/playground/tx/ratelimit",
+                },
               ],
             },
             {
@@ -118,12 +130,51 @@ export default defineConfig({
                   link: "/hanchond/playground/queries/flags",
                 },
                 {
+                  text: "Current Height",
+                  link: "/hanchond/playground/queries/height",
+                },
+                {
                   text: "Bank Balances",
                   link: "/hanchond/playground/queries/balances",
                 },
                 {
                   text: "Transaction",
                   link: "/hanchond/playground/queries/transaction",
+                },
+                {
+                  text: "ERC20",
+                  items: [
+                    {
+                      text: "Supply",
+                      link: "/hanchond/playground/queries/erc20/supply",
+                    },
+                    {
+                      text: "Balance",
+                      link: "/hanchond/playground/queries/erc20/balance",
+                    },
+                  ],
+                },
+                {
+                  text: "Evmos",
+                  items: [
+                    {
+                      text: "Token Pairs",
+                      link: "/hanchond/playground/queries/evmos/tokenPairs",
+                    },
+                    {
+                      text: "IBC Rate Limit",
+                      link: "/hanchond/playground/queries/evmos/rateLimit",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              text: "Examples",
+              items: [
+                {
+                  text: "v19.1.0 Upgrade",
+                  link: "/hanchond/playground/examples/upgradev19",
                 },
               ],
             },
@@ -211,6 +262,15 @@ export default defineConfig({
         {
           text: "Proto Encoder",
           link: "/lib/encoder",
+        },
+        {
+          text: "Examples",
+          items: [
+            {
+              text: "ERC20 Example",
+              link: "/lib/examples/erc20",
+            },
+          ],
         },
       ],
     },

@@ -36,7 +36,7 @@ func (e *Evmos) InitArchiveNode(origin *Evmos) error {
 	}
 	appFile = e.SetPruningInAppFile(false, appFile)
 	// Enable API
-	appFile = e.EnableAPI(appFile)
+	appFile = e.EnableWeb3API(appFile)
 	if err := e.saveAppFile(appFile); err != nil {
 		return err
 	}
@@ -110,7 +110,11 @@ func (e *Evmos) InitGenesis() error {
 	if err != nil {
 		return err
 	}
-	appFile = e.SetPruningInAppFile(true, appFile)
+
+	// NOTE: Running with pruning `nothing` to query old blocks data while debugging
+	appFile = e.SetPruningInAppFile(false, appFile)
+	// Enable API
+	appFile = e.EnableWeb3API(appFile)
 	if err := e.saveAppFile(appFile); err != nil {
 		return err
 	}
@@ -167,8 +171,8 @@ func (e *Evmos) SetGenesisBaseFee(genesis map[string]interface{}) {
 
 func (e *Evmos) SetGenesisFastProposals(genesis map[string]interface{}) {
 	appState := genesis["app_state"].(map[string]interface{})
-	appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["max_deposit_period"] = "30s"
-	appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["voting_period"] = "30s"
+	appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["max_deposit_period"] = "10s"
+	appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["voting_period"] = "15s"
 }
 
 func (e *Evmos) UpdateConfigFile(config []byte) []byte {
@@ -225,7 +229,7 @@ func (e *Evmos) UpdateConfigFile(config []byte) []byte {
 	return []byte(configValues)
 }
 
-func (e *Evmos) EnableAPI(config []byte) []byte {
+func (e *Evmos) EnableWeb3API(config []byte) []byte {
 	configValues := string(config)
 	configValues = strings.Replace(
 		configValues,

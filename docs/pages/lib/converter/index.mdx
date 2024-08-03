@@ -69,6 +69,14 @@ addr, err := converter.Bech32ToHex(bech32addr)
 bech32, err := converter.Bech32ToHex(addr, prefix)
 ```
 
+### Normalize To Hex
+
+`NormalizeAddressToHex` converts from Bech32 if the address does not have the 0x prefix
+
+```go
+hexAddress, err := converter.NormalizeAddressToHex(addr)
+```
+
 ## Numbers converter
 
 ### Hex String to Decimal

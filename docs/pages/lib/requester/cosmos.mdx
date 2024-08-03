@@ -2,18 +2,34 @@
 
 List of supported rest calls to the Cosmos Rest endpoint
 
-## GetBlockByNumber
+## General
+
+### GetBlockByNumber
 
 Sending the height returns the block data.
 
 ```go
-c.GetBlockCosmos(height)
+block, err := c.GetBlockCosmos(height)
 ```
 
-## GetTransaction
+### GetTransaction
 
 Sending the transaction hash returns the transaction data
 
 ```go
-c.GetCosmosTx(hash string)
+txData, err := c.GetCosmosTx(hash string)
+```
+
+## Evmos
+
+- Get all the token-pairs registered in STR
+
+```go
+pairs, err := c.GetEvmosERC20TokenPairs()
+```
+
+- Get all the active IBC rate limits
+
+```go
+rateLimits, err := c.GetIBCRateLimits()
 ```
