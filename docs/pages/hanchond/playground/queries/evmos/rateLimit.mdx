@@ -1,0 +1,43 @@
+# IBC Rate Limits
+
+The command `ibc-rate-limits` returns all the active IBC Rate Limits of the node.
+
+```sh
+hanchond p q evmos ibc-rate-limits -n 2 | jq .
+{
+  "rate_limits": [
+    {
+      "path": {
+        "denom": "aevmos",
+        "channel_id": "channel-0"
+      },
+      "quota": {
+        "max_percent_send": "10",
+        "max_percent_recv": "10",
+        "duration_hours": "24"
+      },
+      "flow": {
+        "inflow": "0",
+        "outflow": "0",
+        "channel_value": "99999999998024433120000000"
+      }
+    },
+    {
+      "path": {
+        "denom": "ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E",
+        "channel_id": "channel-0"
+      },
+      "quota": {
+        "max_percent_send": "10",
+        "max_percent_recv": "10",
+        "duration_hours": "24"
+      },
+      "flow": {
+        "inflow": "0",
+        "outflow": "0",
+        "channel_value": "100"
+      }
+    }
+  ]
+}
+```

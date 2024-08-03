@@ -271,5 +271,17 @@ func (e *Evmos) CreateRateLimitProposal(params RateLimitParams) (string, error) 
 	)
 
 	out, err := command.CombinedOutput()
-	return string(out), err
+	if err != nil {
+		return "", err
+	}
+
+	resp := string(out)
+	if !strings.Contains(resp, "code: 0") {
+		return "", fmt.Errorf("transaction failed:%s", resp)
+	}
+	hash := strings.Split(resp, "txhash: ")
+	if len(hash) > 1 {
+		hash[1] = strings.TrimSpace(hash[1])
+	}
+	return hash[1], nil
 }

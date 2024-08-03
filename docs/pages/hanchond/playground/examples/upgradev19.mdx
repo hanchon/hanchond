@@ -1,0 +1,372 @@
+# Upgrade v19.1.0
+
+:::info
+This example is using `hanchond` v0.1.0. Some interfaces may change in the future
+:::
+
+The `v19.1.0` upgrade applies changes that impact some IBC functionality, so it can not be run with just one node.
+
+## Install Hanchond
+
+```sh
+go install github.com/hanchon/hanchond@v0.1.0
+```
+
+## Install Dependencies
+
+:::warning
+This step is only needed if you have not built the dependencies before
+:::
+
+This step requires 2 dependencies to build the binaries from the source code:
+
+- golang
+- rust
+
+:::info
+Download the already built binary from the GitHub release page will be supported in the next release
+:::
+
+```sh
+$ hanchond p build-evmos v18.1.0
+$ hanchond p build-evmos v19.1.0
+$ hanchond p build-hermes
+```
+
+The output should look like this:
+
+```sh
+Cloning evmos version: v18.1.0
+Building evmos...
+Moving built binary...
+Cleaning up...
+Cloning evmos version: v19.1.0
+Building evmos...
+Moving built binary...
+Cleaning up...
+Cloning hermes version: v1.9.0
+Building hermes...
+Moving built binary...
+Cleaning up...
+```
+
+## Set up the Network
+
+### Init the Genesis Files
+
+```sh
+$ hanchond p init-genesis 1 -v v18.1.0
+Node added with id: 1
+$ hanchond p init-genesis 2 -v v18.1.0
+Node added with id: 2
+```
+
+### Start the Nodes
+
+```sh
+$ hanchond p start-node 1
+Evmos is running with id: 56337
+$ hanchond p start-node 2
+Evmos is running with id: 56543
+```
+
+### Connect Both Nodes with IBC
+
+Create a channel between the chain `1` and `2`, then start the `relayer`.
+
+```sh
+$ hanchond p hermes-add-channel 1 2
+Getting first node data...
+Getting second node data...
+Both chains are running
+Relayer initialized
+First chain added
+Second chain added
+Calling create channel
+Channel created
+$ hanchond p start-hermes
+Hermes running with PID: 62746
+```
+
+## Send an IBC Transaction
+
+Send 100 tokens from `chain 1` to `chain 2`, we are using a random wallet as a destination to avoid sending to the same address in both chains because that case is specially handled in the Evmos' IBC hook.
+
+```sh
+$ hanchond p tx ibc-transfer evmos1f3x0ypjxt2l7tnkt8dvplgd4prk9z35j0ghe87 100 --denom aevmos
+148315FF3BD37E6040110E7A780BC770F944CAEACA39B55242A0D0896F50320A
+```
+
+Check if the transaction was successful:
+
+```sh
+$ hanchond p query tx 148315FF3BD37E6040110E7A780BC770F944CAEACA39B55242A0D0896F50320A
+code: 0
+codespace: ""
+data: 12370A312F6962632E6170706C69636174696F6E732E7472616E736665722E76312E4D73675472616E73666572526573706F6E736512020801
+events:
+...
+```
+
+Check the balance of that wallet in the `chain 2`:
+
+```sh
+$ hanchond p query balance evmos1f3x0ypjxt2l7tnkt8dvplgd4prk9z35j0ghe87 --node 2
+balances:
+- amount: "100"
+  denom: ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E
+pagination:
+  next_key: null
+  total: "0"
+```
+
+## Register the IBC-Denom in the STRv1 Module
+
+- Create the governance proposal:
+
+```sh
+$ hanchond playground tx str-v1-proposal ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E -n 2
+73EF3AB6A1855AEF819782057667A13F4D1D46E7DB0D1DF2ED265849A0FF32FE
+```
+
+- Vote on the proposal:
+
+```sh
+$ hanchond playground tx vote -n 2
+909FEC42A25E25D66512130AA2F2F831949FF5F29F1E4F9D0B93C60577F93BA0
+```
+
+:::warning
+The voting period is 30 seconds, so the vote transaction must be sent quickly after the proposal is on chain
+:::
+
+- Check the STRv1 values to confirm that it was registered:
+
+```sh
+$ hanchond p q evmos token-pairs -n 2 | jq .
+[
+  {
+    "erc20_address": "0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd",
+    "denom": "ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E",
+    "enabled": true,
+    "contract_owner": "OWNER_MODULE"
+  }
+]
+```
+
+## Perform the Network Upgrade
+
+### Create the Proposal
+
+Now that we already sent an IBC transaction and the token was registered in the STRv1 module, we can upgrade the `chain 2` to `v19.1.0`.
+
+Make sure to vote on the proposal after submiting it.
+
+```sh
+$ hanchond playground tx upgrade-proposal v19.1.0 --height-diff 50 -n 2
+{"hash":"615834017CAB21BA14F7076686C7019B2FAB2B74AB3D5A387B36362D1F9DC474", "height":1680}
+$ hanchond playground tx vote -n 2
+474381F1A5CC01F848253C697B9088124E564347DA49AA726868BCFA3D051F38
+```
+
+### Check the Node Height
+
+```sh
+$ hanchond playground query height -n 2
+1680
+```
+
+After reaching the block height that was returned in the `upgrade-proposal` we can `stop the node`, `change the version` and `restart the node`.
+
+### Change the Node Version
+
+- Stop the node:
+
+```sh
+$ hanchond p stop-node 2
+Node is no longer running
+```
+
+- Change the binary version:
+
+```sh
+$ hanchond p change-version 2 v19.1.0
+Node 2 updated to version v19.1.0
+```
+
+- Restart the node:
+
+```sh
+$ hanchond p start-node 2
+Evmos is running with id: 70613
+```
+
+## Verify the Upgrade
+
+### `aevmos` is Now a Token-pair
+
+```sh
+$ hanchond p q evmos token-pairs -n 2 | jq .
+[
+  {
+    "erc20_address": "0xD4949664cD82660AaE99bEdc034a0deA8A0bd517",
+    "denom": "aevmos",
+    "enabled": true,
+    "contract_owner": "OWNER_MODULE"
+  },
+  {
+    "erc20_address": "0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd",
+    "denom": "ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E",
+    "enabled": true,
+    "contract_owner": "OWNER_MODULE"
+  }
+]
+```
+
+### Check the wallet ERC20 Balance
+
+We sent `100aevmos` to the wallet: `evmos1f3x0ypjxt2l7tnkt8dvplgd4prk9z35j0ghe87`
+
+Verify using the ERC20 contract call that the balance is correct:
+
+```sh
+$ hanchond p q erc20 balance 0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd evmos1f3x0ypjxt2l7tnkt8dvplgd4prk9z35j0ghe87 -n 2
+100
+```
+
+Verify that the validator wallet (`evmos10jmp6sgh4cc6zt3e8gw05wavvejgr5pwjnpcky`) has `aevmos` balance using the newly deployed precompile.
+
+```sh
+$ hanchond p q erc20 balance 0xD4949664cD82660AaE99bEdc034a0deA8A0bd517 evmos10jmp6sgh4cc6zt3e8gw05wavvejgr5pwjnpcky -n 2
+99989999998824433160000000
+```
+
+### Test the Rate-Limit Middleware
+
+- Create two governance proposals, one for the `chain 1` token and another for the `chain 2` native token.
+
+:::info
+By default it limits the incoming and outgoing tokens to the 10% of the total supply
+:::
+
+- `chain 1` token
+
+```sh
+$ hanchond p tx rate-limit-proposal ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E -n 2
+4428C4397E0D483355D5A90E4C5A00A930613B25544A1740835645DE101AAF89
+$ hanchond playground tx vote -n 2
+23687E508A2CE81A608F4E2288DC77CBD36331256D883919895FF7E86FD90BC7
+```
+
+- `chain 2` native token
+
+```sh
+$ hanchond p tx rate-limit-proposal aevmos -n 2
+967DE1AF0AFF1FAC2F03B730D286A6AE1F54D3799A19E431B489ED925C92A9A0
+$ hanchond playground tx vote -n 2
+8F0B988704E9270E64DAC2CA3AF08750A8AE63B550565581764A6A877D0ECEC1
+```
+
+- Verify that the rules are active:
+
+```sh
+$ hanchond p q evmos ibc-rate-limits -n 2 | jq .
+{
+  "rate_limits": [
+    {
+      "path": {
+        "denom": "aevmos",
+        "channel_id": "channel-0"
+      },
+      "quota": {
+        "max_percent_send": "10",
+        "max_percent_recv": "10",
+        "duration_hours": "24"
+      },
+      "flow": {
+        "inflow": "0",
+        "outflow": "0",
+        "channel_value": "99999999998024433120000000"
+      }
+    },
+    {
+      "path": {
+        "denom": "ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E",
+        "channel_id": "channel-0"
+      },
+      "quota": {
+        "max_percent_send": "10",
+        "max_percent_recv": "10",
+        "duration_hours": "24"
+      },
+      "flow": {
+        "inflow": "0",
+        "outflow": "0",
+        "channel_value": "100"
+      }
+    }
+  ]
+}
+```
+
+- Send more than the allowed amout from `chain 1` to `chain 2`:
+
+```sh
+$ hanchond p tx ibc-transfer evmos1f3x0ypjxt2l7tnkt8dvplgd4prk9z35j0ghe87 100 --denom aevmos
+3EFC4AC5DDE2C2527141AEF5C9D09503D9E5DC62086791B3777AC8654311BC9D
+```
+
+- Verify that the balance is still the initial `100` `ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E`
+
+```sh
+$ hanchond p q balance evmos1f3x0ypjxt2l7tnkt8dvplgd4prk9z35j0ghe87 -n 2
+balances:
+- amount: "100"
+  denom: ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E
+pagination:
+  next_key: null
+  total: "0"
+```
+
+- Send a valid amount (5) from `chain 1` to `chain 2`
+
+```sh
+$ hanchond p tx ibc-transfer evmos1f3x0ypjxt2l7tnkt8dvplgd4prk9z35j0ghe87 5 --denom aevmos
+A38F339359F77CD12B7A6E6823D3EEC629A8330CE041B6A2391E7AF70F925A4C
+$ hanchond p q balance evmos1f3x0ypjxt2l7tnkt8dvplgd4prk9z35j0ghe87 -n 2
+balances:
+- amount: "105"
+  denom: ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E
+pagination:
+  next_key: null
+  total: "0"
+```
+
+- Send invalid amount from `chain 2` to `chain 1`:
+
+```sh
+$ hanchond p tx ibc-transfer evmos1x49lse4ykqrvntuancrdjdjzz75xzmsj5nn9p0 99989909980829089120000000 --node 2
+047B11609D115E85A2C636945537274A3FF9CB486DB828ACB597052F92F67C33
+$ hanchond p q tx 047B11609D115E85A2C636945537274A3FF9CB486DB828ACB597052F92F67C33 -n 2
+code: 4
+...
+raw_log: 'failed to execute message; message index: 0: Outflow exceeds quota - Net
+  Outflow: 99989909980829089120000010, Channel Value: 99999999998024433120000000,
+  Threshold: 10%: quota exceeded'
+...
+txhash: 047B11609D115E85A2C636945537274A3FF9CB486DB828ACB597052F92F67C33
+```
+
+- Send valid amount (10) from `chain 2` to `chain 1`:
+
+```sh
+$ hanchond p tx ibc-transfer evmos1x49lse4ykqrvntuancrdjdjzz75xzmsj5nn9p0 10 --node 2
+48EA61919116B3251DD474525375D6D8E577A69C9CFCB59797B1A51140F55D6D
+$ hanchond p q balance evmos1x49lse4ykqrvntuancrdjdjzz75xzmsj5nn9p0
+balances:
+- amount: "10"
+  denom: ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E
+pagination:
+  next_key: null
+  total: "0"
+```

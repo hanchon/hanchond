@@ -2,9 +2,16 @@
 
 The command `tx upgrade-proposal` can be used to create an upgrade proposal.
 
-It requires the tag/version name and the upgrade height, it returns the transaction hash.
+It requires the tag/version name, it returns the transaction hash.
 
 ```sh
-hanchond playground tx upgrade-proposal v19.0.0 200000
-8F4FBF03B147607B80A778928FFBCC196CAABEA67E98DA64745280D29EE34795
+hanchond playground tx upgrade-proposal v19.0.0 --height-diff 50
+{"txhash":"8F4FBF03B147607B80A778928FFBCC196CAABEA67E98DA64745280D29EE34795", "height":250}
 ```
+
+:::info
+There are two flags related to the upgrade height:
+
+- `--height`: it is the height where the upgrade will take place
+- `--height-diff`: it is the number of blocks in the future that the network will wait until it upgrades. This is useful because you do not need to know the current height to create the proposal, the program takes care of it. It defaults to 30 blocks (~1min)
+  :::

@@ -16,8 +16,11 @@ The client exposes a set of setters to change the default endpoints:
 
 - `WithUnsecureWeb3Endpoint(endpoint string)`
 - `WithUnsecureCosmosRestEndpoint(endpoint string)`
+- `WithUnsecureTendermintRestEndpoint(endpoint string)`
+
 - `WithSecureWeb3Endpoint(endpoint string, auth string)`
 - `WithSecureCosmosRestEndpoint(endpoint string, auth string)`
+- `WithSecureTendermintRestEndpoint(endpoint string, auth string)`
 
 :::info
 The auth string should be the string that goes after the `Authorization` string in the HTTP request, i.e., `Bearer 1337`
@@ -51,3 +54,4 @@ easyjson --all lib/types/cosmos/block_cosmos.go
 
 - [Web3 Requests](/lib/requester/web3)
 - [Cosmos Requests](/lib/requester/cosmos)
+- [Tendermint Requests](/lib/requester/tendermint)

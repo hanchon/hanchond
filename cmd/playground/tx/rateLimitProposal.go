@@ -12,7 +12,6 @@ import (
 
 // rateLimitProposalCmd represents the rateLimit-proposal command
 var rateLimitProposalCmd = &cobra.Command{
-	// TODO: add flags
 	Use:   "rate-limit-proposal [denom]",
 	Args:  cobra.ExactArgs(1),
 	Short: "Create an rate-limit propsal",

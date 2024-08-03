@@ -56,7 +56,8 @@ Keys:
     - Mnemonic: %s
 Ports:
     - 8545(web3): %d
-    - 26657(cli): %d
+    - 26657(cli/tendermint): %d
+    - 1317(cosmos rest): %d
 `,
 			idNumber,
 			node.BinaryVersion,
@@ -67,6 +68,7 @@ Ports:
 			node.ValidatorKey,
 			ports.P8545,
 			ports.P26657,
+			ports.P1317,
 		)
 	},
 }
