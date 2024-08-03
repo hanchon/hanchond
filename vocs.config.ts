@@ -130,6 +130,10 @@ export default defineConfig({
                   link: "/hanchond/playground/queries/flags",
                 },
                 {
+                  text: "Current Height",
+                  link: "/hanchond/playground/queries/height",
+                },
+                {
                   text: "Bank Balances",
                   link: "/hanchond/playground/queries/balances",
                 },

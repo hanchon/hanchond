@@ -7,7 +7,7 @@ List of supported rest calls to the Cosmos Rest endpoint
 Sending the height returns the block data.
 
 ```go
-c.GetBlockCosmos(height)
+block, err := c.GetBlockCosmos(height)
 ```
 
 ## GetTransaction
@@ -15,5 +15,21 @@ c.GetBlockCosmos(height)
 Sending the transaction hash returns the transaction data
 
 ```go
-c.GetCosmosTx(hash string)
+txData, err := c.GetCosmosTx(hash string)
+```
+
+## Get Chain Status
+
+Returns the status of the node, it's the same as calling the `/status` endpoint
+
+```go
+status, err := c.GetChainStatus()
+```
+
+## Get Chain Height
+
+Using the `GetChainStatus` function returns the chain height
+
+```go
+height, err := c.GetCurrentHeight()
 ```
