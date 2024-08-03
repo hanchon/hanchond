@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// EvmosCmd represents the query command
+// EvmosCmd represents the evmos command
 var EvmosCmd = &cobra.Command{
 	Use:   "evmos",
 	Short: "evmos unique queries ",
