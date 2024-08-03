@@ -4,6 +4,24 @@ import (
 	cosmostypes "github.com/hanchon/hanchond/lib/types/cosmos"
 )
 
+func (c *Client) GetChainStatus() (*cosmostypes.StatusResponse, error) {
+	var result cosmostypes.StatusResponse
+	return &result, c.SendGetRequestEasyJSON(
+		c.CosmosRestEndpoint,
+		"/status",
+		&result,
+		c.CosmosRestAuth,
+	)
+}
+
+func (c *Client) GetCurrentHeight() (string, error) {
+	status, err := c.GetChainStatus()
+	if err != nil {
+		return "", err
+	}
+	return status.Result.SyncInfo.LatestBlockHeight, nil
+}
+
 func (c *Client) GetBlockCosmos(height string) (*cosmostypes.CosmosBlockResult, error) {
 	// TODO: add pagination support
 	var result cosmostypes.CosmosBlockResult
