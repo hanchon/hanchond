@@ -264,7 +264,7 @@ export default defineConfig({
           items: [
             {
               text: "ERC20 Example",
-              link: "/hanchond/lib/examples/erc20",
+              link: "/lib/examples/erc20",
             },
           ],
         },
