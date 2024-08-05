@@ -2,41 +2,41 @@ package cosmosdaemon
 
 import "os/exec"
 
-func (e *Daemon) ConfigKeyring() error {
+func (d *Daemon) ConfigKeyring() error {
 	command := exec.Command( //nolint:gosec
-		e.BinaryPath,
+		d.BinaryPath,
 		"config",
 		"keyring-backend",
-		e.KeyringBackend,
+		d.KeyringBackend,
 		"--home",
-		e.HomeDir,
+		d.HomeDir,
 	)
 	_, err := command.CombinedOutput()
 	return err
 }
 
-func (e *Daemon) ConfigChainID() error {
+func (d *Daemon) ConfigChainID() error {
 	command := exec.Command( //nolint:gosec
-		e.BinaryPath,
+		d.BinaryPath,
 		"config",
 		"chain-id",
-		e.ChainID,
+		d.ChainID,
 		"--home",
-		e.HomeDir,
+		d.HomeDir,
 	)
 	_, err := command.CombinedOutput()
 	return err
 }
 
-func (e *Daemon) NodeInit() error {
+func (d *Daemon) NodeInit() error {
 	command := exec.Command( //nolint:gosec
-		e.BinaryPath,
+		d.BinaryPath,
 		"init",
-		e.Moniker,
+		d.Moniker,
 		"--chain-id",
-		e.ChainID,
+		d.ChainID,
 		"--home",
-		e.HomeDir,
+		d.HomeDir,
 	)
 	_, err := command.CombinedOutput()
 	return err

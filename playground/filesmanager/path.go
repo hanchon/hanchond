@@ -81,6 +81,10 @@ func GetEvmosdPath(version string) string {
 	return GetBuildsDir() + "/evmosd" + version
 }
 
+func GetDaemondPath(binaryName string) string {
+	return GetBuildsDir() + binaryName
+}
+
 func GetGaiadPath() string {
 	return GetBuildsDir() + "/gaiad"
 }

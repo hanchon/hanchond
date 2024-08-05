@@ -19,5 +19,4 @@ func GetGaiadBinary(isDarwin bool, version string) error {
 	command := exec.Command("bash", "-c", cmdString)
 	_, err := command.CombinedOutput()
 	return err
-
 }

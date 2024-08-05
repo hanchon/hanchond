@@ -1,15 +1,19 @@
 package cosmosdaemon
 
-import "github.com/hanchon/hanchond/lib/txbuilder"
+import (
+	"github.com/hanchon/hanchond/lib/converter"
+	"github.com/hanchon/hanchond/lib/txbuilder"
+)
 
 type Daemon struct {
 	ValKeyName  string
 	ValMnemonic string
+	ValWallet   string
 	KeyType     string
 
 	KeyringBackend string
 	HomeDir        string
-	Version        string
+	BinaryName     string
 
 	ChainID string
 	Moniker string
@@ -26,21 +30,31 @@ type Daemon struct {
 }
 
 const (
-	// --key-type string          Key signing algorithm to generate keys for (default "")
 	EthAlgo    = "eth_secp256k1"
 	CosmosAlgo = "secp256k1"
 )
 
-func NewDameon(version string, homeDir string, chainID string, keyName string, algo string, denom string) *Daemon {
+func NewDameon(binaryName string, homeDir string, chainID string, keyName string, algo string, denom string, prefix string) *Daemon {
 	mnemonic, _ := txbuilder.NewMnemonic()
+	wallet := ""
+	switch algo {
+	case EthAlgo:
+		_, temp, _ := txbuilder.WalletFromMnemonic(mnemonic)
+		wallet, _ = converter.HexToBech32(temp.Address.Hex(), prefix)
+	case CosmosAlgo:
+		wallet, _ = txbuilder.MnemonicToCosmosAddress(mnemonic, prefix)
+	}
+
 	return &Daemon{
 		ValKeyName:  keyName,
 		ValMnemonic: mnemonic,
-		KeyType:     algo,
+		ValWallet:   wallet,
+
+		KeyType: algo,
 
 		KeyringBackend: "test",
 		HomeDir:        homeDir,
-		Version:        version,
+		BinaryName:     binaryName,
 
 		ChainID: chainID,
 		Moniker: "moniker",

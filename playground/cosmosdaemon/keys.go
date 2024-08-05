@@ -6,18 +6,18 @@ import (
 	"strings"
 )
 
-func (e *Daemon) AddValidatorKey() error {
-	return e.KeyAdd(e.ValKeyName, e.ValMnemonic)
+func (d *Daemon) AddValidatorKey() error {
+	return d.KeyAdd(d.ValKeyName, d.ValMnemonic)
 }
 
-func (e *Daemon) KeyAdd(name string, mnemonic string) error {
+func (d *Daemon) KeyAdd(name string, mnemonic string) error {
 	cmd := fmt.Sprintf("echo \"%s\" | %s keys add %s --recover --keyring-backend %s --home %s --key-type %s",
 		mnemonic,
-		e.BinaryPath,
+		d.BinaryPath,
 		name,
-		e.KeyringBackend,
-		e.HomeDir,
-		e.KeyType,
+		d.KeyringBackend,
+		d.HomeDir,
+		d.KeyType,
 	)
 	command := exec.Command("bash", "-c", cmd)
 	o, err := command.CombinedOutput()

@@ -42,8 +42,6 @@ func NewMnemonicFromEntropy(entropy string) (string, error) {
 	if len(entropy) < 43 {
 		return "", fmt.Errorf("256-bits is 43 characters in Base-64, and 100 in Base-6. You entered %v, and probably want more", len(entropy))
 	}
-
-	// hash input entropy to get entropy seed
 	hashedEntropy := sha256.Sum256([]byte(entropy))
 	return bip39.NewMnemonic(hashedEntropy[:])
 }
@@ -66,7 +64,6 @@ func MnemonicToAddressWithPath(mnemonic string, hdPath string, prefix string, al
 	}
 	privKey := algo.Generate()(derivedPriv)
 	return sdk.Bech32ifyAddressBytes(prefix, privKey.PubKey().Address().Bytes())
-
 }
 
 func MnemonicToCosmosAddressWithPath(mnemonic string, hdPath string, prefix string) (string, error) {

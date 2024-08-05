@@ -10,7 +10,7 @@ import (
 )
 
 const getAllNodes = `-- name: GetAllNodes :many
-SELECT id, chain_id, config_folder, moniker, validator_key, validator_key_name, binary_version, process_id, is_validator, is_archive, is_running FROM node
+SELECT id, chain_id, config_folder, moniker, validator_key, validator_key_name, validator_wallet, key_type, binary_version, process_id, is_validator, is_archive, is_running FROM node
 `
 
 func (q *Queries) GetAllNodes(ctx context.Context) ([]Node, error) {
@@ -29,6 +29,8 @@ func (q *Queries) GetAllNodes(ctx context.Context) ([]Node, error) {
 			&i.Moniker,
 			&i.ValidatorKey,
 			&i.ValidatorKeyName,
+			&i.ValidatorWallet,
+			&i.KeyType,
 			&i.BinaryVersion,
 			&i.ProcessID,
 			&i.IsValidator,
@@ -107,7 +109,7 @@ func (q *Queries) GetChain(ctx context.Context, id int64) (Chain, error) {
 }
 
 const getNode = `-- name: GetNode :one
-SELECT id, chain_id, config_folder, moniker, validator_key, validator_key_name, key_type, binary_version, process_id, is_validator, is_archive, is_running FROM node where id =? LIMIT 1
+SELECT id, chain_id, config_folder, moniker, validator_key, validator_key_name, validator_wallet, key_type, binary_version, process_id, is_validator, is_archive, is_running FROM node where id =? LIMIT 1
 `
 
 func (q *Queries) GetNode(ctx context.Context, id int64) (Node, error) {
@@ -120,6 +122,7 @@ func (q *Queries) GetNode(ctx context.Context, id int64) (Node, error) {
 		&i.Moniker,
 		&i.ValidatorKey,
 		&i.ValidatorKeyName,
+		&i.ValidatorWallet,
 		&i.KeyType,
 		&i.BinaryVersion,
 		&i.ProcessID,
@@ -214,6 +217,7 @@ INSERT INTO node(
     moniker,
     validator_key,
     validator_key_name,
+    validator_wallet,
     key_type,
     binary_version,
     process_id,
@@ -221,7 +225,7 @@ INSERT INTO node(
     is_archive,
     is_running
 ) VALUES (
-    ?,?,?,?,?,?,?,?,?,?,?
+    ?,?,?,?,?,?,?,?,?,?,?,?
 )
 RETURNING ID
 `
@@ -232,6 +236,7 @@ type InsertNodeParams struct {
 	Moniker          string
 	ValidatorKey     string
 	ValidatorKeyName string
+	ValidatorWallet  string
 	KeyType          string
 	BinaryVersion    string
 	ProcessID        int64
@@ -247,6 +252,7 @@ func (q *Queries) InsertNode(ctx context.Context, arg InsertNodeParams) (int64, 
 		arg.Moniker,
 		arg.ValidatorKey,
 		arg.ValidatorKeyName,
+		arg.ValidatorWallet,
 		arg.KeyType,
 		arg.BinaryVersion,
 		arg.ProcessID,

@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS node(
     moniker TEXT NOT NULL,
     validator_key TEXT NOT NULL,
     validator_key_name TEXT NOT NULL,
+    validator_wallet TEXT NOT NULL,
     key_type TEXT NOT NULL,
     binary_version TEXT NOT NULL,
 
