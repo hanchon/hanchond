@@ -239,6 +239,10 @@ export default defineConfig({
               link: "/lib/txbuilder/wallet",
             },
             {
+              text: "Mnemonic",
+              link: "/lib/txbuilder/mnemonic",
+            },
+            {
               text: "Contract",
               link: "/lib/txbuilder/contract",
             },
