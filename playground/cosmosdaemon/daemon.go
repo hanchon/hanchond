@@ -5,15 +5,31 @@ import (
 	"github.com/hanchon/hanchond/lib/txbuilder"
 )
 
+type SignatureAlgo string
+
+const (
+	EthAlgo    SignatureAlgo = "eth_secp256k1"
+	CosmosAlgo SignatureAlgo = "secp256k1"
+)
+
+type SDKVersion string
+
+const (
+	// NOTE: there are some differences in the namespace while interacting with the CLI, like the genesis namespace
+	GaiaSDK  SDKVersion = "gaiaSDK"
+	EvmosSDK SDKVersion = "evmosSDK"
+)
+
 type Daemon struct {
 	ValKeyName  string
 	ValMnemonic string
 	ValWallet   string
-	KeyType     string
+	KeyType     SignatureAlgo
 
 	KeyringBackend string
 	HomeDir        string
 	BinaryName     string
+	SDKVersion     SDKVersion
 
 	ChainID string
 	Moniker string
@@ -24,17 +40,22 @@ type Daemon struct {
 
 	ValidatorInitialSupply string
 
-	Ports Ports
+	Ports *Ports
 
 	BinaryPath string
 }
 
-const (
-	EthAlgo    = "eth_secp256k1"
-	CosmosAlgo = "secp256k1"
-)
-
-func NewDameon(binaryName string, homeDir string, chainID string, keyName string, algo string, denom string, prefix string) *Daemon {
+func NewDameon(
+	moniker string,
+	binaryName string,
+	homeDir string,
+	chainID string,
+	keyName string,
+	algo SignatureAlgo,
+	denom string,
+	prefix string,
+	sdkVersion SDKVersion,
+) *Daemon {
 	mnemonic, _ := txbuilder.NewMnemonic()
 	wallet := ""
 	switch algo {
@@ -55,9 +76,10 @@ func NewDameon(binaryName string, homeDir string, chainID string, keyName string
 		KeyringBackend: "test",
 		HomeDir:        homeDir,
 		BinaryName:     binaryName,
+		SDKVersion:     sdkVersion,
 
 		ChainID: chainID,
-		Moniker: "moniker",
+		Moniker: moniker,
 
 		BaseDenom: denom,
 
@@ -66,7 +88,7 @@ func NewDameon(binaryName string, homeDir string, chainID string, keyName string
 		BaseFee:                "1000000000",
 		ValidatorInitialSupply: "100000000000000000000000000",
 
-		Ports: *NewPorts(),
+		Ports: nil,
 	}
 }
 

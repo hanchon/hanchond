@@ -1,6 +1,7 @@
 package cosmosdaemon
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -27,38 +28,31 @@ type Ports struct {
 	P26660 int
 }
 
-func NewPorts() *Ports {
-	ports := []int{}
-	for len(ports) < 13 {
-		p, err := getAvailablePort()
-		if err != nil {
-			log.Panic("could not get available ports", err.Error())
-		}
-		// TODO: compare the ports with the rest of the config files
-		if !slices.Contains(ports, p) {
-			ports = append(ports, p)
-		} else {
-			log.Panic("it returned the same port twice")
-		}
+func getAvailablePort() (int, error) {
+	listener, err := net.Listen("tcp", ":0") //nolint:gosec
+	if err != nil {
+		return 0, fmt.Errorf("could not find an available port: %w", err)
 	}
-
-	return &Ports{
-		P1317:  ports[0],
-		P8080:  ports[1],
-		P9090:  ports[2],
-		P9091:  ports[3],
-		P8545:  ports[4],
-		P8546:  ports[5],
-		P6065:  ports[6],
-		P26658: ports[7],
-		P26657: ports[8],
-		P6060:  ports[9],
-		P26656: ports[10],
-		P26660: ports[11],
-	}
+	defer listener.Close()
+	addr := listener.Addr().(*net.TCPAddr)
+	return addr.Port, nil
 }
 
-func NewPortsUsingDB(dbPorts []database.Port) *Ports {
+func (d *Daemon) AssignPorts(queries *database.Queries) error {
+	ports, err := newPorts(queries)
+	if err != nil {
+		return err
+	}
+	d.Ports = ports
+	return nil
+}
+
+func newPorts(queries *database.Queries) (*Ports, error) {
+	dbPorts, err := queries.GetAllPorts(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
 	ports := []int{}
 
 OUTER:
@@ -127,11 +121,11 @@ OUTER:
 		P6060:  ports[9],
 		P26656: ports[10],
 		P26660: ports[11],
-	}
+	}, nil
 }
 
 func (d *Daemon) RestorePortsFromDB(port database.Port) {
-	d.Ports = Ports{
+	d.Ports = &Ports{
 		P1317:  int(port.P1317),
 		P8080:  int(port.P8080),
 		P9090:  int(port.P9090),
@@ -145,16 +139,6 @@ func (d *Daemon) RestorePortsFromDB(port database.Port) {
 		P26656: int(port.P26656),
 		P26660: int(port.P26660),
 	}
-}
-
-func getAvailablePort() (int, error) {
-	listener, err := net.Listen("tcp", ":0") //nolint:gosec
-	if err != nil {
-		return 0, fmt.Errorf("could not find an available port: %w", err)
-	}
-	defer listener.Close()
-	addr := listener.Addr().(*net.TCPAddr)
-	return addr.Port, nil
 }
 
 // func (d *Dameon) SetPorts() error {

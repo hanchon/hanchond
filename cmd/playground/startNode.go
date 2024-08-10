@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/hanchon/hanchond/playground/database"
-	"github.com/hanchon/hanchond/playground/evmos"
+	"github.com/hanchon/hanchond/playground/gaia"
 	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
@@ -40,7 +40,12 @@ var startNodeCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		e := evmos.NewEvmos(node.BinaryVersion, node.ConfigFolder, chain.ChainID, node.ValidatorKeyName)
+		e := gaia.NewGaia(node.Moniker, node.ConfigFolder, chain.ChainID, node.ValidatorKeyName, node.ValidatorKeyName)
+		// if node.BinaryVersion == "gaia" {
+		//
+		// } else {
+		// 	e := evmos.NewEvmos(node.BinaryVersion, node.ConfigFolder, chain.ChainID, node.ValidatorKeyName)
+		// }
 		pID, err := e.Start(node.Moniker)
 		if err != nil {
 			fmt.Println("could not start the node:", err.Error())

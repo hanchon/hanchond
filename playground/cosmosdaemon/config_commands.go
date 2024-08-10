@@ -1,6 +1,9 @@
 package cosmosdaemon
 
-import "os/exec"
+import (
+	"fmt"
+	"os/exec"
+)
 
 func (d *Daemon) ConfigKeyring() error {
 	command := exec.Command( //nolint:gosec
@@ -11,7 +14,10 @@ func (d *Daemon) ConfigKeyring() error {
 		"--home",
 		d.HomeDir,
 	)
-	_, err := command.CombinedOutput()
+	out, err := command.CombinedOutput()
+	if err != nil {
+		err = fmt.Errorf("error %s: %s", err.Error(), string(out))
+	}
 	return err
 }
 
@@ -24,7 +30,10 @@ func (d *Daemon) ConfigChainID() error {
 		"--home",
 		d.HomeDir,
 	)
-	_, err := command.CombinedOutput()
+	out, err := command.CombinedOutput()
+	if err != nil {
+		err = fmt.Errorf("error %s: %s", err.Error(), string(out))
+	}
 	return err
 }
 
@@ -38,6 +47,9 @@ func (d *Daemon) NodeInit() error {
 		"--home",
 		d.HomeDir,
 	)
-	_, err := command.CombinedOutput()
+	out, err := command.CombinedOutput()
+	if err != nil {
+		err = fmt.Errorf("error %s: %s", err.Error(), string(out))
+	}
 	return err
 }

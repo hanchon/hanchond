@@ -1,67 +1,109 @@
 package cosmosdaemon
 
 import (
+	"fmt"
 	"os/exec"
 	"strings"
+	"syscall"
+	"time"
+
+	"github.com/hanchon/hanchond/playground/filesmanager"
 )
 
-func (d *Daemon) AddGenesisAccount() error {
-	validatorAddr, err := d.GetValidatorAddress()
-	if err != nil {
-		return err
-	}
-	command := exec.Command( //nolint:gosec
-		d.BinaryPath,
+func (d *Daemon) AddGenesisAccount(validatorAddr string) error {
+	args := []string{
 		"add-genesis-account",
 		validatorAddr,
-		d.ValidatorInitialSupply+d.BaseDenom,
+		d.ValidatorInitialSupply + d.BaseDenom,
 		"--keyring-backend",
 		d.KeyringBackend,
 		"--home",
 		d.HomeDir,
+	}
+	if d.SDKVersion == GaiaSDK {
+		args = append([]string{"genesis"}, args...)
+	}
+
+	command := exec.Command( //nolint:gosec
+		d.BinaryPath,
+		args...,
 	)
-	_, err = command.CombinedOutput()
+
+	out, err := command.CombinedOutput()
+	if err != nil {
+		err = fmt.Errorf("error %s: %s", err.Error(), string(out))
+	}
 	return err
 }
 
 func (d *Daemon) ValidatorGenTx() error {
-	command := exec.Command( //nolint:gosec
-		d.BinaryPath,
+	args := []string{
 		"gentx",
 		d.ValKeyName,
-		d.ValidatorInitialSupply[0:len(d.ValidatorInitialSupply)-4]+d.BaseDenom,
+		d.ValidatorInitialSupply[0:len(d.ValidatorInitialSupply)-4] + d.BaseDenom,
 		"--gas-prices",
-		d.BaseFee+d.BaseDenom,
+		d.BaseFee + d.BaseDenom,
 		"--chain-id",
 		d.ChainID,
 		"--keyring-backend",
 		d.KeyringBackend,
 		"--home",
 		d.HomeDir,
+	}
+
+	if d.SDKVersion == GaiaSDK {
+		args = append([]string{"genesis"}, args...)
+	}
+
+	command := exec.Command( //nolint:gosec
+		d.BinaryPath,
+		args...,
 	)
-	_, err := command.CombinedOutput()
+	out, err := command.CombinedOutput()
+	if err != nil {
+		err = fmt.Errorf("error %s: %s", err.Error(), string(out))
+	}
 	return err
 }
 
 func (d *Daemon) CollectGenTxs() error {
-	command := exec.Command( //nolint:gosec
-		d.BinaryPath,
+	args := []string{
 		"collect-gentxs",
 		"--home",
 		d.HomeDir,
+	}
+
+	if d.SDKVersion == GaiaSDK {
+		args = append([]string{"genesis"}, args...)
+	}
+	command := exec.Command( //nolint:gosec
+		d.BinaryPath,
+		args...,
 	)
-	_, err := command.CombinedOutput()
+	out, err := command.CombinedOutput()
+	if err != nil {
+		err = fmt.Errorf("error %s: %s", err.Error(), string(out))
+	}
 	return err
 }
 
 func (d *Daemon) ValidateGenesis() error {
-	command := exec.Command( //nolint:gosec
-		d.BinaryPath,
+	args := []string{
 		"validate-genesis",
 		"--home",
 		d.HomeDir,
+	}
+	if d.SDKVersion == GaiaSDK {
+		args = append([]string{"genesis"}, args...)
+	}
+	command := exec.Command( //nolint:gosec
+		d.BinaryPath,
+		args...,
 	)
-	_, err := command.CombinedOutput()
+	out, err := command.CombinedOutput()
+	if err != nil {
+		err = fmt.Errorf("error %s: %s", err.Error(), string(out))
+	}
 	return err
 }
 
@@ -80,6 +122,42 @@ func (d *Daemon) GetValidatorAddress() (string, error) {
 	)
 	o, err := command.CombinedOutput()
 	if err != nil {
+		err = fmt.Errorf("error %s: %s", err.Error(), string(o))
+		return "", err
+	}
+	return strings.TrimSpace(string(o)), nil
+}
+
+func (d *Daemon) Start(startCmd string) (int, error) {
+	fmt.Println(startCmd)
+	command := exec.Command("bash", "-c", startCmd)
+	// Deattach the program
+	command.SysProcAttr = &syscall.SysProcAttr{
+		Setpgid: true,
+	}
+	err := command.Start()
+	if err != nil {
+		return 0, err
+	}
+	time.Sleep(2 * time.Second)
+	id, err := filesmanager.GetChildPID(command.Process.Pid)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
+}
+
+func (d *Daemon) GetNodeID() (string, error) {
+	command := exec.Command( //nolint:gosec
+		d.BinaryPath,
+		"tendermint",
+		"show-node-id",
+		"--home",
+		d.HomeDir,
+	)
+	o, err := command.CombinedOutput()
+	if err != nil {
+		err = fmt.Errorf("error %s: %s", err.Error(), string(o))
 		return "", err
 	}
 	return strings.TrimSpace(string(o)), nil

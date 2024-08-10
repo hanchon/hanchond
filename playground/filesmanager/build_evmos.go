@@ -1,6 +1,7 @@
 package filesmanager
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 )
@@ -28,11 +29,22 @@ func BuildEvmos(path string) error {
 func SaveEvmosBuiltVersion(version string) error {
 	// Ensure the path exists
 	_ = CreateBuildsDir()
-	return CopyFile(GetBranchFolder(version)+"/build/evmosd", GetEvmosdPath(version))
+	return MoveFile(GetBranchFolder(version)+"/build/evmosd", GetEvmosdPath(version))
+}
+
+func MoveFile(origin string, destination string) error {
+	return os.Rename(origin, destination)
 }
 
 func CopyFile(origin string, destination string) error {
-	return os.Rename(origin, destination)
+	fmt.Println(origin)
+	fmt.Println(destination)
+	cmd := exec.Command("cp", origin, destination)
+	if out, err := cmd.CombinedOutput(); err != nil {
+		err = fmt.Errorf("error %s: %s", err.Error(), string(out))
+		return err
+	}
+	return nil
 }
 
 // NOTE: This requires that the version was already cloned

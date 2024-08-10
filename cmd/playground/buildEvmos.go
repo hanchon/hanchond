@@ -31,7 +31,7 @@ var buildEvmosCmd = &cobra.Command{
 				os.Exit(1)
 			}
 			fmt.Println("Moving built binary...")
-			if err := filesmanager.CopyFile(path+"/build/evmosd", filesmanager.GetEvmosdPath(version)); err != nil {
+			if err := filesmanager.MoveFile(path+"/build/evmosd", filesmanager.GetEvmosdPath(version)); err != nil {
 				fmt.Println("could not move the built binary:", err.Error())
 				os.Exit(1)
 			}
