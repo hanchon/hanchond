@@ -55,10 +55,7 @@ func GetNodeHomeFolder(chainID int64) string {
 }
 
 func IsNodeHomeFolderInitialized(chainID int64) bool {
-	if _, err := os.Stat(getNodeHomePath(chainID)); os.IsNotExist(err) {
-		return false
-	}
-	return true
+	return DoesFileExist(getNodeHomePath(chainID))
 }
 
 func GetBaseDir() string {
@@ -66,7 +63,7 @@ func GetBaseDir() string {
 }
 
 func GetBuildsDir() string {
-	return baseDir + "/evmos_build"
+	return baseDir + "/builds"
 }
 
 func GetTempDir() string {

@@ -9,6 +9,7 @@ type Chain struct {
 	Name          string
 	ChainID       string
 	BinaryVersion string
+	Denom         string
 }
 
 type Node struct {

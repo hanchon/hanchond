@@ -43,6 +43,8 @@ type Daemon struct {
 	Ports *Ports
 
 	BinaryPath string
+
+	CustomConfig func() error
 }
 
 func NewDameon(
@@ -83,10 +85,11 @@ func NewDameon(
 
 		BaseDenom: denom,
 
-		// Maybe move this to just evmos
-		GasLimit:               "10000000",
-		BaseFee:                "1000000000",
 		ValidatorInitialSupply: "100000000000000000000000000",
+
+		// Maybe move this to just evmos
+		GasLimit: "10000000",
+		BaseFee:  "1000000000",
 
 		Ports: nil,
 	}
@@ -94,4 +97,16 @@ func NewDameon(
 
 func (d *Daemon) SetBinaryPath(path string) {
 	d.BinaryPath = path
+}
+
+// This is used to change the config files that are specific to a client
+func (d *Daemon) SetCustomConfig(configurator func() error) {
+	d.CustomConfig = configurator
+}
+
+func (d *Daemon) ExecuteCustomConfig() error {
+	if d.CustomConfig == nil {
+		return nil
+	}
+	return d.CustomConfig()
 }

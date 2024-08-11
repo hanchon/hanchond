@@ -62,7 +62,7 @@ func (e *Evmos) CreateSTRv1Proposal(params STRv1) (string, error) {
 	}
 
 	command := exec.Command( //nolint:gosec
-		filesmanager.GetEvmosdPath(e.Version),
+		e.BinaryPath,
 		"tx",
 		"gov",
 		"submit-proposal",
@@ -90,7 +90,7 @@ func (e *Evmos) CreateSTRv1Proposal(params STRv1) (string, error) {
 
 func (e *Evmos) VoteOnProposal(proposalID string, option string) (string, error) {
 	command := exec.Command( //nolint:gosec
-		filesmanager.GetEvmosdPath(e.Version),
+		e.BinaryPath,
 		"tx",
 		"gov",
 		"vote",
@@ -165,7 +165,7 @@ func (e *Evmos) VoteOnAllTheProposals(option string) ([]string, error) {
 
 func (e *Evmos) CreateUpgradeProposal(versionName string, upgradeHeight string) (string, error) {
 	command := exec.Command( //nolint:gosec
-		filesmanager.GetEvmosdPath(e.Version),
+		e.BinaryPath,
 		"tx",
 		"gov",
 		"submit-legacy-proposal",
@@ -250,7 +250,7 @@ func (e *Evmos) CreateRateLimitProposal(params RateLimitParams) (string, error) 
 	}
 
 	command := exec.Command( //nolint:gosec
-		filesmanager.GetEvmosdPath(e.Version),
+		e.BinaryPath,
 		"tx",
 		"gov",
 		"submit-proposal",

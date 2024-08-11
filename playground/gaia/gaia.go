@@ -6,14 +6,14 @@ import (
 )
 
 type Gaia struct {
-	cosmosdaemon.Daemon
+	*cosmosdaemon.Daemon
 }
 
 func NewGaia(moniker string, homeDir string, chainID string, keyName string, denom string) *Gaia {
 	g := &Gaia{
-		Daemon: *cosmosdaemon.NewDameon(moniker, "gaia", homeDir, chainID, keyName, cosmosdaemon.CosmosAlgo, denom, "atom", cosmosdaemon.GaiaSDK),
+		Daemon: cosmosdaemon.NewDameon(moniker, "gaia", homeDir, chainID, keyName, cosmosdaemon.CosmosAlgo, denom, "atom", cosmosdaemon.GaiaSDK),
 	}
 	g.SetBinaryPath(filesmanager.GetGaiadPath())
-
+	g.SetCustomConfig(g.UpdateGenesisFile)
 	return g
 }

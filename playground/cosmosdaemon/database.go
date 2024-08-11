@@ -12,10 +12,11 @@ func (d *Daemon) SaveChainToDB(queries *database.Queries) (database.Chain, error
 		Name:          fmt.Sprintf("chain-%s", d.ChainID),
 		ChainID:       d.ChainID,
 		BinaryVersion: d.BinaryName,
+		Denom:         d.BaseDenom,
 	})
 }
 
-func (d *Daemon) SaveNodeToDB(chain database.Chain, queries *database.Queries) error {
+func (d *Daemon) SaveNodeToDB(chain database.Chain, queries *database.Queries) (int64, error) {
 	nodeID, err := queries.InsertNode(context.Background(), database.InsertNodeParams{
 		ChainID:          chain.ID,
 		ConfigFolder:     d.HomeDir,
@@ -29,7 +30,7 @@ func (d *Daemon) SaveNodeToDB(chain database.Chain, queries *database.Queries) e
 		IsRunning:        0,
 	})
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	err = queries.InsertPorts(context.Background(), database.InsertPortsParams{
@@ -48,8 +49,8 @@ func (d *Daemon) SaveNodeToDB(chain database.Chain, queries *database.Queries) e
 		P26660: int64(d.Ports.P26660),
 	})
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return nodeID, nil
 }

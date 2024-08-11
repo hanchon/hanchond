@@ -37,8 +37,6 @@ func MoveFile(origin string, destination string) error {
 }
 
 func CopyFile(origin string, destination string) error {
-	fmt.Println(origin)
-	fmt.Println(destination)
 	cmd := exec.Command("cp", origin, destination)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		err = fmt.Errorf("error %s: %s", err.Error(), string(out))

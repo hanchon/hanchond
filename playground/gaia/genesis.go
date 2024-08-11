@@ -1,11 +1,6 @@
 package gaia
 
 func (g *Gaia) UpdateGenesisFile() error {
-	// Call general updates
-	if err := g.Daemon.UpdateGenesisFile(); err != nil {
-		return err
-	}
-
 	// Gaia extra config
 	genesis, err := g.Daemon.OpenGenesisFile()
 	if err != nil {

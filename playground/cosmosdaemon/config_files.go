@@ -2,6 +2,7 @@ package cosmosdaemon
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -16,18 +17,20 @@ func (d *Daemon) UpdateConfigFile(withSlowBlocks bool) error {
 		configFile = d.enableSlowBlocks(configFile)
 	}
 
+	configFile = d.allowDuplicateIP(configFile)
+
 	return d.saveConfigFile(configFile)
 }
 
 func (d *Daemon) UpdateAppFile() error {
 	//  Pruning
-	appFile, err := d.openAppFile()
+	appFile, err := d.OpenAppFile()
 	if err != nil {
 		return err
 	}
 	appFile = d.SetPruningInAppFile(true, appFile)
 	appFile = d.SetMinGasPricesInAppFile(appFile)
-	return d.saveAppFile(appFile)
+	return d.SaveAppFile(appFile)
 }
 
 func (d *Daemon) CreateGenTx() error {
@@ -63,6 +66,18 @@ func (d *Daemon) InitGenesis() error {
 	}
 
 	return nil
+}
+
+func (d *Daemon) allowDuplicateIP(configFile []byte) []byte {
+	configValues := string(configFile)
+	// Tendermint Values
+	configValues = strings.Replace(
+		configValues,
+		"allow_duplicate_ip = false",
+		"allow_duplicate_ip = true",
+		1,
+	)
+	return []byte(configValues)
 }
 
 func (d *Daemon) enableSlowBlocks(configFile []byte) []byte {
@@ -194,10 +209,14 @@ func (d *Daemon) GetPeerInfo() (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("%s@127.0.0.1:%d", nodeID, d.Ports.P26656), nil
+	return fmt.Sprintf("%s@192.168.1.36:%d", nodeID, d.Ports.P26656), nil
 }
 
 func (d *Daemon) AddPersistenPeers(peers []string) error {
+	fmt.Println("peers", d.Moniker)
+	fmt.Println("peers", peers)
+	fmt.Println("path", d.Path())
+
 	filtered := []string{}
 	for k := range peers {
 		// Exclude ourself from the list
@@ -210,13 +229,16 @@ func (d *Daemon) AddPersistenPeers(peers []string) error {
 	if err != nil {
 		return err
 	}
-
-	configFile = []byte(strings.Replace(
-		string(configFile),
-		"persistent_peers = \"\"",
-		fmt.Sprintf("persistent_peers = \"%s\"", strings.Join(filtered, ",")),
-		1,
-	))
+	regex := regexp.MustCompile(`persistent_peers\s*=\s*".*"`)
+	configFile = regex.ReplaceAll(
+		configFile,
+		[]byte(
+			fmt.Sprintf(
+				"persistent_peers = \"%s\"",
+				strings.Join(filtered, ","),
+			),
+		),
+	)
 
 	if err := d.saveConfigFile(configFile); err != nil {
 		return err
@@ -226,7 +248,7 @@ func (d *Daemon) AddPersistenPeers(peers []string) error {
 }
 
 func (d *Daemon) UpdateConfigPorts() error {
-	appFile, err := d.openAppFile()
+	appFile, err := d.OpenAppFile()
 	if err != nil {
 		return err
 	}
@@ -238,7 +260,7 @@ func (d *Daemon) UpdateConfigPorts() error {
 	app = strings.Replace(app, "8545", fmt.Sprint(d.Ports.P8545), 1)
 	app = strings.Replace(app, "8546", fmt.Sprint(d.Ports.P8546), 1)
 	app = strings.Replace(app, "6065", fmt.Sprint(d.Ports.P6065), 1)
-	if err := d.saveAppFile([]byte(app)); err != nil {
+	if err := d.SaveAppFile([]byte(app)); err != nil {
 		return err
 	}
 

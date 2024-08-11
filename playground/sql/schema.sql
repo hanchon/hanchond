@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS chain(
     id INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     chain_id TEXT NOT NULL,
-    binary_version TEXT NOT NULL
+    binary_version TEXT NOT NULL,
+    denom TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS node(

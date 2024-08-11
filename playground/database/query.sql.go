@@ -93,7 +93,7 @@ func (q *Queries) GetAllPorts(ctx context.Context) ([]Port, error) {
 }
 
 const getChain = `-- name: GetChain :one
-SELECT id, name, chain_id, binary_version FROM chain where id =? LIMIT 1
+SELECT id, name, chain_id, binary_version, denom FROM chain where id =? LIMIT 1
 `
 
 func (q *Queries) GetChain(ctx context.Context, id int64) (Chain, error) {
@@ -104,6 +104,7 @@ func (q *Queries) GetChain(ctx context.Context, id int64) (Chain, error) {
 		&i.Name,
 		&i.ChainID,
 		&i.BinaryVersion,
+		&i.Denom,
 	)
 	return i, err
 }
@@ -185,27 +186,34 @@ func (q *Queries) InitRelayer(ctx context.Context) error {
 
 const insertChain = `-- name: InsertChain :one
 INSERT INTO chain(
-    name, chain_id, binary_version
+    name, chain_id, binary_version, denom
 ) VALUES (
-    ?,?,?
+    ?,?,?,?
 )
-RETURNING id, name, chain_id, binary_version
+RETURNING id, name, chain_id, binary_version, denom
 `
 
 type InsertChainParams struct {
 	Name          string
 	ChainID       string
 	BinaryVersion string
+	Denom         string
 }
 
 func (q *Queries) InsertChain(ctx context.Context, arg InsertChainParams) (Chain, error) {
-	row := q.db.QueryRowContext(ctx, insertChain, arg.Name, arg.ChainID, arg.BinaryVersion)
+	row := q.db.QueryRowContext(ctx, insertChain,
+		arg.Name,
+		arg.ChainID,
+		arg.BinaryVersion,
+		arg.Denom,
+	)
 	var i Chain
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.ChainID,
 		&i.BinaryVersion,
+		&i.Denom,
 	)
 	return i, err
 }

@@ -1,8 +1,8 @@
 -- name: InsertChain :one
 INSERT INTO chain(
-    name, chain_id, binary_version
+    name, chain_id, binary_version, denom
 ) VALUES (
-    ?,?,?
+    ?,?,?,?
 )
 RETURNING *;
 

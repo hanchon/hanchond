@@ -30,15 +30,19 @@ func (d *Daemon) openConfigFile() ([]byte, error) {
 	return filesmanager.ReadFile(d.getConfigPath())
 }
 
+func (d *Daemon) Path() string {
+	return d.getConfigPath()
+}
+
 func (d *Daemon) saveConfigFile(configFile []byte) error {
 	return filesmanager.SaveFile(configFile, d.getConfigPath())
 }
 
-func (d *Daemon) openAppFile() ([]byte, error) {
+func (d *Daemon) OpenAppFile() ([]byte, error) {
 	return filesmanager.ReadFile(d.getAppPath())
 }
 
-func (d *Daemon) saveAppFile(appFile []byte) error {
+func (d *Daemon) SaveAppFile(appFile []byte) error {
 	return filesmanager.SaveFile(appFile, d.getAppPath())
 }
 
@@ -56,12 +60,3 @@ func (d *Daemon) backupConfigFiles() error {
 
 	return nil
 }
-
-// func (d *Daemon) copyGenesisFile(genesisPath string) error {
-// 	cmd := exec.Command("cp", genesisPath, d.getGenesisPath()) //nolint:gosec
-// 	_, err := cmd.CombinedOutput()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }

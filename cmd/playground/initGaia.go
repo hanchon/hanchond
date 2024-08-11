@@ -76,7 +76,8 @@ var initGaiaCmd = &cobra.Command{
 					panic(err)
 				}
 			}
-			if err := g.SaveNodeToDB(chainDB, queries); err != nil {
+			_, err := g.SaveNodeToDB(chainDB, queries)
+			if err != nil {
 				panic(err)
 			}
 		}
