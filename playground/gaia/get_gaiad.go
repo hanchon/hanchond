@@ -15,7 +15,6 @@ func GetGaiadBinary(isDarwin bool, version string) error {
 	}
 	path := filesmanager.GetGaiadPath()
 	cmdString := fmt.Sprintf("wget %s -O %s && chmod +x %s", url, path, path)
-
 	command := exec.Command("bash", "-c", cmdString)
 	_, err := command.CombinedOutput()
 	return err

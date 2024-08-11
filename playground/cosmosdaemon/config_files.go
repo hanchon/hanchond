@@ -198,7 +198,6 @@ func (d *Daemon) GetPeerInfo() (string, error) {
 }
 
 func (d *Daemon) AddPersistenPeers(peers []string) error {
-	fmt.Println("peers", peers)
 	filtered := []string{}
 	for k := range peers {
 		// Exclude ourself from the list
@@ -206,15 +205,6 @@ func (d *Daemon) AddPersistenPeers(peers []string) error {
 			filtered = append(filtered, peers[k])
 		}
 	}
-
-	// filtered := slices.DeleteFunc(peers, func(e string) bool {
-	// 	if strings.Contains(e, fmt.Sprintf("%d", d.Ports.P26656)) {
-	// 		return true
-	// 	}
-	// 	return false
-	// })
-
-	fmt.Println("filtered", filtered)
 
 	configFile, err := d.openConfigFile()
 	if err != nil {
