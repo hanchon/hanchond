@@ -204,6 +204,23 @@ func (q *Queries) GetChain(ctx context.Context, id int64) (Chain, error) {
 	return i, err
 }
 
+const getLatestChain = `-- name: GetLatestChain :one
+SELECT id, name, chain_id, binary_version, denom FROM chain ORDER BY id DESC LIMIT 1
+`
+
+func (q *Queries) GetLatestChain(ctx context.Context) (Chain, error) {
+	row := q.db.QueryRowContext(ctx, getLatestChain)
+	var i Chain
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.ChainID,
+		&i.BinaryVersion,
+		&i.Denom,
+	)
+	return i, err
+}
+
 const getNode = `-- name: GetNode :one
 SELECT id, chain_id, config_folder, moniker, validator_key, validator_key_name, validator_wallet, key_type, binary_version, process_id, is_validator, is_archive, is_running FROM node where id =? LIMIT 1
 `

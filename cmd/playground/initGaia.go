@@ -29,7 +29,7 @@ var initGaiaCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		if filesmanager.IsNodeHomeFolderInitialized(chainid) {
+		if filesmanager.IsNodeHomeFolderInitialized(chainid, 0) {
 			fmt.Println("the home folder for this node was already created")
 			os.Exit(1)
 		}
@@ -41,7 +41,7 @@ var initGaiaCmd = &cobra.Command{
 		var chainDB database.Chain
 
 		for k := range nodes {
-			path := filesmanager.GetNodeHomeFolder(chainid + int64(k))
+			path := filesmanager.GetNodeHomeFolder(chainid, int64(k))
 			g := gaia.NewGaia(fmt.Sprintf("moniker-%d-%d", chainid, k), path, chainID, "validator-key", "icsstake")
 			// Init the config files
 			if err := g.InitNode(); err != nil {

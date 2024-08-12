@@ -41,10 +41,10 @@ var startMultiChainCmd = &cobra.Command{
 			var err error
 			switch {
 			case strings.Contains(version, "gaia"):
-				d := gaia.NewGaia(v.Moniker, v.ConfigFolder, v.ChainID_2, v.ValidatorKeyName, v.ValidatorKeyName)
+				d := gaia.NewGaia(v.Moniker, v.ConfigFolder, v.ChainID_2, v.ValidatorKeyName, v.Denom)
 				pID, err = d.Start(v.Moniker)
 			case strings.Contains(version, "evmos"):
-				d := evmos.NewEvmos(v.Moniker, v.ConfigFolder, v.ChainID_2, v.ValidatorKeyName, v.ValidatorKeyName, v.Denom)
+				d := evmos.NewEvmos(v.Moniker, v.BinaryVersion, v.ConfigFolder, v.ChainID_2, v.ValidatorKeyName, v.Denom)
 				pID, err = d.Start(v.Moniker)
 			default:
 				fmt.Println("incorrect binary name")

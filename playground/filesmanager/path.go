@@ -40,22 +40,22 @@ func GetDataFolder() string {
 	return fmt.Sprintf("%s/data", GetBaseDir())
 }
 
-func getNodeHomePath(chainID int64) string {
-	return fmt.Sprintf("%s/%d", GetDataFolder(), chainID)
+func getNodeHomePath(chainID int64, nodeID int64) string {
+	return fmt.Sprintf("%s/%d-%d", GetDataFolder(), chainID, nodeID)
 }
 
-func GetNodeHomeFolder(chainID int64) string {
+func GetNodeHomeFolder(chainID, nodeID int64) string {
 	if _, err := os.Stat(GetDataFolder()); os.IsNotExist(err) {
 		if err := os.Mkdir(GetDataFolder(), os.ModePerm); err != nil {
 			// We panic here because if we can not create the folder we should inmediately stop
 			panic(err)
 		}
 	}
-	return getNodeHomePath(chainID)
+	return getNodeHomePath(chainID, nodeID)
 }
 
-func IsNodeHomeFolderInitialized(chainID int64) bool {
-	return DoesFileExist(getNodeHomePath(chainID))
+func IsNodeHomeFolderInitialized(chainID int64, nodeID int64) bool {
+	return DoesFileExist(getNodeHomePath(chainID, nodeID))
 }
 
 func GetBaseDir() string {
@@ -79,7 +79,7 @@ func GetEvmosdPath(version string) string {
 }
 
 func GetDaemondPath(binaryName string) string {
-	return GetBuildsDir() + binaryName
+	return GetBuildsDir() + "/" + binaryName
 }
 
 func GetGaiadPath() string {

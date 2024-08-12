@@ -1,15 +1,19 @@
 package playground
 
 import (
+	"context"
+	dbsql "database/sql"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/hanchon/hanchond/playground/cosmosdaemon"
+	"github.com/hanchon/hanchond/playground/evmos"
 	"github.com/hanchon/hanchond/playground/filesmanager"
 	"github.com/hanchon/hanchond/playground/gaia"
 	"github.com/hanchon/hanchond/playground/sql"
+
 	"github.com/spf13/cobra"
 )
 
@@ -39,17 +43,35 @@ var initMultiChainCmd = &cobra.Command{
 
 		queries := sql.InitDBFromCmd(cmd)
 
-		// GetNextChainID
+		// TODO: GetNextChainID
+		latestChain, err := queries.GetLatestChain(context.Background())
 		chainNumber := 1
+		if err == nil {
+			chainNumber = int(latestChain.ID) + 1
+		} else if err != dbsql.ErrNoRows {
+			fmt.Println("could not get the chains info from db")
+			os.Exit(1)
+		}
 
 		nodes := make([]*cosmosdaemon.Daemon, amountOfValidators)
 		switch strings.ToLower(strings.TrimSpace(client)) {
 		case "evmos":
-			fmt.Println("using", version)
+			chainID := fmt.Sprintf("evmos_9000-%d", chainNumber)
+			for k := range nodes {
+				path := filesmanager.GetNodeHomeFolder(int64(chainNumber), int64(k))
+				nodes[k] = evmos.NewEvmos(
+					fmt.Sprintf("moniker-%d-%d", chainNumber, k),
+					version,
+					path,
+					chainID,
+					"validator-key",
+					"aevmos",
+				).Daemon
+			}
 		case "gaia":
 			chainID := fmt.Sprintf("cosmoshub-%d", chainNumber)
 			for k := range nodes {
-				path := filesmanager.GetNodeHomeFolder(int64(chainNumber) + int64(k))
+				path := filesmanager.GetNodeHomeFolder(int64(chainNumber), int64(k))
 				nodes[k] = gaia.NewGaia(
 					fmt.Sprintf("moniker-%d-%d", chainNumber, k),
 					path,
@@ -57,24 +79,23 @@ var initMultiChainCmd = &cobra.Command{
 					"validator-key",
 					"icsstake",
 				).Daemon
-
 			}
-
-			fmt.Println(nodes)
-			if err := cosmosdaemon.InitMultiNodeChain(nodes, queries); err != nil {
-				fmt.Printf("error: %s\n", err.Error())
-				os.Exit(1)
-			}
-			fmt.Println(nodes)
 		default:
 			fmt.Println("invalid client")
 			os.Exit(1)
 		}
+
+		fmt.Println(nodes)
+		if err := cosmosdaemon.InitMultiNodeChain(nodes, queries); err != nil {
+			fmt.Printf("error: %s\n", err.Error())
+			os.Exit(1)
+		}
+		fmt.Println(nodes)
 	},
 }
 
 func init() {
 	PlaygroundCmd.AddCommand(initMultiChainCmd)
-	initMultiChainCmd.Flags().String("client", "gaia", "Client that you want to use. Options: evmos, gaia")
+	initMultiChainCmd.Flags().String("client", "evmos", "Client that you want to use. Options: evmos, gaia")
 	initMultiChainCmd.Flags().StringP("version", "v", "local", "Version of the Evmos node that you want to use, defaults to local. Tag names are supported. If selected node is gaia, the flag is ignored.")
 }

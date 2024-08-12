@@ -40,12 +40,12 @@ var initGenesisCmd = &cobra.Command{
 
 		}
 
-		if filesmanager.IsNodeHomeFolderInitialized(chainid) {
+		if filesmanager.IsNodeHomeFolderInitialized(chainid, 0) {
 			fmt.Println("the home folder for this node was already created")
 			os.Exit(1)
 		}
 
-		path := filesmanager.GetNodeHomeFolder(chainid)
+		path := filesmanager.GetNodeHomeFolder(chainid, 0)
 		chainID := fmt.Sprintf("evmos_9001-%d", chainid)
 
 		e := evmos.NewEvmos("moniker", version, path, chainID, fmt.Sprintf("mykey%d", chainid), "aevmos")

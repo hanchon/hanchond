@@ -71,6 +71,9 @@ SELECT * FROM ports;
 -- name: GetChain :one
 SELECT * FROM chain where id =? LIMIT 1;
 
+-- name: GetLatestChain :one
+SELECT * FROM chain ORDER BY id DESC LIMIT 1;
+
 -- name: GetAllNodes :many
 SELECT * FROM node;
 
