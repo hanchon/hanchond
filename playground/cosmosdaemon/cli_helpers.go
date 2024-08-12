@@ -76,6 +76,7 @@ func InitFilesAndDB(nodes []*Daemon, queries *database.Queries) error {
 }
 
 func JoinGenesisTransactions(nodes []*Daemon, queries *database.Queries) error {
+	_ = queries
 	for k, v := range nodes {
 		// Node 0 will be the only the one that creates the genesis
 		if k == 0 {
@@ -107,6 +108,7 @@ func JoinGenesisTransactions(nodes []*Daemon, queries *database.Queries) error {
 }
 
 func CollectGenTxns(nodes []*Daemon, queries *database.Queries) error {
+	_ = queries
 	if err := nodes[0].CollectGenTxs(); err != nil {
 		return err
 	}
@@ -117,6 +119,7 @@ func CollectGenTxns(nodes []*Daemon, queries *database.Queries) error {
 }
 
 func UpdatePeers(nodes []*Daemon, queries *database.Queries) error {
+	_ = queries
 	peers := []string{}
 
 	for k := range nodes {
