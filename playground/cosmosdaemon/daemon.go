@@ -25,6 +25,7 @@ type Daemon struct {
 	ValMnemonic string
 	ValWallet   string
 	KeyType     SignatureAlgo
+	Prefix      string
 
 	KeyringBackend string
 	HomeDir        string
@@ -72,6 +73,7 @@ func NewDameon(
 		ValKeyName:  keyName,
 		ValMnemonic: mnemonic,
 		ValWallet:   wallet,
+		Prefix:      prefix,
 
 		KeyType: algo,
 

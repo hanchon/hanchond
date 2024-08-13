@@ -59,10 +59,21 @@ var hermesAddChannelCmd = &cobra.Command{
 
 			switch {
 			case strings.Contains(v.BinaryVersion, "gaia"):
-				// d := gaia.NewGaia(v.Moniker, v.ConfigFolder, v.ChainID_2, v.ValidatorKeyName, v.Denom)
-				// pID, err = d.Start(v.Moniker)
+				fmt.Println("Adding gaia chain")
+				if err := h.AddCosmosChain(
+					v.ChainID_2,
+					v.P26657,
+					v.P9090,
+					v.ValidatorKeyName,
+					v.ValidatorKey,
+					v.Prefix,
+					v.Denom,
+				); err != nil {
+					fmt.Println("error adding first chain to the relayer:", err.Error())
+					os.Exit(1)
+				}
 			case strings.Contains(v.BinaryVersion, "evmos"):
-				fmt.Println("adding evmos key")
+				fmt.Println("Adding evmos chain")
 				if err := h.AddEvmosChain(
 					v.ChainID_2,
 					v.P26657,
@@ -73,27 +84,12 @@ var hermesAddChannelCmd = &cobra.Command{
 					fmt.Println("error adding first chain to the relayer:", err.Error())
 					os.Exit(1)
 				}
-				// d := evmos.NewEvmos(v.Moniker, v.BinaryVersion, v.ConfigFolder, v.ChainID_2, v.ValidatorKeyName, v.Denom)
-				// pID, err = d.Start(v.Moniker)
 			default:
 				fmt.Println("incorrect binary name")
 				os.Exit(1)
 			}
 
 		}
-
-		// if err := h.AddEvmosChain(
-		// 	secondNode.Chain.ChainID,
-		// 	secondNode.Ports.P26657,
-		// 	secondNode.Ports.P9090,
-		// 	secondNode.Node.ValidatorKeyName,
-		// 	secondNode.Node.ValidatorKey,
-		// ); err != nil {
-		// 	fmt.Println("error adding second chain to the relayer:", err.Error())
-		// 	os.Exit(1)
-		// }
-
-		// fmt.Println("Second chain added")
 
 		fmt.Println("Calling create channel")
 		err = h.CreateChannel(chains[0].ChainID_2, chains[1].ChainID_2)

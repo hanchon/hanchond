@@ -10,7 +10,7 @@ import (
 )
 
 const getAllChainNodes = `-- name: GetAllChainNodes :many
-SELECT n.id, n.chain_id, config_folder, moniker, validator_key, validator_key_name, validator_wallet, key_type, n.binary_version, process_id, is_validator, is_archive, is_running, p.id, node_id, p1317, p8080, p9090, p9091, p8545, p8546, p6065, p26658, p26657, p6060, p26656, p26660, c.id, name, c.chain_id, c.binary_version, denom FROM node n join ports p on p.node_id == n.id join chain c on n.chain_id == c.id where n.chain_id = ?
+SELECT n.id, n.chain_id, config_folder, moniker, validator_key, validator_key_name, validator_wallet, key_type, n.binary_version, process_id, is_validator, is_archive, is_running, p.id, node_id, p1317, p8080, p9090, p9091, p8545, p8546, p6065, p26658, p26657, p6060, p26656, p26660, c.id, name, c.chain_id, c.binary_version, denom, prefix FROM node n join ports p on p.node_id == n.id join chain c on n.chain_id == c.id where n.chain_id = ?
 `
 
 type GetAllChainNodesRow struct {
@@ -46,6 +46,7 @@ type GetAllChainNodesRow struct {
 	ChainID_2        string
 	BinaryVersion_2  string
 	Denom            string
+	Prefix           string
 }
 
 func (q *Queries) GetAllChainNodes(ctx context.Context, chainID int64) ([]GetAllChainNodesRow, error) {
@@ -90,6 +91,7 @@ func (q *Queries) GetAllChainNodes(ctx context.Context, chainID int64) ([]GetAll
 			&i.ChainID_2,
 			&i.BinaryVersion_2,
 			&i.Denom,
+			&i.Prefix,
 		); err != nil {
 			return nil, err
 		}
@@ -188,7 +190,7 @@ func (q *Queries) GetAllPorts(ctx context.Context) ([]Port, error) {
 }
 
 const getChain = `-- name: GetChain :one
-SELECT id, name, chain_id, binary_version, denom FROM chain where id =? LIMIT 1
+SELECT id, name, chain_id, binary_version, denom, prefix FROM chain where id =? LIMIT 1
 `
 
 func (q *Queries) GetChain(ctx context.Context, id int64) (Chain, error) {
@@ -200,12 +202,13 @@ func (q *Queries) GetChain(ctx context.Context, id int64) (Chain, error) {
 		&i.ChainID,
 		&i.BinaryVersion,
 		&i.Denom,
+		&i.Prefix,
 	)
 	return i, err
 }
 
 const getLatestChain = `-- name: GetLatestChain :one
-SELECT id, name, chain_id, binary_version, denom FROM chain ORDER BY id DESC LIMIT 1
+SELECT id, name, chain_id, binary_version, denom, prefix FROM chain ORDER BY id DESC LIMIT 1
 `
 
 func (q *Queries) GetLatestChain(ctx context.Context) (Chain, error) {
@@ -217,6 +220,7 @@ func (q *Queries) GetLatestChain(ctx context.Context) (Chain, error) {
 		&i.ChainID,
 		&i.BinaryVersion,
 		&i.Denom,
+		&i.Prefix,
 	)
 	return i, err
 }
@@ -298,11 +302,11 @@ func (q *Queries) InitRelayer(ctx context.Context) error {
 
 const insertChain = `-- name: InsertChain :one
 INSERT INTO chain(
-    name, chain_id, binary_version, denom
+    name, chain_id, binary_version, denom, prefix
 ) VALUES (
-    ?,?,?,?
+    ?,?,?,?,?
 )
-RETURNING id, name, chain_id, binary_version, denom
+RETURNING id, name, chain_id, binary_version, denom, prefix
 `
 
 type InsertChainParams struct {
@@ -310,6 +314,7 @@ type InsertChainParams struct {
 	ChainID       string
 	BinaryVersion string
 	Denom         string
+	Prefix        string
 }
 
 func (q *Queries) InsertChain(ctx context.Context, arg InsertChainParams) (Chain, error) {
@@ -318,6 +323,7 @@ func (q *Queries) InsertChain(ctx context.Context, arg InsertChainParams) (Chain
 		arg.ChainID,
 		arg.BinaryVersion,
 		arg.Denom,
+		arg.Prefix,
 	)
 	var i Chain
 	err := row.Scan(
@@ -326,6 +332,7 @@ func (q *Queries) InsertChain(ctx context.Context, arg InsertChainParams) (Chain
 		&i.ChainID,
 		&i.BinaryVersion,
 		&i.Denom,
+		&i.Prefix,
 	)
 	return i, err
 }

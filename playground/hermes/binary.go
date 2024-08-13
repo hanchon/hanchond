@@ -14,16 +14,16 @@ func (h *Hermes) GetHermesBinary() string {
 }
 
 func (h *Hermes) AddRelayerKey(chainID string, mnemonic string, isEthWallet bool) error {
-	mnemonicPath := "m/44'/60'/0'/0/0"
-	if !isEthWallet {
-		mnemonicPath = "m/44'/118'/0'/0/0"
+	hdPath := " "
+	if isEthWallet {
+		hdPath = " --hd-path \"m/44'/60'/0'/0/0\" "
 	}
 	cmd := fmt.Sprintf(
-		"echo \"%s\" | %s --config %s keys add --hd-path \"%s\" --mnemonic-file /dev/stdin --chain %s >> %s 2>&1",
+		"echo \"%s\" | %s --config %s keys add %s --mnemonic-file /dev/stdin --chain %s >> %s 2>&1",
 		mnemonic,
 		h.GetHermesBinary(),
 		h.GetConfigFile(),
-		mnemonicPath,
+		hdPath,
 		chainID,
 		filesmanager.GetHermesPath()+"/logs_keys"+chainID,
 	)
@@ -43,6 +43,7 @@ func (h *Hermes) CreateChannel(firstChainID, secondChainID string) error {
 	)
 	command := exec.Command("bash", "-c", cmd)
 	out, err := command.CombinedOutput()
+	fmt.Println(out)
 	if err != nil {
 		err = fmt.Errorf("error %s: %s", err.Error(), string(out))
 	}

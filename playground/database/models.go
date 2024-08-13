@@ -10,6 +10,7 @@ type Chain struct {
 	ChainID       string
 	BinaryVersion string
 	Denom         string
+	Prefix        string
 }
 
 type Node struct {

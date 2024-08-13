@@ -13,6 +13,7 @@ func (d *Daemon) SaveChainToDB(queries *database.Queries) (database.Chain, error
 		ChainID:       d.ChainID,
 		BinaryVersion: d.BinaryName,
 		Denom:         d.BaseDenom,
+		Prefix:        d.Prefix,
 	})
 }
 

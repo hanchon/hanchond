@@ -61,6 +61,9 @@ OUTER:
 		if err != nil {
 			log.Panic("could not get available ports", err.Error())
 		}
+		if p > 60_000 {
+			continue
+		}
 		port := int64(p)
 		for _, v := range dbPorts {
 			if v.P1317 == port {

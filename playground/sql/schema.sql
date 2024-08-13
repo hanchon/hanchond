@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS chain(
     name TEXT NOT NULL,
     chain_id TEXT NOT NULL,
     binary_version TEXT NOT NULL,
-    denom TEXT NOT NULL
+    denom TEXT NOT NULL,
+    prefix TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS node(

@@ -67,7 +67,7 @@ var initMultiChainCmd = &cobra.Command{
 					version,
 					path,
 					chainID,
-					"validator-key",
+					fmt.Sprintf("validator-key-%d-%d", chainNumber, k),
 					"aevmos",
 				).Daemon
 			}
@@ -83,7 +83,7 @@ var initMultiChainCmd = &cobra.Command{
 					fmt.Sprintf("moniker-%d-%d", chainNumber, k),
 					path,
 					chainID,
-					"validator-key",
+					fmt.Sprintf("validator-key-%d-%d", chainNumber, k),
 					"icsstake",
 				).Daemon
 			}
