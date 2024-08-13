@@ -52,7 +52,7 @@ address_type = { derivation = 'ethermint', proto_type = { pk_type = '/ethermint.
 		panic(err)
 	}
 
-	err = h.AddRelayerKey(chainID, mnemonic)
+	err = h.AddRelayerKey(chainID, mnemonic, true)
 	if err != nil {
 		panic(err)
 	}
