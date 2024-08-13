@@ -8,71 +8,72 @@ import (
 	"github.com/hanchon/hanchond/playground/filesmanager"
 )
 
-func InitMultiNodeChain(nodes []*Daemon, queries *database.Queries) error {
-	if err := InitFilesAndDB(nodes, queries); err != nil {
-		return err
+func InitMultiNodeChain(nodes []*Daemon, queries *database.Queries) (int64, error) {
+	chainID, err := InitFilesAndDB(nodes, queries)
+	if err != nil {
+		return 0, err
 	}
 	if err := JoinGenesisTransactions(nodes, queries); err != nil {
-		return err
+		return 0, err
 	}
 	if err := CollectGenTxns(nodes, queries); err != nil {
-		return err
+		return 0, err
 	}
 	if err := UpdatePeers(nodes, queries); err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	return chainID, nil
 }
 
-func InitFilesAndDB(nodes []*Daemon, queries *database.Queries) error {
+func InitFilesAndDB(nodes []*Daemon, queries *database.Queries) (int64, error) {
 	var chainDB database.Chain
 	var err error
 
 	for k := range nodes {
 		// Init the config files
 		if err := nodes[k].InitNode(); err != nil {
-			return err
+			return 0, err
 		}
 		// Update general parameters in the genesis file
 		if err := nodes[k].UpdateGenesisFile(); err != nil {
-			return err
+			return 0, err
 		}
 		if err := nodes[k].UpdateConfigFile(false); err != nil {
-			return err
+			return 0, err
 		}
 		if err := nodes[k].UpdateAppFile(); err != nil {
-			return err
+			return 0, err
 		}
 		if err := nodes[k].CreateGenTx(); err != nil {
-			return err
+			return 0, err
 		}
 		// Assign random and unique ports
 		if err := nodes[k].AssignPorts(queries); err != nil {
-			return err
+			return 0, err
 		}
 		// Update the Config Files
 		if err := nodes[k].UpdateConfigPorts(); err != nil {
-			return err
+			return 0, err
 		}
 
 		// Apply client specific configurations
 		if err := nodes[k].ExecuteCustomConfig(); err != nil {
-			return err
+			return 0, err
 		}
 
 		if k == 0 {
 			chainDB, err = nodes[k].SaveChainToDB(queries)
 			if err != nil {
-				return err
+				return 0, err
 			}
 		}
 		nodeID, err := nodes[k].SaveNodeToDB(chainDB, queries)
 		if err != nil {
-			return err
+			return 0, err
 		}
 		fmt.Printf("Node added with ID: %d\n", nodeID)
 	}
-	return nil
+	return chainDB.ID, nil
 }
 
 func JoinGenesisTransactions(nodes []*Daemon, queries *database.Queries) error {
@@ -139,10 +140,7 @@ func UpdatePeers(nodes []*Daemon, queries *database.Queries) error {
 	}
 
 	for k := range nodes {
-		if k == 0 {
-			continue
-		}
-		if err := nodes[k].AddPersistenPeers([]string{peers[k-1]}); err != nil {
+		if err := nodes[k].AddPersistenPeers(peers); err != nil {
 			return err
 		}
 	}

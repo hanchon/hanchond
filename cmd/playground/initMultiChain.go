@@ -43,7 +43,6 @@ var initMultiChainCmd = &cobra.Command{
 
 		queries := sql.InitDBFromCmd(cmd)
 
-		// TODO: GetNextChainID
 		latestChain, err := queries.GetLatestChain(context.Background())
 		chainNumber := 1
 		if err == nil {
@@ -58,6 +57,10 @@ var initMultiChainCmd = &cobra.Command{
 		case "evmos":
 			chainID := fmt.Sprintf("evmos_9000-%d", chainNumber)
 			for k := range nodes {
+				if filesmanager.IsNodeHomeFolderInitialized(int64(chainNumber), int64(k)) {
+					fmt.Printf("the home folder already exists: %d-%d\n", chainNumber, k)
+					os.Exit(1)
+				}
 				path := filesmanager.GetNodeHomeFolder(int64(chainNumber), int64(k))
 				nodes[k] = evmos.NewEvmos(
 					fmt.Sprintf("moniker-%d-%d", chainNumber, k),
@@ -71,6 +74,10 @@ var initMultiChainCmd = &cobra.Command{
 		case "gaia":
 			chainID := fmt.Sprintf("cosmoshub-%d", chainNumber)
 			for k := range nodes {
+				if filesmanager.IsNodeHomeFolderInitialized(int64(chainNumber), int64(k)) {
+					fmt.Printf("the home folder already exists: %d-%d\n", chainNumber, k)
+					os.Exit(1)
+				}
 				path := filesmanager.GetNodeHomeFolder(int64(chainNumber), int64(k))
 				nodes[k] = gaia.NewGaia(
 					fmt.Sprintf("moniker-%d-%d", chainNumber, k),
@@ -85,12 +92,13 @@ var initMultiChainCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		fmt.Println(nodes)
-		if err := cosmosdaemon.InitMultiNodeChain(nodes, queries); err != nil {
+		chainID, err := cosmosdaemon.InitMultiNodeChain(nodes, queries)
+		if err != nil {
 			fmt.Printf("error: %s\n", err.Error())
 			os.Exit(1)
 		}
-		fmt.Println(nodes)
+
+		fmt.Println("New chain created with id:", chainID)
 	},
 }
 

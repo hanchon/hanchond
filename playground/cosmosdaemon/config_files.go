@@ -209,14 +209,10 @@ func (d *Daemon) GetPeerInfo() (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("%s@192.168.1.36:%d", nodeID, d.Ports.P26656), nil
+	return fmt.Sprintf("%s@127.0.0.1:%d", nodeID, d.Ports.P26656), nil
 }
 
 func (d *Daemon) AddPersistenPeers(peers []string) error {
-	fmt.Println("peers", d.Moniker)
-	fmt.Println("peers", peers)
-	fmt.Println("path", d.Path())
-
 	filtered := []string{}
 	for k := range peers {
 		// Exclude ourself from the list
