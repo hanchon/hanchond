@@ -43,7 +43,6 @@ func (h *Hermes) CreateChannel(firstChainID, secondChainID string) error {
 	)
 	command := exec.Command("bash", "-c", cmd)
 	out, err := command.CombinedOutput()
-	fmt.Println(out)
 	if err != nil {
 		err = fmt.Errorf("error %s: %s", err.Error(), string(out))
 	}
