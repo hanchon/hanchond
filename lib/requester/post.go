@@ -29,7 +29,7 @@ func (c *Client) SendPostRequestEasyJSON(endpoint string, body []byte, res easyj
 
 	statusCode := resp.StatusCode()
 	if statusCode != http.StatusOK {
-		return fmt.Errorf("status code is not ok: " + strconv.Itoa(statusCode))
+		return fmt.Errorf("status code is not ok: %s", strconv.Itoa(statusCode))
 	}
 
 	respBody := resp.Body()
