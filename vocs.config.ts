@@ -28,6 +28,7 @@ export default defineConfig({
           items: [
             {
               text: "Utils",
+              collapsed: true,
               items: [
                 {
                   text: "Config",
@@ -37,14 +38,11 @@ export default defineConfig({
                   text: "Remove Data",
                   link: "/hanchond/playground/removeData",
                 },
-                {
-                  text: "List Binaries",
-                  link: "/hanchond/playground/listBinaries",
-                },
               ],
             },
             {
               text: "Binaries",
+              collapsed: true,
               items: [
                 {
                   text: "Build Evmosd",
@@ -58,15 +56,34 @@ export default defineConfig({
                   text: "Build Hermes",
                   link: "/hanchond/playground/buildHermes",
                 },
+                {
+                  text: "List Binaries",
+                  link: "/hanchond/playground/listBinaries",
+                },
               ],
             },
             {
-              text: "Evmos",
+              text: "Chain",
+              collapsed: true,
               items: [
                 {
-                  text: "Init Genesis",
-                  link: "/hanchond/playground/initGenesis",
+                  text: "Init Chain",
+                  link: "/hanchond/playground/initChain",
                 },
+                {
+                  text: "Start Chain",
+                  link: "/hanchond/playground/startChain",
+                },
+                {
+                  text: "Stop Chain",
+                  link: "/hanchond/playground/stopChain",
+                },
+              ],
+            },
+            {
+              text: "Nodes",
+              collapsed: true,
+              items: [
                 {
                   text: "Start Node",
                   link: "/hanchond/playground/startNode",
@@ -87,6 +104,7 @@ export default defineConfig({
             },
             {
               text: "Hermes",
+              collapsed: true,
               items: [
                 {
                   text: "Add a New Channel",
@@ -104,6 +122,7 @@ export default defineConfig({
             },
             {
               text: "Transactions",
+              collapsed: true,
               items: [
                 {
                   text: "General Flags",
@@ -133,6 +152,7 @@ export default defineConfig({
             },
             {
               text: "Queries",
+              collapsed: true,
               items: [
                 {
                   text: "General Flags",
@@ -152,6 +172,7 @@ export default defineConfig({
                 },
                 {
                   text: "ERC20",
+                  collapsed: true,
                   items: [
                     {
                       text: "Supply",
@@ -165,6 +186,7 @@ export default defineConfig({
                 },
                 {
                   text: "Evmos",
+                  collapsed: true,
                   items: [
                     {
                       text: "Token Pairs",
@@ -180,9 +202,10 @@ export default defineConfig({
             },
             {
               text: "Examples",
+              collapsed: true,
               items: [
                 {
-                  text: "v19.1.0 Upgrade",
+                  text: "v19.1.0 Upgrade (v0.1.0)",
                   link: "/hanchond/playground/examples/upgradev19",
                 },
               ],
@@ -278,6 +301,7 @@ export default defineConfig({
         },
         {
           text: "Examples",
+          collapsed: false,
           items: [
             {
               text: "ERC20 Example",

@@ -1,0 +1,18 @@
+# Stop Chain
+
+To stop a running chain, the command `stop-chain` can be used
+
+## Stop all the nodes
+
+Running the `start-chain` command will stop all the validators associated with the chain.
+
+The command requires an integer as a parameter that represents the chain ID.
+
+```sh
+hanchond p stop-chain 1
+Chain is stopped
+```
+
+:::info
+If the node is not running but still in the database, the command will remove the entry from the database and exit correctly.
+:::
