@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hanchon/hanchond/playground/cosmosdaemon"
 	"github.com/hanchon/hanchond/playground/database"
 	"github.com/hanchon/hanchond/playground/evmos"
 	"github.com/hanchon/hanchond/playground/gaia"
@@ -43,28 +42,28 @@ var startNodeCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		var d *cosmosdaemon.Daemon
+		var pID int
 		switch {
 		case strings.Contains(node.BinaryVersion, "evmos"):
-			d = evmos.NewEvmos(
+			d := evmos.NewEvmos(
 				node.Moniker,
 				node.BinaryVersion,
 				node.ConfigFolder,
 				chain.ChainID,
 				node.ValidatorKeyName,
 				chain.Denom,
-			).Daemon
+			)
+			pID, err = d.Start()
 		case strings.Contains(node.BinaryVersion, "gaia"):
-			d = gaia.NewGaia(
+			d := gaia.NewGaia(
 				node.Moniker,
 				node.ConfigFolder,
 				chain.ChainID,
 				node.ValidatorKeyName,
 				node.ValidatorKeyName,
-			).Daemon
+			)
+			pID, err = d.Start()
 		}
-
-		pID, err := d.Start(node.Moniker)
 		if err != nil {
 			fmt.Println("could not start the node:", err.Error())
 			os.Exit(1)
