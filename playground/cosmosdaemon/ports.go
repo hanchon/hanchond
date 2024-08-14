@@ -143,38 +143,3 @@ func (d *Daemon) RestorePortsFromDB(port database.Port) {
 		P26660: int(port.P26660),
 	}
 }
-
-// func (d *Dameon) SetPorts() error {
-// 	appFile, err := d.openAppFile()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	app := string(appFile)
-// 	app = strings.Replace(app, "1317", fmt.Sprint(d.Ports.P1317), 1)
-// 	app = strings.Replace(app, "8080", fmt.Sprint(d.Ports.P8080), 1)
-// 	app = strings.Replace(app, "9090", fmt.Sprint(d.Ports.P9090), 1)
-// 	app = strings.Replace(app, "9091", fmt.Sprint(d.Ports.P9091), 1)
-// 	app = strings.Replace(app, "8545", fmt.Sprint(d.Ports.P8545), 1)
-// 	app = strings.Replace(app, "8546", fmt.Sprint(d.Ports.P8546), 1)
-// 	app = strings.Replace(app, "6065", fmt.Sprint(d.Ports.P6065), 1)
-// 	if err := d.saveAppFile([]byte(app)); err != nil {
-// 		return err
-// 	}
-//
-// 	configFile, err := d.openConfigFile()
-// 	if err != nil {
-// 		return err
-// 	}
-//
-// 	config := string(configFile)
-// 	config = strings.Replace(config, "26656", fmt.Sprint(d.Ports.P26656), 1)
-// 	config = strings.Replace(config, "26657", fmt.Sprint(d.Ports.P26657), 1)
-// 	config = strings.Replace(config, "26658", fmt.Sprint(d.Ports.P26658), 1)
-// 	config = strings.Replace(config, "26660", fmt.Sprint(d.Ports.P26660), 1)
-// 	config = strings.Replace(config, "6060", fmt.Sprint(d.Ports.P6060), 1)
-// 	if err := d.saveConfigFile([]byte(config)); err != nil {
-// 		return err
-// 	}
-//
-// 	return nil
-// }
