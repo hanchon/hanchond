@@ -1,8 +1,8 @@
 -- name: InsertChain :one
 INSERT INTO chain(
-    name, chain_id, binary_version
+    name, chain_id, binary_version, denom, prefix
 ) VALUES (
-    ?,?,?
+    ?,?,?,?,?
 )
 RETURNING *;
 
@@ -13,13 +13,15 @@ INSERT INTO node(
     moniker,
     validator_key,
     validator_key_name,
+    validator_wallet,
+    key_type,
     binary_version,
     process_id,
     is_validator,
     is_archive,
     is_running
 ) VALUES (
-    ?,?,?,?,?,?,?,?,?,?
+    ?,?,?,?,?,?,?,?,?,?,?,?
 )
 RETURNING ID;
 
@@ -69,8 +71,14 @@ SELECT * FROM ports;
 -- name: GetChain :one
 SELECT * FROM chain where id =? LIMIT 1;
 
+-- name: GetLatestChain :one
+SELECT * FROM chain ORDER BY id DESC LIMIT 1;
+
 -- name: GetAllNodes :many
 SELECT * FROM node;
+
+-- name: GetAllChainNodes :many
+SELECT * FROM node n join ports p on p.node_id == n.id join chain c on n.chain_id == c.id where n.chain_id = ?;
 
 -- name: InitRelayer :exec
 INSERT INTO relayer(

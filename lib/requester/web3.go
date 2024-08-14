@@ -110,5 +110,5 @@ func (c *Client) BroadcastTx(tx *coretypes.Transaction) (string, error) {
 		return resp.Result, nil
 	}
 
-	return "", fmt.Errorf(resp.Error.Message)
+	return "", fmt.Errorf("%s", resp.Error.Message)
 }

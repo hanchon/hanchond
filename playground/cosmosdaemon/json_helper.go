@@ -1,4 +1,4 @@
-package evmos
+package cosmosdaemon
 
 import (
 	"encoding/json"

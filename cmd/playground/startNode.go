@@ -5,16 +5,18 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/hanchon/hanchond/playground/database"
 	"github.com/hanchon/hanchond/playground/evmos"
+	"github.com/hanchon/hanchond/playground/gaia"
 	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
 
 // startNodeCmd represents the startNode command
 var startNodeCmd = &cobra.Command{
-	Use:   "start-node id",
+	Use:   "start-node [node_id]",
 	Args:  cobra.ExactArgs(1),
 	Short: "Starts a node with the given ID",
 	Long:  `It will run the node in a subprocess, saving the pid in the database in case it needs to be stoped in the future`,
@@ -40,13 +42,33 @@ var startNodeCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		e := evmos.NewEvmos(node.BinaryVersion, node.ConfigFolder, chain.ChainID, node.ValidatorKeyName)
-		pID, err := e.Start(node.Moniker)
+		var pID int
+		switch {
+		case strings.Contains(node.BinaryVersion, "evmos"):
+			d := evmos.NewEvmos(
+				node.Moniker,
+				node.BinaryVersion,
+				node.ConfigFolder,
+				chain.ChainID,
+				node.ValidatorKeyName,
+				chain.Denom,
+			)
+			pID, err = d.Start()
+		case strings.Contains(node.BinaryVersion, "gaia"):
+			d := gaia.NewGaia(
+				node.Moniker,
+				node.ConfigFolder,
+				chain.ChainID,
+				node.ValidatorKeyName,
+				node.ValidatorKeyName,
+			)
+			pID, err = d.Start()
+		}
 		if err != nil {
 			fmt.Println("could not start the node:", err.Error())
 			os.Exit(1)
 		}
-		fmt.Println("Evmos is running with id:", pID)
+		fmt.Println("Node is running with pID:", pID)
 
 		err = queries.SetProcessID(context.Background(), database.SetProcessIDParams{
 			ProcessID: int64(pID),

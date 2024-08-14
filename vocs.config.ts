@@ -44,12 +44,25 @@ export default defineConfig({
               ],
             },
             {
-              text: "Evmos",
+              text: "Binaries",
               items: [
                 {
-                  text: "Build Evmos",
+                  text: "Build Evmosd",
                   link: "/hanchond/playground/buildEvmos",
                 },
+                {
+                  text: "Build Gaiad",
+                  link: "/hanchond/playground/buildGaiad",
+                },
+                {
+                  text: "Build Hermes",
+                  link: "/hanchond/playground/buildHermes",
+                },
+              ],
+            },
+            {
+              text: "Evmos",
+              items: [
                 {
                   text: "Init Genesis",
                   link: "/hanchond/playground/initGenesis",
@@ -75,10 +88,6 @@ export default defineConfig({
             {
               text: "Hermes",
               items: [
-                {
-                  text: "Build Hermes",
-                  link: "/hanchond/playground/buildHermes",
-                },
                 {
                   text: "Add a New Channel",
                   link: "/hanchond/playground/hermesAddChannel",
@@ -237,6 +246,10 @@ export default defineConfig({
             {
               text: "Wallet",
               link: "/lib/txbuilder/wallet",
+            },
+            {
+              text: "Mnemonic",
+              link: "/lib/txbuilder/mnemonic",
             },
             {
               text: "Contract",

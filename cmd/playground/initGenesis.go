@@ -40,20 +40,20 @@ var initGenesisCmd = &cobra.Command{
 
 		}
 
-		if filesmanager.IsNodeHomeFolderInitialized(chainid) {
+		if filesmanager.IsNodeHomeFolderInitialized(chainid, 0) {
 			fmt.Println("the home folder for this node was already created")
 			os.Exit(1)
 		}
 
-		path := filesmanager.GetNodeHomeFolder(chainid)
+		path := filesmanager.GetNodeHomeFolder(chainid, 0)
 		chainID := fmt.Sprintf("evmos_9001-%d", chainid)
 
-		e := evmos.NewEvmos(version, path, chainID, fmt.Sprintf("mykey%d", chainid))
+		e := evmos.NewEvmos("moniker", version, path, chainID, fmt.Sprintf("mykey%d", chainid), "aevmos")
 		if err := e.InitGenesis(); err != nil {
 			fmt.Println("could not init the genesis file", err.Error())
 			os.Exit(1)
 		}
-		if err := e.SetPorts(); err != nil {
+		if err := e.Daemon.AssignPorts(queries); err != nil {
 			fmt.Println("could not set the ports", err.Error())
 			os.Exit(1)
 		}
@@ -61,7 +61,8 @@ var initGenesisCmd = &cobra.Command{
 		row, err := queries.InsertChain(context.Background(), database.InsertChainParams{
 			Name:          fmt.Sprintf("chain%d", chainid),
 			ChainID:       e.ChainID,
-			BinaryVersion: e.Version,
+			BinaryVersion: e.BinaryName,
+			Denom:         e.BaseDenom,
 		})
 		if err != nil {
 			fmt.Println("could not insert chain. ", err.Error())
@@ -74,7 +75,7 @@ var initGenesisCmd = &cobra.Command{
 			Moniker:          e.Moniker,
 			ValidatorKey:     e.ValMnemonic,
 			ValidatorKeyName: e.ValKeyName,
-			BinaryVersion:    e.Version,
+			BinaryVersion:    e.BinaryName,
 			ProcessID:        0,
 			IsValidator:      1,
 			IsArchive:        0,

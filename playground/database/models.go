@@ -9,6 +9,8 @@ type Chain struct {
 	Name          string
 	ChainID       string
 	BinaryVersion string
+	Denom         string
+	Prefix        string
 }
 
 type Node struct {
@@ -18,6 +20,8 @@ type Node struct {
 	Moniker          string
 	ValidatorKey     string
 	ValidatorKeyName string
+	ValidatorWallet  string
+	KeyType          string
 	BinaryVersion    string
 	ProcessID        int64
 	IsValidator      int64

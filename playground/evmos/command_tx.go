@@ -3,17 +3,15 @@ package evmos
 import (
 	"fmt"
 	"os/exec"
-
-	"github.com/hanchon/hanchond/playground/filesmanager"
 )
 
-func (e *Evmos) CheckBalance(wallet string) (string, error) {
+func (e *Evmos) GetTransaction(txhash string) (string, error) {
 	command := exec.Command( //nolint:gosec
-		filesmanager.GetEvmosdPath(e.Version),
+		e.BinaryPath,
 		"q",
-		"bank",
-		"balances",
-		wallet,
+		"tx",
+		"--type=hash",
+		txhash,
 		"--home",
 		e.HomeDir,
 		"--node",

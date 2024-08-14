@@ -1,10 +1,13 @@
 package playground
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 
-	"github.com/hanchon/hanchond/playground/evmos"
+	"github.com/hanchon/hanchond/playground/database"
 	"github.com/hanchon/hanchond/playground/hermes"
 	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
@@ -12,62 +15,84 @@ import (
 
 // hermesAddChannelCmd represents the hermesAddChannel command
 var hermesAddChannelCmd = &cobra.Command{
-	Use:   "hermes-add-channel id1 id2",
+	Use:   "hermes-add-channel [chain_id] [chain_id]",
 	Args:  cobra.ExactArgs(2),
 	Short: "It uses the hermes client to open an IBC channel between two chains",
 	Long:  `This command requires that Hermes was already built and at least one node for each chain running.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		queries := sql.InitDBFromCmd(cmd)
 
-		node1 := args[0]
-		node2 := args[1]
-		fmt.Println("Getting first node data...")
-		firstNode := evmos.GetNodeFromDB(queries, node1)
-		fmt.Println("Getting second node data...")
-		secondNode := evmos.GetNodeFromDB(queries, node2)
-		// TODO: make sure that the nodes are running checking for the PID
-		if firstNode.Node.IsRunning != 1 {
-			fmt.Println("first node is not running")
+		chainOne := args[0]
+		chainOneID, err := strconv.Atoi(chainOne)
+		if err != nil {
+			fmt.Println("invalid chain id")
 			os.Exit(1)
-
 		}
-		if secondNode.Node.IsRunning != 1 {
-			fmt.Println("second node is not running")
+		chainTwo := args[1]
+		chainTwoID, err := strconv.Atoi(chainTwo)
+		if err != nil {
+			fmt.Println("invalid chain id")
 			os.Exit(1)
-
 		}
-		fmt.Println("Both chains are running")
+		chains := make([]database.GetAllChainNodesRow, 2)
+		nodesChainOne, err := queries.GetAllChainNodes(context.Background(), int64(chainOneID))
+		if err != nil {
+			fmt.Println("could not find nodes for chain:", chainOne)
+			os.Exit(1)
+		}
+		chains[0] = nodesChainOne[0]
+
+		nodesChainTwo, err := queries.GetAllChainNodes(context.Background(), int64(chainTwoID))
+		if err != nil {
+			fmt.Println("could not find nodes for chain:", chainTwo)
+			os.Exit(1)
+		}
+		chains[1] = nodesChainTwo[0]
 
 		h := hermes.NewHermes()
 		fmt.Println("Relayer initialized")
 
-		if err := h.AddEvmosChain(
-			firstNode.Chain.ChainID,
-			firstNode.Ports.P26657,
-			firstNode.Ports.P9090,
-			firstNode.Node.ValidatorKeyName,
-			firstNode.Node.ValidatorKey,
-		); err != nil {
-			fmt.Println("error adding first chain to the relayer:", err.Error())
-			os.Exit(1)
-		}
-		fmt.Println("First chain added")
+		for _, v := range chains {
+			if v.IsRunning != 1 {
+				fmt.Println("the node is not running, chain id:", v.ChainID)
+			}
 
-		if err := h.AddEvmosChain(
-			secondNode.Chain.ChainID,
-			secondNode.Ports.P26657,
-			secondNode.Ports.P9090,
-			secondNode.Node.ValidatorKeyName,
-			secondNode.Node.ValidatorKey,
-		); err != nil {
-			fmt.Println("error adding second chain to the relayer:", err.Error())
-			os.Exit(1)
-		}
+			switch {
+			case strings.Contains(v.BinaryVersion, "gaia"):
+				fmt.Println("Adding gaia chain")
+				if err := h.AddCosmosChain(
+					v.ChainID_2,
+					v.P26657,
+					v.P9090,
+					v.ValidatorKeyName,
+					v.ValidatorKey,
+					v.Prefix,
+					v.Denom,
+				); err != nil {
+					fmt.Println("error adding first chain to the relayer:", err.Error())
+					os.Exit(1)
+				}
+			case strings.Contains(v.BinaryVersion, "evmos"):
+				fmt.Println("Adding evmos chain")
+				if err := h.AddEvmosChain(
+					v.ChainID_2,
+					v.P26657,
+					v.P9090,
+					v.ValidatorKeyName,
+					v.ValidatorKey,
+				); err != nil {
+					fmt.Println("error adding first chain to the relayer:", err.Error())
+					os.Exit(1)
+				}
+			default:
+				fmt.Println("incorrect binary name")
+				os.Exit(1)
+			}
 
-		fmt.Println("Second chain added")
+		}
 
 		fmt.Println("Calling create channel")
-		err := h.CreateChannel(firstNode.Chain.ChainID, secondNode.Chain.ChainID)
+		err = h.CreateChannel(chains[0].ChainID_2, chains[1].ChainID_2)
 		if err != nil {
 			fmt.Println("error creating channel", err.Error())
 			os.Exit(1)

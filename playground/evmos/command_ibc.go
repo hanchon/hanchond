@@ -3,13 +3,11 @@ package evmos
 import (
 	"fmt"
 	"os/exec"
-
-	"github.com/hanchon/hanchond/playground/filesmanager"
 )
 
 func (e *Evmos) SendIBC(port, channel, receiver, amount string) (string, error) {
 	command := exec.Command( //nolint:gosec
-		filesmanager.GetEvmosdPath(e.Version),
+		e.BinaryPath,
 		"tx",
 		"ibc-transfer",
 		"transfer",

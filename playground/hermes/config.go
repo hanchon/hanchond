@@ -13,6 +13,53 @@ func (h *Hermes) GetConfigFile() string {
 	return filesmanager.GetHermesPath() + "/config.toml"
 }
 
+func (h *Hermes) AddCosmosChain(chainID string, p26657 int64, p9090 int64, keyname string, mnemonic string, accountPrefix string, denom string) error {
+	values := fmt.Sprintf(`
+[[chains]]
+id = '%s'
+rpc_addr = 'http://127.0.0.1:%d'
+grpc_addr = 'http://127.0.0.1:%d'
+event_source = { mode = 'pull', interval = '1s' }
+rpc_timeout = '10s'
+account_prefix = '%s'
+key_store_folder = '%s'
+key_name = '%s'
+store_prefix = 'ibc'
+default_gas = 5000000
+max_gas = 10000000
+gas_price = { price = 100, denom = '%s' }
+gas_multiplier = 5
+max_msg_num = 20
+max_tx_size = 209715
+clock_drift = '20s'
+max_block_time = '10s'
+trust_threshold = { numerator = '1', denominator = '3' }
+`, chainID, p26657, p9090, accountPrefix, filesmanager.GetHermesPath()+"/keyring"+chainID, keyname, denom)
+
+	configFile, err := filesmanager.ReadFile(h.GetConfigFile())
+	if err != nil {
+		return err
+	}
+
+	configFileString := string(configFile)
+	// If the chain was already included in the config file, do nothing
+	if strings.Contains(configFileString, chainID) {
+		// Maybe update ports if needed
+		return nil
+	}
+	configFileString += values
+	err = filesmanager.SaveFile([]byte(configFileString), h.GetConfigFile())
+	if err != nil {
+		panic(err)
+	}
+
+	err = h.AddRelayerKey(chainID, mnemonic, false)
+	if err != nil {
+		panic(err)
+	}
+	return nil
+}
+
 func (h *Hermes) AddEvmosChain(chainID string, p26657 int64, p9090 int64, keyname string, mnemonic string) error {
 	values := fmt.Sprintf(`
 [[chains]]
@@ -52,7 +99,7 @@ address_type = { derivation = 'ethermint', proto_type = { pk_type = '/ethermint.
 		panic(err)
 	}
 
-	err = h.AddRelayerKey(chainID, mnemonic)
+	err = h.AddRelayerKey(chainID, mnemonic, true)
 	if err != nil {
 		panic(err)
 	}

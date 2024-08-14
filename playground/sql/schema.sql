@@ -2,7 +2,9 @@ CREATE TABLE IF NOT EXISTS chain(
     id INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     chain_id TEXT NOT NULL,
-    binary_version TEXT NOT NULL
+    binary_version TEXT NOT NULL,
+    denom TEXT NOT NULL,
+    prefix TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS node(
@@ -12,6 +14,8 @@ CREATE TABLE IF NOT EXISTS node(
     moniker TEXT NOT NULL,
     validator_key TEXT NOT NULL,
     validator_key_name TEXT NOT NULL,
+    validator_wallet TEXT NOT NULL,
+    key_type TEXT NOT NULL,
     binary_version TEXT NOT NULL,
 
     process_id INTEGER NOT NULL,
