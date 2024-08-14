@@ -205,7 +205,7 @@ export default defineConfig({
               collapsed: true,
               items: [
                 {
-                  text: "v19.1.0 Upgrade (deprecated)",
+                  text: "v19.1.0 Upgrade (v0.1.0)",
                   link: "/hanchond/playground/examples/upgradev19",
                 },
               ],
