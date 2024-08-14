@@ -1,0 +1,20 @@
+# Start Chain
+
+After running the `init-chain` command, you can start the chain.
+
+## Start all the nodes
+
+Running the `start-chain` command will run all the validators associated with the chain.
+
+The command requires an integer as a parameter that represents the chain id.
+
+```sh
+hanchond playground init-chain 1 --client evmos --version local
+Node added with ID: 1
+Node added with ID: 2
+New chain created with id: 1
+```
+
+:::info
+The node logs can be found inside the home folder `data/${chain_id}-${node_id}/run.log`.
+:::

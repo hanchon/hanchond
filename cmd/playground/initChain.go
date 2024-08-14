@@ -17,9 +17,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// initMultiChainCmd represents the initMultiChainCmd
-var initMultiChainCmd = &cobra.Command{
-	Use:   "init-multi-chain [amount_of_validators]",
+// initChainCmd represents the initChainCmd
+var initChainCmd = &cobra.Command{
+	Use:   "init-chain [amount_of_validators]",
 	Args:  cobra.ExactArgs(1),
 	Short: "Init the genesis and configurations files for a new chain",
 	Long:  `Set up the validators nodes for the new chain.`,
@@ -103,7 +103,7 @@ var initMultiChainCmd = &cobra.Command{
 }
 
 func init() {
-	PlaygroundCmd.AddCommand(initMultiChainCmd)
-	initMultiChainCmd.Flags().String("client", "evmos", "Client that you want to use. Options: evmos, gaia")
-	initMultiChainCmd.Flags().StringP("version", "v", "local", "Version of the Evmos node that you want to use, defaults to local. Tag names are supported. If selected node is gaia, the flag is ignored.")
+	PlaygroundCmd.AddCommand(initChainCmd)
+	initChainCmd.Flags().String("client", "evmos", "Client that you want to use. Options: evmos, gaia")
+	initChainCmd.Flags().StringP("version", "v", "local", "Version of the Evmos node that you want to use, defaults to local. Tag names are supported. If selected node is gaia, the flag is ignored.")
 }

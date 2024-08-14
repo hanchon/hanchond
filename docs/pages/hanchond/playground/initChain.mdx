@@ -1,0 +1,21 @@
+# Init Chain
+
+Before starting the chain, a genesis file needs to be created and the configurations files need to be updated.
+
+## Set up the genesis and config files
+
+Running the `init-chain` command will set up the genesis file and update the configuration files so the ports do not conflict with the rest of your network.
+
+The command requires an integer as a parameter that represents the amount of validator that will be set up.
+
+```sh
+hanchond playground start-chain 1
+Node is running with pID: 81553
+Node is running with pID: 81634
+```
+
+:::info
+By default the `--version` flag will be `local`, it can be overwritten with any of the versions that were previously built.
+
+By default the `--client` flag will be `evmos`. `gaia` is also supported.
+:::

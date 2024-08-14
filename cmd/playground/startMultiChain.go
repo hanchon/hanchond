@@ -14,16 +14,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// startMultiChainCmd represents the startMultiChainCmd
-var startMultiChainCmd = &cobra.Command{
-	Use:   "start-multi-chain [chain_id]",
+// startChainCmd represents the startChainCmd
+var startChainCmd = &cobra.Command{
+	Use:   "start-chain [chain_id]",
 	Args:  cobra.ExactArgs(1),
 	Short: "Start all the validators of the chain",
 	Long:  `Start all the required processes to run the chain`,
 	Run: func(cmd *cobra.Command, args []string) {
 		queries := sql.InitDBFromCmd(cmd)
 
-		// GetNextChainID
 		chainNumber, err := strconv.Atoi(strings.TrimSpace(args[0]))
 		if err != nil {
 			fmt.Println("invalid chain id:", err.Error())
@@ -56,7 +55,7 @@ var startMultiChainCmd = &cobra.Command{
 				os.Exit(1)
 			}
 
-			fmt.Println("node is running with id:", pID)
+			fmt.Println("Node is running with id:", pID)
 			err = queries.SetProcessID(context.Background(), database.SetProcessIDParams{
 				ProcessID: int64(pID),
 				IsRunning: 1,
@@ -71,5 +70,5 @@ var startMultiChainCmd = &cobra.Command{
 }
 
 func init() {
-	PlaygroundCmd.AddCommand(startMultiChainCmd)
+	PlaygroundCmd.AddCommand(startChainCmd)
 }

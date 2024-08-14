@@ -129,7 +129,6 @@ func (d *Daemon) GetValidatorAddress() (string, error) {
 }
 
 func (d *Daemon) Start(startCmd string) (int, error) {
-	fmt.Println(startCmd)
 	command := exec.Command("bash", "-c", startCmd)
 	// Deattach the program
 	command.SysProcAttr = &syscall.SysProcAttr{
