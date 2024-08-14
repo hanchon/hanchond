@@ -74,6 +74,10 @@ export default defineConfig({
                   text: "Start Chain",
                   link: "/hanchond/playground/startChain",
                 },
+                {
+                  text: "Stop Chain",
+                  link: "/hanchond/playground/stopChain",
+                },
               ],
             },
             {
