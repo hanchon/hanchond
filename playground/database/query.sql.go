@@ -465,6 +465,24 @@ func (q *Queries) SetBinaryVersion(ctx context.Context, arg SetBinaryVersionPara
 	return err
 }
 
+const setChainBinaryVersion = `-- name: SetChainBinaryVersion :exec
+UPDATE chain SET
+    binary_version = ?
+WHERE (
+    id = ?
+)
+`
+
+type SetChainBinaryVersionParams struct {
+	BinaryVersion string
+	ID            int64
+}
+
+func (q *Queries) SetChainBinaryVersion(ctx context.Context, arg SetChainBinaryVersionParams) error {
+	_, err := q.db.ExecContext(ctx, setChainBinaryVersion, arg.BinaryVersion, arg.ID)
+	return err
+}
+
 const setProcessID = `-- name: SetProcessID :exec
 UPDATE node SET
     process_id = ?,

@@ -2,11 +2,18 @@
 
 When performing an upgrade, you can use the `change-version` command to change the chain binary version.
 
+The `change-version` command requires 2 parameters:
+
+- ID (It can be node ID or chain ID, depending on the `--is-chain-id` flag)
+- Version
+
 ```sh
-hanchond playground change-version 1 local
+hanchond playground change-version 1 local --is-chain-id false
 Node 1 updated to version local
 ```
 
 :::info
-`local` is a valid version when the local built is needed
+`local` is a valid version when the local built is needed.
+
+The `--is-chain-id` flag can be used with the value `true` when you want to update all the chain node versions. If you only need to update one node, you can ignore the flag or send it with the value `false`.
 :::

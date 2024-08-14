@@ -52,6 +52,13 @@ WHERE (
     id = ?
 );
 
+-- name: SetChainBinaryVersion :exec
+UPDATE chain SET
+    binary_version = ?
+WHERE (
+    id = ?
+);
+
 -- name: SetBinaryVersion :exec
 UPDATE node SET
     binary_version = ?
