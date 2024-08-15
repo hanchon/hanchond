@@ -28,7 +28,9 @@ func (d *Daemon) UpdateAppFile() error {
 	if err != nil {
 		return err
 	}
-	appFile = d.SetPruningInAppFile(true, appFile)
+
+	// No pruning to use archive queries
+	appFile = d.SetPruningInAppFile(false, appFile)
 	appFile = d.SetMinGasPricesInAppFile(appFile)
 	return d.SaveAppFile(appFile)
 }

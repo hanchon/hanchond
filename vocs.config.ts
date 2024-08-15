@@ -208,6 +208,10 @@ export default defineConfig({
                   text: "v19.1.0 Upgrade (v0.1.0)",
                   link: "/hanchond/playground/examples/upgradev19",
                 },
+                {
+                  text: "Debug eth_call (v0.2.0)",
+                  link: "/hanchond/playground/examples/debugEthCall",
+                },
               ],
             },
           ],
