@@ -3,6 +3,7 @@ package erc20
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/hanchon/hanchond/lib/converter"
@@ -25,6 +26,8 @@ var balanceCmd = &cobra.Command{
 			fmt.Println("node not set")
 			os.Exit(1)
 		}
+
+		height, _ := cmd.Flags().GetString("height")
 		contract := strings.TrimSpace(args[0])
 		wallet := strings.TrimSpace(args[1])
 		wallet, err = converter.NormalizeAddressToHex(wallet)
@@ -35,7 +38,16 @@ var balanceCmd = &cobra.Command{
 
 		e := evmos.NewEvmosFromDB(queries, nodeID)
 		client := requester.NewClient().WithUnsecureWeb3Endpoint(fmt.Sprintf("http://localhost:%d", e.Ports.P8545))
-		balance, err := client.GetBalanceERC20(contract, wallet, erc20.Latest)
+		heightInt := erc20.Latest
+		if height != "latest" {
+			temp, err := strconv.ParseInt(height, 10, 64)
+			if err != nil {
+				fmt.Printf("invalid height: %s\n", err.Error())
+				os.Exit(1)
+			}
+			heightInt = int(temp)
+		}
+		balance, err := client.GetBalanceERC20(contract, wallet, heightInt)
 		if err != nil {
 			fmt.Println("could not get the balance:", err.Error())
 			os.Exit(1)
@@ -46,4 +58,5 @@ var balanceCmd = &cobra.Command{
 
 func init() {
 	ERC20Cmd.AddCommand(balanceCmd)
+	balanceCmd.Flags().String("height", "latest", "Query at the given height.")
 }

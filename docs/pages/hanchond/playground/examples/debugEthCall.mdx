@@ -1,0 +1,142 @@
+# Debug `eth_call` for archive queries
+
+:::info
+This example is using `hanchond` v0.2.0. Some interfaces may change in the future
+:::
+
+## Set up the chains
+
+Create two chains with just one validator each using the `v18.1.0` Evmos version and start them
+
+```bash
+hanchond p remove-data && hanchond p init-chain 1 --version v18.1.0 && hanchond p init-chain 1 --version v18.1.0 && hanchond p start-chain 1 && hanchond p start-chain 2
+```
+
+## IBC config
+
+- Create an IBC Channel and start the relayer
+
+```bash
+hanchond p hermes-add-channel 1 2 && hanchond p start-hermes
+```
+
+- Send an IBC transfer
+
+```bash
+hanchond p tx ibc-transfer evmos1x49lse4ykqrvntuancrdjdjzz75xzmsj5nn9p0 1000 --node 2
+```
+
+- Verify the balance:
+
+```bash
+hanchond p q balance evmos1x49lse4ykqrvntuancrdjdjzz75xzmsj5nn9p0
+```
+
+## Register the ERC20
+
+```bash
+hanchond playground tx str-v1-proposal ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E
+hanchond playground tx vote
+hanchond p q evmos token-pairs | jq .
+```
+
+We have an ERC20 with the address: `0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd`
+
+- Send another IBC transfer so all the balance is converted
+
+```bash
+hanchond p tx ibc-transfer evmos1x49lse4ykqrvntuancrdjdjzz75xzmsj5nn9p0 1000 --node 2
+```
+
+## Debug `eth_call`
+
+-Get the current value
+
+```bash
+hanchond p q height
+118
+
+hanchond p q erc20 balance 0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd 0x354bF866A4B006C9AF9d9e06d9364217A8616E12 --height 118
+2000
+```
+
+- Upgrade the network
+
+```bash
+hanchond playground tx upgrade-proposal v19.1.0 --height-diff 50
+hanchond playground tx vote
+```
+
+- Wait for the upgrade height
+
+```bash
+hanchond p q height
+235
+```
+
+### Apply the upgrade
+
+- Stop the node
+
+```bash
+hanchond p stop-node 1
+```
+
+- Change the version
+
+```bash
+hanchond p change-version 1 evmosdv19.1.0
+```
+
+- Restart the node
+
+```bash
+hanchond p start-node 1
+```
+
+### Query archive data
+
+```bash
+hanchond p q erc20 balance 0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd 0x354bF866A4B006C9AF9d9e06d9364217A8616E12 --height 118
+
+could not get the balance: rpc error: code = Internal desc = invalid opcode: PUSH0
+```
+
+## Create a patch
+
+- Clone the repo locally and apply the needed changes.
+
+- Build the binary locally
+
+```bash
+hanchond p build-evmos --path /Users/hanchon/devel/evmos/evmos
+```
+
+- Update the node to use the local fork
+
+```bash
+hanchond p change-version 1 evmosdlocal
+```
+
+- Stop the node
+
+```bash
+hanchond p stop-node 1
+```
+
+- Start the node
+
+```bash
+hanchond p start-node 1
+```
+
+- Test your patch
+
+```bash
+hanchond p q erc20 balance 0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd 0x354bF866A4B006C9AF9d9e06d9364217A8616E12 --height 118
+2000
+```
+
+:::info
+Logs can be found at `~/hanchond/data/1-0/run.log`
+:::
