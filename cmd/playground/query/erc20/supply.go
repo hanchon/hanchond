@@ -8,7 +8,6 @@ import (
 
 	"github.com/hanchon/hanchond/lib/requester"
 	"github.com/hanchon/hanchond/lib/smartcontract/erc20"
-	"github.com/hanchon/hanchond/playground/evmos"
 	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
@@ -20,14 +19,10 @@ var supplyCmd = &cobra.Command{
 	Short: "Get the wallet supply",
 	Run: func(cmd *cobra.Command, args []string) {
 		queries := sql.InitDBFromCmd(cmd)
-		nodeID, err := cmd.Flags().GetString("node")
-		if err != nil {
-			fmt.Println("node not set")
-			os.Exit(1)
-		}
 		contract := strings.TrimSpace(args[0])
-		e := evmos.NewEvmosFromDB(queries, nodeID)
-		client := requester.NewClient().WithUnsecureWeb3Endpoint(fmt.Sprintf("http://localhost:%d", e.Ports.P8545))
+
+		endpoint := getEndpoint(queries, cmd)
+		client := requester.NewClient().WithUnsecureWeb3Endpoint(endpoint)
 
 		height, _ := cmd.Flags().GetString("height")
 		heightInt := erc20.Latest
