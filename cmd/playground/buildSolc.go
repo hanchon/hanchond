@@ -13,7 +13,6 @@ import (
 var buildSolcCmd = &cobra.Command{
 	Use:   "build-solc",
 	Short: "Build an specific version of Solc",
-	Long:  `It downloads any Solc version. Using the --version flag to change the default one: 0.8.0`,
 	Run: func(cmd *cobra.Command, _ []string) {
 		_ = filesmanager.SetHomeFolderFromCobraFlags(cmd)
 		version, err := cmd.Flags().GetString("version")
