@@ -13,7 +13,7 @@ type TxBuilder struct {
 
 	currentNonce map[string]uint64
 
-	requester requester.Client
+	requester *requester.Client
 }
 
 func NexTxBuilder(
@@ -21,7 +21,7 @@ func NexTxBuilder(
 	mnemonic string,
 	customGasLimit map[string]uint64,
 	defaultGasLimit uint64,
-	requester requester.Client,
+	requester *requester.Client,
 ) *TxBuilder {
 	return &TxBuilder{
 		contracts:       contracts,

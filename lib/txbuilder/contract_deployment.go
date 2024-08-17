@@ -1,14 +1,17 @@
 package txbuilder
 
-import "math/big"
+import (
+	"math/big"
 
-func (t *TxBuilder) InteractWithContract(
-	contractName string,
+	"github.com/ethereum/go-ethereum/common"
+)
+
+func (t *TxBuilder) DeployContract(
 	accountID int,
-	value *big.Int,
-	message string,
-	args ...interface{},
+	bytecode []byte,
+	gasLimit uint64,
 ) (string, error) {
+	value := big.NewInt(0)
 	wallet, account, err := WalletFromMnemonicWithAccountID(t.mnemonic, accountID)
 	if err != nil {
 		return "", err
@@ -19,5 +22,5 @@ func (t *TxBuilder) InteractWithContract(
 		return "", err
 	}
 
-	return t.SendTxToContract(contractName, account.Address, privateKey, value, message, args...)
+	return t.SendTx(account.Address, common.Address{}, value, gasLimit, bytecode, privateKey)
 }
