@@ -121,3 +121,7 @@ func CleanUpData() error {
 	_ = os.RemoveAll(GetDatabaseFile())
 	return os.RemoveAll(GetDataFolder())
 }
+
+func GetSolcPath(version string) string {
+	return GetBuildsDir() + "/solc" + version
+}

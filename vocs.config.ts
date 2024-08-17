@@ -57,6 +57,10 @@ export default defineConfig({
                   link: "/hanchond/playground/buildHermes",
                 },
                 {
+                  text: "Build Solc",
+                  link: "/hanchond/playground/buildSolc",
+                },
+                {
                   text: "List Binaries",
                   link: "/hanchond/playground/listBinaries",
                 },
