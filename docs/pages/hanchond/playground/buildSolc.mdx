@@ -1,0 +1,17 @@
+# Build Solc
+
+To compile solidity contracts, you need to have a solidity compiler. The `build-solc` command allows you to download the version of `solc` that you need.
+
+## Download the solidity compiler
+
+The `build-solc` command supports the flag `--version` to download a specific release. It defaults to version `0.8.0`.
+
+```sh
+hanchond playground build-solc --version 0.8.1
+Downloading solidity from github: 0.8.1
+Solc 0.8.1 is now available
+```
+
+:::info
+The `--is-darwin` flag is available and defaults to `true`. Using the value as `false`, it will download the Linux version of the binary>
+:::
