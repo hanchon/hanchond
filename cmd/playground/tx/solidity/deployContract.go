@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/hanchon/hanchond/lib/requester"
-	"github.com/hanchon/hanchond/lib/txbuilder"
 	"github.com/hanchon/hanchond/playground/evmos"
 	"github.com/hanchon/hanchond/playground/filesmanager"
 	"github.com/hanchon/hanchond/playground/sql"
@@ -38,17 +36,7 @@ var deployContractCmd = &cobra.Command{
 		pathToBytecode := args[0]
 
 		e := evmos.NewEvmosFromDB(queries, nodeID)
-
-		// TODO: add getTxBuilder to the Evmos struct
-		builder := txbuilder.NexTxBuilder(
-			map[string]txbuilder.Contract{},
-			e.ValMnemonic,
-			map[string]uint64{},
-			uint64(2_000_000),
-			requester.NewClient().WithUnsecureWeb3Endpoint(
-				fmt.Sprintf("http://localhost:%d", e.Ports.P8545),
-			),
-		)
+		builder := e.NewTxBuilder(uint64(gasLimit))
 
 		bytecode, err := filesmanager.ReadFile(pathToBytecode)
 		if err != nil {

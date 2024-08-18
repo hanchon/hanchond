@@ -127,3 +127,13 @@ func (d *Daemon) NewRequester() *requester.Client {
 		WithUnsecureRestEndpoint(fmt.Sprintf("http://localhost:%d", d.Ports.P1317)).
 		WithUnsecureTendermintEndpoint(fmt.Sprintf("http://localhost:%d", d.Ports.P26657))
 }
+
+func (d *Daemon) NewTxBuilder(gasLimit uint64) *txbuilder.TxBuilder {
+	return txbuilder.NexTxBuilder(
+		map[string]txbuilder.Contract{},
+		d.ValMnemonic,
+		map[string]uint64{},
+		gasLimit,
+		d.NewRequester(),
+	)
+}
