@@ -1,11 +1,14 @@
 package cosmosdaemon
 
 import (
+	"context"
 	"fmt"
 	"path/filepath"
+	"strconv"
 
 	"github.com/hanchon/hanchond/playground/database"
 	"github.com/hanchon/hanchond/playground/filesmanager"
+	"github.com/spf13/cobra"
 )
 
 func InitMultiNodeChain(nodes []*Daemon, queries *database.Queries) (int64, error) {
@@ -145,4 +148,32 @@ func UpdatePeers(nodes []*Daemon, queries *database.Queries) error {
 		}
 	}
 	return nil
+}
+
+func GetWeb3Endpoint(queries *database.Queries, cmd *cobra.Command) (string, error) {
+	endpoint := ""
+	mainnet, _ := cmd.Flags().GetBool("mainnet")
+	if mainnet {
+		return "https://proxy.evmos.org/web3", nil
+	}
+
+	url, _ := cmd.Flags().GetString("url")
+	if url != "" {
+		endpoint = url
+	} else {
+		nodeID, err := cmd.Flags().GetString("node")
+		if err != nil {
+			return "", fmt.Errorf("node not set")
+		}
+		validatorID, err := strconv.ParseInt(nodeID, 10, 64)
+		if err != nil {
+			return "", err
+		}
+		ports, err := queries.GetNodePorts(context.Background(), validatorID)
+		if err != nil {
+			return "", err
+		}
+		endpoint = fmt.Sprintf("http://localhost:%d", ports.P8545)
+	}
+	return endpoint, nil
 }

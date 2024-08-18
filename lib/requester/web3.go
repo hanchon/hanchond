@@ -127,3 +127,31 @@ func (c *Client) BroadcastTx(tx *coretypes.Transaction) (string, error) {
 
 	return "", fmt.Errorf("%s", resp.Error.Message)
 }
+
+// Eth_call
+// TODO: add documentation for this function
+func (c *Client) EthCall(address string, data string, height string) ([]byte, error) {
+	heightString, err := heigthToQueryParam(height)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(heightString)
+	return c.SendPostRequest(
+		c.Web3Endpoint,
+		[]byte(`{"method":"eth_call","params":[{"to":"`+address+`","data":"`+data+`"},"`+heightString+`"],"id":1,"jsonrpc":"2.0"}`),
+		c.Web3Auth,
+	)
+}
+
+func heigthToQueryParam(height string) (string, error) {
+	heightString := "latest"
+	if height != "latest" {
+		temp, err := strconv.ParseInt(height, 10, 64)
+		if err != nil {
+			return "", fmt.Errorf("invalid height: %s\n", err.Error())
+		}
+
+		heightString = fmt.Sprintf("0x%x", temp)
+	}
+	return heightString, nil
+}
