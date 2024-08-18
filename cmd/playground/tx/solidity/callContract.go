@@ -5,7 +5,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/hanchon/hanchond/lib/requester"
 	"github.com/hanchon/hanchond/lib/smartcontract"
 	"github.com/hanchon/hanchond/playground/cosmosdaemon"
@@ -46,17 +45,10 @@ var callContractViewCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		callArgs := []interface{}{}
-		for _, v := range params {
-			value := strings.Split(v, ":")
-			switch value[0] {
-			case "a":
-				callArgs = append(callArgs, common.HexToAddress(value[1]))
-			default:
-				// TODO: support more types of params
-				fmt.Println("invalid param type")
-				os.Exit(1)
-			}
+		callArgs, err := smartcontract.StringsToABIArguments(params)
+		if err != nil {
+			fmt.Printf("error converting arguments: %s\n", err.Error())
+			os.Exit(1)
 		}
 
 		client := requester.NewClient().WithUnsecureWeb3Endpoint(endpoint)

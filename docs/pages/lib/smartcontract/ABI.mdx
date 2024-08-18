@@ -1,0 +1,23 @@
+# ABI Helpers
+
+## ABI Pack
+
+To simplify the pack of arguments, the `ABIPack` function was created:
+
+```go
+callData, err := smartcontract.ABIPack(abiBytes, method, callArgs...)
+```
+
+This is meant to be used after reading the `abi` file from disk.
+
+## Strings To ABIArguments
+
+The `StringsToABIArguments` function can be used to convert the strings used in the `cli` to the correct type used by solidity.
+
+```go
+callArgs, err := smartcontract.StringsToABIArguments(params)
+```
+
+Supported types:
+
+- Address: `a:0x123...`

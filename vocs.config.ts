@@ -308,6 +308,10 @@ export default defineConfig({
           collapsed: false,
           items: [
             {
+              text: "ABI",
+              link: "/lib/smartcontract/ABI",
+            },
+            {
               text: "ERC20",
               link: "/lib/smartcontract/erc20",
             },

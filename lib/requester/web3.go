@@ -148,7 +148,7 @@ func heigthToQueryParam(height string) (string, error) {
 	if height != "latest" {
 		temp, err := strconv.ParseInt(height, 10, 64)
 		if err != nil {
-			return "", fmt.Errorf("invalid height: %s\n", err.Error())
+			return "", fmt.Errorf("invalid height: %s", err.Error())
 		}
 
 		heightString = fmt.Sprintf("0x%x", temp)

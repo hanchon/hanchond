@@ -55,7 +55,7 @@ func (c *Client) SendPostRequest(endpoint string, body []byte, auth string) ([]b
 	}
 
 	if resp.StatusCode() != http.StatusOK {
-		return []byte{}, fmt.Errorf("incorrect status code: " + strconv.Itoa(resp.StatusCode()))
+		return []byte{}, fmt.Errorf("incorrect status code: %d", resp.StatusCode())
 	}
 
 	ret := make([]byte, len(resp.Body()))
