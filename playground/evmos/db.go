@@ -44,5 +44,6 @@ func NewEvmosFromDB(queries *database.Queries, nodeID string) *Evmos {
 	data := GetNodeFromDB(queries, nodeID)
 	e := NewEvmos(data.Node.Moniker, data.Node.BinaryVersion, data.Node.ConfigFolder, data.Chain.ChainID, data.Node.ValidatorKeyName, data.Chain.Denom)
 	e.RestorePortsFromDB(data.Ports)
+	e.SetValidatorWallet(data.Node.ValidatorKey, data.Node.ValidatorWallet)
 	return e
 }

@@ -30,10 +30,10 @@ func (t *TxBuilder) SendTxToContract(contractName string, address common.Address
 
 	gasLimit := t.GetGasLimit(message)
 
-	return t.SendTx(address, contractAddress, value, gasLimit, data, privateKey)
+	return t.SendTx(address, &contractAddress, value, gasLimit, data, privateKey)
 }
 
-func (t *TxBuilder) SendTx(from, to common.Address, value *big.Int, gasLimit uint64, data []byte, privateKey *ecdsa.PrivateKey) (string, error) {
+func (t *TxBuilder) SendTx(from common.Address, to *common.Address, value *big.Int, gasLimit uint64, data []byte, privateKey *ecdsa.PrivateKey) (string, error) {
 	var err error
 
 	v, ok := t.currentNonce[from.Hex()]
@@ -49,7 +49,10 @@ func (t *TxBuilder) SendTx(from, to common.Address, value *big.Int, gasLimit uin
 		return "", err
 	}
 
-	tx := types.NewTransaction(nonce, to, value, gasLimit, gasPrice, data)
+	tx := types.NewContractCreation(nonce, value, gasLimit, gasPrice, data)
+	if to != nil {
+		tx = types.NewTransaction(nonce, *to, value, gasLimit, gasPrice, data)
+	}
 
 	chainID, err := t.requester.ChanID()
 	if err != nil {

@@ -1,0 +1,24 @@
+# Compile Solidity Contract
+
+The command `compile-contract` can be used to compile a `.sol` file.
+
+## Compile the file
+
+The `solc` version must be [built](/hanchond/playground/buildSolc) before running the command.
+
+:::info
+There are two available flags:
+
+- version: it is used to set the solc version
+- output-folder: it is used to set the folder where the compile contract will be stored
+
+:::
+
+```bash
+hanchond playground tx solidity compile ./temp/address.sol -v 0.6.12 -o /tmp
+Contract compiled at /tmp/address.json
+```
+
+:::warning
+The `solc` version MUST match the contract pragma.
+:::

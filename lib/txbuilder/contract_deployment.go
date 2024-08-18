@@ -2,8 +2,6 @@ package txbuilder
 
 import (
 	"math/big"
-
-	"github.com/ethereum/go-ethereum/common"
 )
 
 func (t *TxBuilder) DeployContract(
@@ -22,5 +20,18 @@ func (t *TxBuilder) DeployContract(
 		return "", err
 	}
 
-	return t.SendTx(account.Address, common.Address{}, value, gasLimit, bytecode, privateKey)
+	// TODO: add support for constructors args
+	// parsedABI, err := abi.JSON(bytes.NewReader(abiFile))
+	// if err != nil {
+	//     log.Fatalf("Failed to parse ABI: %v", err)
+	// }
+	// input, err := parsedABI.Pack("", "Hello, Ethereum!")
+	// if err != nil {
+	//     log.Fatalf("Failed to pack input parameters: %v", err)
+	// }
+	//
+	// // Combine bytecode + constructor arguments
+	// fullBytecode := append(bytecode, input...)
+
+	return t.SendTx(account.Address, nil, value, gasLimit, bytecode, privateKey)
 }

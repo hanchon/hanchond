@@ -152,6 +152,20 @@ export default defineConfig({
                   text: "Rate Limit Proposal",
                   link: "/hanchond/playground/tx/ratelimit",
                 },
+                {
+                  text: "Solidity",
+                  collapsed: true,
+                  items: [
+                    {
+                      text: "Compile a Contract",
+                      link: "/hanchond/playground/tx/solidity/compile",
+                    },
+                    {
+                      text: "Deploy a Contract",
+                      link: "/hanchond/playground/tx/solidity/deploy",
+                    },
+                  ],
+                },
               ],
             },
             {

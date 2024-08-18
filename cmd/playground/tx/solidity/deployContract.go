@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/hanchon/hanchond/lib/requester"
 	"github.com/hanchon/hanchond/lib/txbuilder"
@@ -77,13 +76,18 @@ var deployContractCmd = &cobra.Command{
 			fmt.Printf("error sending the transaction: %s\n", err.Error())
 			os.Exit(1)
 		}
-		fmt.Println("Transaction sent with hash:", txHash)
+
+		receipt, err := e.NewRequester().GetTransactionReceiptWithRetry(txHash, 15)
+		if err != nil {
+			fmt.Printf("error getting the tx receipt:%s\n", err.Error())
+		}
+
+		fmt.Printf("{\"contract_address\":\"%s\", \"tx_hash\":\"%s\"}\n", receipt.Result.ContractAddress, txHash)
 		os.Exit(0)
-		// TODO: wait for the transaction to be included and get the contract address
 	},
 }
 
 func init() {
 	SolidityCmd.AddCommand(deployContractCmd)
-	deployContractCmd.Flags().Int("gas-limit", 2_000_000, "GasLimit for the deploy transaction")
+	deployContractCmd.Flags().Int("gas-limit", 2_000_000, "GasLimit to be used to deploy the transaction")
 }
