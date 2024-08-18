@@ -129,7 +129,6 @@ func (c *Client) BroadcastTx(tx *coretypes.Transaction) (string, error) {
 }
 
 // Eth_call
-// TODO: add documentation for this function
 func (c *Client) EthCall(address string, data string, height string) ([]byte, error) {
 	heightString, err := heigthToQueryParam(height)
 	if err != nil {

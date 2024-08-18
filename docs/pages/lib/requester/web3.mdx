@@ -78,3 +78,9 @@ Broadcast the transaction object
 ```go
 txHash, err := c.BroadcastTX(tx)
 ```
+
+## Eth_call
+
+```go
+resp, err := client.EthCall(contract, callData, height)
+```
