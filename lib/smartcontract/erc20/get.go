@@ -43,10 +43,6 @@ func (e *ERC20) GetBalance(contractAddress string, wallet string, height int) (*
 	method := hex.EncodeToString(contract.Methods["balanceOf"].ID)
 	params := method + "000000000000000000000000" + wallet
 
-	type Request struct {
-		To   string `json:"to"`
-		Data string `json:"data"`
-	}
 	req := Request{"0x" + contractAddress, "0x" + params}
 	var result string
 
