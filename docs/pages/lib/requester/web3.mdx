@@ -37,6 +37,16 @@ Gets the receipt for a given transaction hash
 c.GetTransactionReceipt(hash)
 ```
 
+## GetTransactionReceiptWithRetry
+
+Gets the receipt for a given transaction hash, it will use the second argument as the amount of retries.
+
+Between retry attempts the process will wait one second. This function is useful to wait for the transaction to be included in a block.
+
+```go
+c.GetTransactionReceiptWithRetry(hash, 10)
+```
+
 ## Get Nonce
 
 Gets the current nonce for an account

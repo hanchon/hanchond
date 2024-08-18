@@ -19,5 +19,5 @@ func (t *TxBuilder) InteractWithContract(
 		return "", err
 	}
 
-	return t.SendTransaction(contractName, account.Address, privateKey, value, message, args...)
+	return t.SendTxToContract(contractName, account.Address, privateKey, value, message, args...)
 }

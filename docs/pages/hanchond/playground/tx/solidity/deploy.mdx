@@ -1,0 +1,23 @@
+# Deploy a Solidity Contract
+
+Before being able to deploy a contract, it needs to be [compiled](/hanchond/playground/tx/solidity/compile)
+
+The command `compile-contract` can be used to compile a `.sol` file.
+
+## File Format
+
+The compiled file must have the following format:
+
+```json
+{
+    "bytecode":"hex_string",
+    ...
+}
+```
+
+## Deploy the Contract
+
+```bash
+hanchond playground tx solidity deploy-contract /tmp/account.json
+{"contract_address":"0xc2f633d1e91e1a2edeb55274753b44b204a4df91", "tx_hash":"0xa0a473953fb8ff88cbd7f63c956992d2621a7fbc47a6ba59427ef8482a0baf9f"}
+```

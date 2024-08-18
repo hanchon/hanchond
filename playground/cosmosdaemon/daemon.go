@@ -1,7 +1,10 @@
 package cosmosdaemon
 
 import (
+	"fmt"
+
 	"github.com/hanchon/hanchond/lib/converter"
+	"github.com/hanchon/hanchond/lib/requester"
 	"github.com/hanchon/hanchond/lib/txbuilder"
 )
 
@@ -111,4 +114,26 @@ func (d *Daemon) ExecuteCustomConfig() error {
 		return nil
 	}
 	return d.CustomConfig()
+}
+
+func (d *Daemon) SetValidatorWallet(mnemonic, wallet string) {
+	d.ValMnemonic = mnemonic
+	d.ValWallet = wallet
+}
+
+func (d *Daemon) NewRequester() *requester.Client {
+	return requester.NewClient().
+		WithUnsecureWeb3Endpoint(fmt.Sprintf("http://localhost:%d", d.Ports.P8545)).
+		WithUnsecureRestEndpoint(fmt.Sprintf("http://localhost:%d", d.Ports.P1317)).
+		WithUnsecureTendermintEndpoint(fmt.Sprintf("http://localhost:%d", d.Ports.P26657))
+}
+
+func (d *Daemon) NewTxBuilder(gasLimit uint64) *txbuilder.TxBuilder {
+	return txbuilder.NexTxBuilder(
+		map[string]txbuilder.Contract{},
+		d.ValMnemonic,
+		map[string]uint64{},
+		gasLimit,
+		d.NewRequester(),
+	)
 }

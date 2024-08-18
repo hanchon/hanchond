@@ -4,17 +4,25 @@ To create and send transactions, we need some on-chain info, encode the data cor
 
 ## Send Transaction
 
-The `SendTransaction` function takes care of building the correct transaction and broadcasting it.
+The `SendTx` function is the basic function to broadcast Ethereum transactions
 
 ```go
-txHash, err := t.SendTransaction(contractName, address, privateKey, value, message, args)
+txHash, err := t.SendTx(from, to, value, gasLimit, data, privateKey)
+```
+
+## Send Transaction To Contract
+
+The `SendTxToContract` function takes care of building the correct transaction and broadcasting it.
+
+```go
+txHash, err := t.SendTxToContract(contractName, address, privateKey, value, message, args)
 ```
 
 :::info
 This function is meant to be used just internally by the `InteractWithContract` function.
 :::
 
-## Send Transaction to Smart Contracts
+## Interact with Smart Contracts
 
 This helper function makes it easy to send a transaction to a smart contract, it automatically instantie your wallet based on the `TxBuilder` mnemonic and the account ID.
 
@@ -27,3 +35,11 @@ The `contractName` variable is the string set in the TxBuilder constructor for t
 
 The `accountID` is the id related to the path of the `mnemonic` usually you just need to use the id `0`
 :::
+
+## Deploy a Contract
+
+This helper function makes it easy to send a transaction to deploy a smart contract.
+
+```go
+txHash, err := t.DeployContract(accountID, bytecode, gasLimit)
+```

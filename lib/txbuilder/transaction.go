@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 )
 
-func (t *TxBuilder) SendTransaction(contractName string, address common.Address, privateKey *ecdsa.PrivateKey, value *big.Int, message string, args ...interface{}) (string, error) {
+func (t *TxBuilder) SendTxToContract(contractName string, address common.Address, privateKey *ecdsa.PrivateKey, value *big.Int, message string, args ...interface{}) (string, error) {
 	var contractABI abi.ABI
 	var contractAddress common.Address
 	var err error
@@ -22,30 +22,37 @@ func (t *TxBuilder) SendTransaction(contractName string, address common.Address,
 		return "", fmt.Errorf("invalid contract name")
 	}
 
-	v, ok := t.currentNonce[address.Hex()]
-	nonce := uint64(0)
-	if ok {
-		nonce = v
-	} else {
-		nonce, err = t.requester.GetNonce(address.Hex())
-		if err != nil {
-			return "", err
-		}
-	}
-
-	gasLimit := t.GetGasLimit(message)
-	gasPrice, err := t.requester.GasPrice()
-	if err != nil {
-		return "", err
-	}
-
 	var data []byte
 	data, err = contractABI.Pack(message, args...)
 	if err != nil {
 		return "", err
 	}
 
-	tx := types.NewTransaction(nonce, contractAddress, value, gasLimit, gasPrice, data)
+	gasLimit := t.GetGasLimit(message)
+
+	return t.SendTx(address, &contractAddress, value, gasLimit, data, privateKey)
+}
+
+func (t *TxBuilder) SendTx(from common.Address, to *common.Address, value *big.Int, gasLimit uint64, data []byte, privateKey *ecdsa.PrivateKey) (string, error) {
+	var err error
+
+	v, ok := t.currentNonce[from.Hex()]
+	nonce := uint64(0)
+	if ok {
+		nonce = v
+	} else if nonce, err = t.requester.GetNonce(from.Hex()); err != nil {
+		return "", err
+	}
+
+	gasPrice, err := t.requester.GasPrice()
+	if err != nil {
+		return "", err
+	}
+
+	tx := types.NewContractCreation(nonce, value, gasLimit, gasPrice, data)
+	if to != nil {
+		tx = types.NewTransaction(nonce, *to, value, gasLimit, gasPrice, data)
+	}
 
 	chainID, err := t.requester.ChanID()
 	if err != nil {
@@ -62,7 +69,7 @@ func (t *TxBuilder) SendTransaction(contractName string, address common.Address,
 		return "", err
 	}
 
-	t.currentNonce[address.Hex()] = nonce + 1
+	t.currentNonce[from.Hex()] = nonce + 1
 
 	return txhash, nil
 }

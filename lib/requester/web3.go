@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/big"
 	"strconv"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	coretypes "github.com/ethereum/go-ethereum/core/types"
@@ -38,6 +39,20 @@ func (c *Client) GetTransactionReceipt(hash string) (*web3types.TxReceipt, error
 		&receipt,
 		c.Web3Auth,
 	)
+}
+
+func (c *Client) GetTransactionReceiptWithRetry(hash string, retryInSeconds int) (receipt *web3types.TxReceipt, err error) {
+	retry := 0
+	for retry < retryInSeconds {
+		receipt, err = c.GetTransactionReceipt(hash)
+		if err != nil || receipt.Result.BlockHash == "" {
+			time.Sleep(time.Second)
+			continue
+		}
+		return
+	}
+
+	return nil, err
 }
 
 func (c *Client) GetNonce(address string) (uint64, error) {
