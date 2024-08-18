@@ -17,7 +17,6 @@ var compileContractCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Aliases: []string{"c"},
 	Short:   "Compile a solidity contract",
-	// Long:    "The bytecode file must have the following format: {\"bytecode\":\"60806...\",...}",
 	Run: func(cmd *cobra.Command, args []string) {
 		queries := sql.InitDBFromCmd(cmd)
 		nodeID, err := cmd.Flags().GetString("node")
