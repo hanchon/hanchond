@@ -18,14 +18,7 @@ var compileContractCmd = &cobra.Command{
 	Aliases: []string{"c"},
 	Short:   "Compile a solidity contract",
 	Run: func(cmd *cobra.Command, args []string) {
-		queries := sql.InitDBFromCmd(cmd)
-		nodeID, err := cmd.Flags().GetString("node")
-		if err != nil {
-			fmt.Println("node not set")
-			os.Exit(1)
-		}
-		_ = queries
-		_ = nodeID
+		_ = sql.InitDBFromCmd(cmd)
 
 		outputFolder, err := cmd.Flags().GetString("output-folder")
 		if err != nil {
