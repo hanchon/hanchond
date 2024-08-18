@@ -1,0 +1,21 @@
+# Contract View
+
+The `call-contract-view` command can be used to send an `eth_call` request to a deployed smart contract.
+
+The arguments are:
+
+- Contract Address
+- ABI path
+- Method name
+- Params list
+
+```bash
+hanchond playground tx solidity call-contract-view 0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd ./abis/erc20.abi balanceOf --params=a:0x354bF866A4B006C9AF9d9e06d9364217A8616E12
+{"jsonrpc":"2.0","id":1,"result":"0x00000000000000000000000000000000000000000000000000000000000007d0"}
+```
+
+The supported params list can be found [here](/lib/smartcontract/ABI)
+
+:::info
+The params MUST be prefixed with the type followed by `:`
+:::

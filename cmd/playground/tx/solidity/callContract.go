@@ -58,7 +58,6 @@ var callContractViewCmd = &cobra.Command{
 			fmt.Println(err.Error())
 			os.Exit(1)
 		}
-		fmt.Println(callData)
 
 		resp, err := client.EthCall(contract, callData, height)
 		if err != nil {

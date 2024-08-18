@@ -164,6 +164,10 @@ export default defineConfig({
                       text: "Deploy a Contract",
                       link: "/hanchond/playground/tx/solidity/deploy",
                     },
+                    {
+                      text: "Call Contract View",
+                      link: "/hanchond/playground/tx/solidity/contractView",
+                    },
                   ],
                 },
               ],

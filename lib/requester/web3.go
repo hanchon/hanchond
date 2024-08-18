@@ -134,7 +134,6 @@ func (c *Client) EthCall(address string, data string, height string) ([]byte, er
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(heightString)
 	return c.SendPostRequest(
 		c.Web3Endpoint,
 		[]byte(`{"method":"eth_call","params":[{"to":"`+address+`","data":"`+data+`"},"`+heightString+`"],"id":1,"jsonrpc":"2.0"}`),
