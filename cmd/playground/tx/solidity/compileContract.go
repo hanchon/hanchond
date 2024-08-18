@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
+	"path/filepath"
 
 	"github.com/hanchon/hanchond/playground/filesmanager"
 	"github.com/hanchon/hanchond/playground/sql"
@@ -37,23 +37,43 @@ var compileContractCmd = &cobra.Command{
 		}
 
 		pathToSolidityCode := args[0]
-		paths := strings.Split(pathToSolidityCode, "/")
-		fileName := strings.Split(paths[len(paths)-1], ".sol")[0]
 
 		solcPath := filesmanager.GetSolcPath(solcVersion)
 
-		compileCmd := exec.Command(solcPath, "--optimize", "--combined-json", "abi,bin", pathToSolidityCode, "-o", outputFolder)
+		if err := filesmanager.CleanUpTempFolder(); err != nil {
+			fmt.Printf("could not clean up temp folder:%s\n", err.Error())
+			os.Exit(1)
+		}
+
+		folderName := "compiler"
+		if err := filesmanager.CreateTempFolder(folderName); err != nil {
+			fmt.Printf("could not create up temp folder:%s\n", err.Error())
+			os.Exit(1)
+		}
+
+		compileCmd := exec.Command(solcPath, "--optimize", "--abi", "--bin", pathToSolidityCode, "-o", filesmanager.GetBranchFolder(folderName))
 		out, err := compileCmd.CombinedOutput()
 		if err != nil {
 			fmt.Printf("error compiling the contract:%s. %s\n", err.Error(), string(out))
 			os.Exit(1)
 		}
 
-		if err := os.Rename(outputFolder+"combined.json", outputFolder+fileName+".json"); err != nil {
-			fmt.Printf("error copying the built file: %s\n", err.Error())
+		if err := moveFiles(filesmanager.GetBranchFolder(folderName), outputFolder, "abi"); err != nil {
+			fmt.Printf("error copying the built files: %s\n", err.Error())
 			os.Exit(1)
 		}
-		fmt.Printf("Contract compiled at %s%s.json\n", outputFolder, fileName)
+
+		if err := moveFiles(filesmanager.GetBranchFolder(folderName), outputFolder, "bin"); err != nil {
+			fmt.Printf("error copying the built files: %s\n", err.Error())
+			os.Exit(1)
+		}
+
+		if err := filesmanager.CleanUpTempFolder(); err != nil {
+			fmt.Printf("could not clean up temp folder:%s\n", err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Printf("Contract compiled at %s\n", outputFolder)
 	},
 }
 
@@ -61,4 +81,25 @@ func init() {
 	SolidityCmd.AddCommand(compileContractCmd)
 	compileContractCmd.Flags().StringP("output-folder", "o", "./", "Output folder where the compile code will be saved")
 	compileContractCmd.Flags().StringP("solc-version", "v", "0.8.0", "Solc version used to compile the code")
+}
+
+func moveFiles(in, out, extension string) error {
+	files, err := filepath.Glob(in + "/*." + extension)
+	if err != nil {
+		return err
+	}
+	if len(files) == 0 {
+		return err
+	}
+
+	for _, v := range files {
+		if err := filesmanager.CopyFile(
+			v,
+			out,
+		); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

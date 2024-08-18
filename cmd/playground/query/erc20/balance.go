@@ -9,6 +9,7 @@ import (
 	"github.com/hanchon/hanchond/lib/converter"
 	"github.com/hanchon/hanchond/lib/requester"
 	"github.com/hanchon/hanchond/lib/smartcontract/erc20"
+	"github.com/hanchon/hanchond/playground/cosmosdaemon"
 	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,12 @@ var balanceCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		endpoint := getEndpoint(queries, cmd)
+		endpoint, err := cosmosdaemon.GetWeb3Endpoint(queries, cmd)
+		if err != nil {
+			fmt.Printf("error generting web3 endpoint: %s\n", err.Error())
+			os.Exit(1)
+		}
+
 		client := requester.NewClient().WithUnsecureWeb3Endpoint(endpoint)
 		heightInt := erc20.Latest
 		if height != "latest" {

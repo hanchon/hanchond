@@ -8,6 +8,7 @@ import (
 
 	"github.com/hanchon/hanchond/lib/requester"
 	"github.com/hanchon/hanchond/lib/smartcontract/erc20"
+	"github.com/hanchon/hanchond/playground/cosmosdaemon"
 	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
@@ -21,7 +22,11 @@ var supplyCmd = &cobra.Command{
 		queries := sql.InitDBFromCmd(cmd)
 		contract := strings.TrimSpace(args[0])
 
-		endpoint := getEndpoint(queries, cmd)
+		endpoint, err := cosmosdaemon.GetWeb3Endpoint(queries, cmd)
+		if err != nil {
+			fmt.Printf("error generting web3 endpoint: %s\n", err.Error())
+			os.Exit(1)
+		}
 		client := requester.NewClient().WithUnsecureWeb3Endpoint(endpoint)
 
 		height, _ := cmd.Flags().GetString("height")

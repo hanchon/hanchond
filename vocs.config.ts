@@ -164,6 +164,10 @@ export default defineConfig({
                       text: "Deploy a Contract",
                       link: "/hanchond/playground/tx/solidity/deploy",
                     },
+                    {
+                      text: "Call Contract View",
+                      link: "/hanchond/playground/tx/solidity/contractView",
+                    },
                   ],
                 },
               ],
@@ -307,6 +311,10 @@ export default defineConfig({
           link: "/lib/smartcontract",
           collapsed: false,
           items: [
+            {
+              text: "ABI",
+              link: "/lib/smartcontract/ABI",
+            },
             {
               text: "ERC20",
               link: "/lib/smartcontract/erc20",

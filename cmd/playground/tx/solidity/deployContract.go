@@ -1,8 +1,6 @@
 package solidity
 
 import (
-	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"os"
 
@@ -14,11 +12,11 @@ import (
 
 // deployContractCmd represents the deploy command
 var deployContractCmd = &cobra.Command{
-	Use:     "deploy-contract [path_to_bytecode]",
+	Use:     "deploy-contract [path_to_bin_file]",
 	Args:    cobra.ExactArgs(1),
 	Aliases: []string{"d"},
 	Short:   "Deploy a solidity contract",
-	Long:    "The bytecode file must have the following format: {\"bytecode\":\"60806...\",...}",
+	Long:    "The bytecode file must contain just the hex data",
 	Run: func(cmd *cobra.Command, args []string) {
 		queries := sql.InitDBFromCmd(cmd)
 		nodeID, err := cmd.Flags().GetString("node")
@@ -44,22 +42,7 @@ var deployContractCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		type Bytecode struct {
-			Bytecode string `json:"bytecode"`
-		}
-		var b Bytecode
-		if err := json.Unmarshal(bytecode, &b); err != nil {
-			fmt.Printf("error unmarshing the json file: %s\n", err.Error())
-			os.Exit(1)
-		}
-
-		bytes, err := hex.DecodeString(b.Bytecode)
-		if err != nil {
-			fmt.Printf("error decoding the bytecode: %s\n", err.Error())
-			os.Exit(1)
-		}
-
-		txHash, err := builder.DeployContract(0, bytes, uint64(gasLimit))
+		txHash, err := builder.DeployContract(0, bytecode, uint64(gasLimit))
 		if err != nil {
 			fmt.Printf("error sending the transaction: %s\n", err.Error())
 			os.Exit(1)
