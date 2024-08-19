@@ -66,6 +66,10 @@ func GetBuildsDir() string {
 	return baseDir + "/builds"
 }
 
+func GetDepsDir(name string) string {
+	return baseDir + "/builds/deps/" + name
+}
+
 func GetTempDir() string {
 	return baseDir + "/temp"
 }
@@ -103,6 +107,10 @@ func CreateBuildsDir() error {
 		return os.Mkdir(GetBuildsDir(), os.ModePerm)
 	}
 	return nil
+}
+
+func CreateDepsFolder() error {
+	return os.MkdirAll(baseDir+"/builds/deps/", os.ModePerm)
 }
 
 func CreateTempFolder(version string) error {

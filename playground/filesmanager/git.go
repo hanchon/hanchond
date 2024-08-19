@@ -1,6 +1,8 @@
 package filesmanager
 
-import "os/exec"
+import (
+	"os/exec"
+)
 
 func GitCloneEvmosBranch(version string) error {
 	return GitCloneBranch(version, GetBranchFolder(version), "https://github.com/evmos/evmos")
