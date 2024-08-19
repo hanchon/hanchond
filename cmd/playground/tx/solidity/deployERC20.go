@@ -46,17 +46,19 @@ var deployERC20Cmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		// Save the contract to disk
+		// Set up temp folder
 		if err := filesmanager.CleanUpTempFolder(); err != nil {
 			fmt.Println("could not clean up the temp folder:", err.Error())
 			os.Exit(1)
 		}
+
 		folderName := "erc20builder"
 		if err := filesmanager.CreateTempFolder(folderName); err != nil {
 			fmt.Println("could not create the temp folder:", err.Error())
 			os.Exit(1)
 		}
 
+		// Create the contract
 		contract := solidity.GenerateERC20Contract(path, name, symbol, initialAmount)
 		contractPath := filesmanager.GetBranchFolder(folderName) + "/mycontract.sol"
 		if err := filesmanager.SaveFile([]byte(contract), contractPath); err != nil {
@@ -64,6 +66,7 @@ var deployERC20Cmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		// Compile the contract
 		err = solidity.CompileWithSolc("0.8.25", contractPath, filesmanager.GetBranchFolder(folderName))
 		if err != nil {
 			fmt.Println("could not compile the erc20 contract:", err.Error())
@@ -95,6 +98,7 @@ var deployERC20Cmd = &cobra.Command{
 
 		fmt.Printf("{\"contract_address\":\"%s\", \"tx_hash\":\"%s\"}\n", receipt.Result.ContractAddress, txHash)
 
+		// Clean up files
 		if err := filesmanager.CleanUpTempFolder(); err != nil {
 			fmt.Println("could not clean up the temp folder:", err.Error())
 			os.Exit(1)
