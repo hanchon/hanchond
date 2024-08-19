@@ -152,12 +152,11 @@ hanchond p change-version 1 evmosdv19.1.0
 hanchond p start-node 1
 ```
 
-### Check the ERC20 has no bytecode
+### Check the ERC20 precompile has no bytecode
 
 ```bash
 hanchond playground tx solidity call-contract-view 0x8dc79b6e0f5ca429ac93d564799cc922c10ec2c8 /tmp/CheckAddress.abi isContract --params=a:0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd
 {"jsonrpc":"2.0","id":1,"result":"0x0000000000000000000000000000000000000000000000000000000000000000"}
-
 ```
 
 ```bash
