@@ -165,6 +165,10 @@ export default defineConfig({
                       link: "/hanchond/playground/tx/solidity/deploy",
                     },
                     {
+                      text: "Deploy an ERC20",
+                      link: "/hanchond/playground/tx/solidity/deployERC20",
+                    },
+                    {
                       text: "Call Contract View",
                       link: "/hanchond/playground/tx/solidity/contractView",
                     },

@@ -3,10 +3,10 @@ package solidity
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 
 	"github.com/hanchon/hanchond/playground/filesmanager"
+	"github.com/hanchon/hanchond/playground/solidity"
 	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
@@ -38,8 +38,6 @@ var compileContractCmd = &cobra.Command{
 
 		pathToSolidityCode := args[0]
 
-		solcPath := filesmanager.GetSolcPath(solcVersion)
-
 		if err := filesmanager.CleanUpTempFolder(); err != nil {
 			fmt.Printf("could not clean up temp folder:%s\n", err.Error())
 			os.Exit(1)
@@ -51,10 +49,9 @@ var compileContractCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		compileCmd := exec.Command(solcPath, "--optimize", "--abi", "--bin", pathToSolidityCode, "-o", filesmanager.GetBranchFolder(folderName))
-		out, err := compileCmd.CombinedOutput()
+		err = solidity.CompileWithSolc(solcVersion, pathToSolidityCode, filesmanager.GetBranchFolder(folderName))
 		if err != nil {
-			fmt.Printf("error compiling the contract:%s. %s\n", err.Error(), string(out))
+			fmt.Println(err.Error())
 			os.Exit(1)
 		}
 
