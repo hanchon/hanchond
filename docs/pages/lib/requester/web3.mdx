@@ -81,6 +81,16 @@ txHash, err := c.BroadcastTX(tx)
 
 ## Eth_call
 
+Interacts with a public function exposed by the smartcontract at the given height
+
 ```go
 resp, err := client.EthCall(contract, callData, height)
+```
+
+## Eth_code
+
+Gets the smartcontract bytecode at the given height
+
+```go
+resp, err := client.EthCode(contract, height)
 ```

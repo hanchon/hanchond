@@ -141,6 +141,19 @@ func (c *Client) EthCall(address string, data string, height string) ([]byte, er
 	)
 }
 
+// Eth_code
+func (c *Client) EthCode(address string, height string) ([]byte, error) {
+	heightString, err := heigthToQueryParam(height)
+	if err != nil {
+		return nil, err
+	}
+	return c.SendPostRequest(
+		c.Web3Endpoint,
+		[]byte(`{"method":"eth_getCode","params":["`+address+`","`+heightString+`"],"id":1,"jsonrpc":"2.0"}`),
+		c.Web3Auth,
+	)
+}
+
 func heigthToQueryParam(height string) (string, error) {
 	heightString := "latest"
 	if height != "latest" {
