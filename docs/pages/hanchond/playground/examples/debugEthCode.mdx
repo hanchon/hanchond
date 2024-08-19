@@ -1,0 +1,247 @@
+# Debug STRv2 problem with Steer
+
+:::info
+This example is using `hanchond` v0.3.0. Some interfaces may change in the future
+:::
+
+## Requirements
+
+```sh
+$ hanchond p build-evmos v18.1.0
+$ hanchond p build-evmos v19.1.0
+$ hanchond p build-hermes
+$ hanchond p build-solc --version 0.6.12
+```
+
+## Set up the chains
+
+Create two chains with just one validator each using the `v18.1.0` Evmos version and start them
+
+```bash
+hanchond p remove-data && hanchond p init-chain 1 --version v18.1.0 && hanchond p init-chain 1 --version v18.1.0 && hanchond p start-chain 1 && hanchond p start-chain 2
+```
+
+## IBC config
+
+- Create an IBC Channel and start the relayer
+
+```bash
+hanchond p hermes-add-channel 1 2 && hanchond p start-hermes
+```
+
+- Send an IBC transfer
+
+```bash
+hanchond p tx ibc-transfer evmos1x49lse4ykqrvntuancrdjdjzz75xzmsj5nn9p0 1000 --node 2
+```
+
+- Verify the balance:
+
+```bash
+hanchond p q balance evmos1x49lse4ykqrvntuancrdjdjzz75xzmsj5nn9p0
+```
+
+## Register the ERC20
+
+- Create the proposal
+
+```bash
+hanchond playground tx str-v1-proposal ibc/8EAC8061F4499F03D2D1419A3E73D346289AE9DB89CAB1486B72539572B1915E
+```
+
+- Vote
+
+```bash
+hanchond playground tx vote
+```
+
+- Wait for it to pass
+
+```bash
+hanchond p q evmos token-pairs | jq .
+
+```
+
+We have an ERC20 with the address: `0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd`
+
+## Deploy AAVE address contract
+
+- Copy and paste the file to disk, i.e., `./temp/address.sol`
+
+```js
+// SPDX-License-Identifier: agpl-3.0
+pragma solidity 0.6.12;
+
+contract CheckAddress {
+    function isContract(address account) public view returns (bool) {
+        bytes32 codehash;
+        bytes32 accountHash = 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470;
+        // solhint-disable-next-line no-inline-assembly
+        assembly {
+            codehash := extcodehash(account)
+        }
+        return (codehash != accountHash && codehash != 0x0);
+    }
+}
+```
+
+- Compile the contract
+
+```bash
+hanchond playground tx solidity compile-contract ./temp/address.sol -v 0.6.12 -o /tmp
+```
+
+- Deploy the contract
+
+```bash
+hanchond playground tx solidity deploy-contract /tmp/CheckAddress.bin
+{"contract_address":"0x8dc79b6e0f5ca429ac93d564799cc922c10ec2c8", "tx_hash":"0x262a870feb9298b45ed9f7b02901cca4a9f41ea9e59fb86a56e94d5f259d9243"}
+```
+
+- Test the contract
+
+The contract that we just deployed MUST return `true` (0x...1)
+
+```bash
+hanchond playground tx solidity call-contract-view 0x8dc79b6e0f5ca429ac93d564799cc922c10ec2c8 /tmp/CheckAddress.abi isContract --params=a:0x8dc79b6e0f5ca429ac93d564799cc922c10ec2c8
+{"jsonrpc":"2.0","id":1,"result":"0x0000000000000000000000000000000000000000000000000000000000000001"}
+```
+
+The ERC20 from STRv2 MUST return `true`
+
+```bash
+hanchond playground tx solidity call-contract-view 0x8dc79b6e0f5ca429ac93d564799cc922c10ec2c8 /tmp/CheckAddress.abi isContract --params=a:0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd
+{"jsonrpc":"2.0","id":1,"result":"0x0000000000000000000000000000000000000000000000000000000000000001"}
+```
+
+- Create the network upgrade proposal
+
+```bash
+hanchond playground tx upgrade-proposal v19.1.0 --height-diff 25
+```
+
+- Vote
+
+```bash
+hanchond playground tx vote
+```
+
+- Wait for the upgrade height
+
+```bash
+hanchond p q height
+```
+
+### Apply the upgrade
+
+- Stop the node
+
+```bash
+hanchond p stop-node 1
+```
+
+- Change the version
+
+```bash
+hanchond p change-version 1 evmosdv19.1.0
+```
+
+- Restart the node
+
+```bash
+hanchond p start-node 1
+```
+
+### Check the ERC20 precompile has no bytecode
+
+```bash
+hanchond playground tx solidity call-contract-view 0x8dc79b6e0f5ca429ac93d564799cc922c10ec2c8 /tmp/CheckAddress.abi isContract --params=a:0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd
+{"jsonrpc":"2.0","id":1,"result":"0x0000000000000000000000000000000000000000000000000000000000000000"}
+```
+
+```bash
+hanchond p q evmos eth-code 0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd | jq .
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": "0x"
+}
+```
+
+## Try the patch
+
+- Checkout the release branch
+
+```bash
+cd evmos
+git checkout release/v19.x.x
+git pull origin release/v19.x.x
+```
+
+```bash
+hanchond playground tx upgrade-proposal v19.2.0 --height-diff 25
+```
+
+- Vote
+
+```bash
+hanchond playground tx vote
+```
+
+- Build the binary
+
+```bash
+hanchond p build-evmos --path /Users/hanchon/devel/evmos/evmos
+```
+
+- Wait for the upgrade height
+
+```bash
+hanchond p q height
+```
+
+- Update the node to use the local fork
+
+```bash
+hanchond p change-version 1 evmosdlocal
+```
+
+- Stop the node
+
+```bash
+hanchond p stop-node 1
+```
+
+- Start the node
+
+```bash
+hanchond p start-node 1
+```
+
+- Test the upgrade
+
+```bash
+hanchond playground tx solidity call-contract-view 0x8dc79b6e0f5ca429ac93d564799cc922c10ec2c8 /tmp/CheckAddress.abi isContract --params=a:0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd
+{"jsonrpc":"2.0","id":1,"result":"0x0000000000000000000000000000000000000000000000000000000000000001"}
+```
+
+```bash
+hanchond p q evmos eth-code 0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd | jq .
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": "0x608..."
+}
+```
+
+:::info
+Logs can be found at `~/.hanchond/data/1-0/run.log`
+:::
+
+## Clean up
+
+- Stop all running processes and delete the database
+
+```bash
+hanchond p remove-data
+```
