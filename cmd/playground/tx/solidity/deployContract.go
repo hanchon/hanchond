@@ -1,6 +1,7 @@
 package solidity
 
 import (
+	"encoding/hex"
 	"fmt"
 	"os"
 
@@ -39,6 +40,12 @@ var deployContractCmd = &cobra.Command{
 		bytecode, err := filesmanager.ReadFile(pathToBytecode)
 		if err != nil {
 			fmt.Printf("error reading the bytecode file:%s\n", err.Error())
+			os.Exit(1)
+		}
+
+		bytecode, err = hex.DecodeString(string(bytecode))
+		if err != nil {
+			fmt.Println("error converting bytecode to []byte:", err.Error())
 			os.Exit(1)
 		}
 

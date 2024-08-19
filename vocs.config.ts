@@ -218,6 +218,10 @@ export default defineConfig({
                       text: "IBC Rate Limit",
                       link: "/hanchond/playground/queries/evmos/rateLimit",
                     },
+                    {
+                      text: "Smart-Contract Bytecode",
+                      link: "/hanchond/playground/queries/evmos/ethCode",
+                    },
                   ],
                 },
               ],
