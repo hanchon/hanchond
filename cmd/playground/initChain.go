@@ -55,7 +55,7 @@ var initChainCmd = &cobra.Command{
 		nodes := make([]*cosmosdaemon.Daemon, amountOfValidators)
 		switch strings.ToLower(strings.TrimSpace(client)) {
 		case "evmos":
-			chainID := fmt.Sprintf("evmos_9000-%d", chainNumber)
+			chainID := fmt.Sprintf("evmos_9001-%d", chainNumber)
 			for k := range nodes {
 				if filesmanager.IsNodeHomeFolderInitialized(int64(chainNumber), int64(k)) {
 					fmt.Printf("the home folder already exists: %d-%d\n", chainNumber, k)
