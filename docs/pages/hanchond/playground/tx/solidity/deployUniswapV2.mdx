@@ -1,0 +1,18 @@
+# Deploy UniswapV2
+
+Before being able to deploy this contract, it requires `solc` `v0.5.16`. You can use the [Build Solc](/hanchond/playground/buildSolc) command to get the compiler.
+
+## Deploy the Factory
+
+Params:
+
+- Wallet that will get the fees
+
+```sh
+hanchond playground tx solidity deploy-erc20 Hanchon HCH 10000000
+{"contract_address":"0xe38de16950d3f1048f940268f80ef80bdd10d750", "tx_hash":"0x0ba8e69c71013345f28d7514125c7f323464b4179a68b2a8c28defcf2e96ef3a"}
+```
+
+:::info
+The flag `gas-limit` can be set to use custom gas. It defaults to 2_000_000.
+:::

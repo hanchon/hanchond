@@ -9,17 +9,26 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-func ABIPack(abiBytes []byte, method string, args ...interface{}) (string, error) {
+// ABIPackRaw returns []byte instead of string
+func ABIPackRaw(abiBytes []byte, method string, args ...interface{}) ([]byte, error) {
 	parsedABI, err := abi.JSON(strings.NewReader(string(abiBytes)))
 	if err != nil {
-		return "", fmt.Errorf("failed to parse the ABI: %s", err.Error())
+		return []byte{}, fmt.Errorf("failed to parse the ABI: %s", err.Error())
 	}
 
 	callData, err := parsedABI.Pack(method, args...)
 	if err != nil {
-		return "", fmt.Errorf("failed to pack the ABI: %s", err.Error())
+		return []byte{}, fmt.Errorf("failed to pack the ABI: %s", err.Error())
 	}
 
+	return callData, nil
+}
+
+func ABIPack(abiBytes []byte, method string, args ...interface{}) (string, error) {
+	callData, err := ABIPackRaw(abiBytes, method, args...)
+	if err != nil {
+		return "", err
+	}
 	return "0x" + hex.EncodeToString(callData), nil
 }
 
