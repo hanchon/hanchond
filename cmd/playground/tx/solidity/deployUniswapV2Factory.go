@@ -39,7 +39,7 @@ var deployUniswapV2FactoryCmd = &cobra.Command{
 		builder := e.NewTxBuilder(uint64(gasLimit))
 
 		contractName := "/UniswapV2Factory"
-		// Clone openzeppelin if needed
+		// Clone uniswap-v2-core if needed
 		path, err := solidity.DownloadDep("https://github.com/Uniswap/uniswap-v2-core", "master", "uniswapv2")
 		if err != nil {
 			fmt.Println(err.Error())
