@@ -86,7 +86,7 @@ var deployUniswapV2FactoryCmd = &cobra.Command{
 		}
 
 		// Get Params
-		callArgs, err := smartcontract.StringsToABIArguments([]string{fmt.Sprintf("a:" + feeWallet)})
+		callArgs, err := smartcontract.StringsToABIArguments([]string{fmt.Sprintf("a:%s", feeWallet)})
 		if err != nil {
 			fmt.Printf("error converting arguments: %s\n", err.Error())
 			os.Exit(1)

@@ -172,6 +172,10 @@ export default defineConfig({
                       text: "Call Contract View",
                       link: "/hanchond/playground/tx/solidity/contractView",
                     },
+                    {
+                      text: "Deploy UniswapV2",
+                      link: "/hanchond/playground/tx/solidity/deployUniswapV2",
+                    },
                   ],
                 },
               ],
