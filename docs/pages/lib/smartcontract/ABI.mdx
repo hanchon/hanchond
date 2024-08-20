@@ -10,6 +10,10 @@ callData, err := smartcontract.ABIPack(abiBytes, method, callArgs...)
 
 This is meant to be used after reading the `abi` file from disk.
 
+### ABIPackRaw
+
+It is the same as the `ABIPack` function but it returns a byte array instead of an `hex` string.
+
 ## Strings To ABIArguments
 
 The `StringsToABIArguments` function can be used to convert the strings used in the `cli` to the correct type used by solidity.

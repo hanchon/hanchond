@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/hanchon/hanchond/lib/smartcontract"
 	"github.com/hanchon/hanchond/playground/evmos"
 	"github.com/hanchon/hanchond/playground/filesmanager"
 	"github.com/hanchon/hanchond/playground/sql"
@@ -49,6 +50,34 @@ var deployContractCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		abiPath, err := cmd.Flags().GetString("abi")
+		if err != nil {
+			fmt.Println("could not read abi path:", err.Error())
+			os.Exit(1)
+		}
+
+		if abiPath != "" {
+			// It requires a constructor
+			abiBytes, err := filesmanager.ReadFile(abiPath)
+			if err != nil {
+				fmt.Printf("error reading the abi file:%s\n", err.Error())
+				os.Exit(1)
+			}
+			// Get Params
+			callArgs, err := smartcontract.StringsToABIArguments(params)
+			if err != nil {
+				fmt.Printf("error converting arguments: %s\n", err.Error())
+				os.Exit(1)
+			}
+
+			callData, err := smartcontract.ABIPackRaw(abiBytes, "", callArgs...)
+			if err != nil {
+				fmt.Println(err.Error())
+				os.Exit(1)
+			}
+			bytecode = append(bytecode, callData...)
+		}
+
 		txHash, err := builder.DeployContract(0, bytecode, uint64(gasLimit))
 		if err != nil {
 			fmt.Printf("error sending the transaction: %s\n", err.Error())
@@ -59,6 +88,14 @@ var deployContractCmd = &cobra.Command{
 		if err != nil {
 			fmt.Printf("error getting the tx receipt:%s\n", err.Error())
 		}
+		trace, err := e.NewRequester().GetTransactionTrace(txHash)
+		if err != nil {
+			fmt.Printf("error getting the tx trace:%s\n", err.Error())
+		}
+		if trace.Result.Error != "" {
+			fmt.Println("failed to execute the transaction:", trace.Result.Error)
+			os.Exit(1)
+		}
 
 		fmt.Printf("{\"contract_address\":\"%s\", \"tx_hash\":\"%s\"}\n", receipt.Result.ContractAddress, txHash)
 		os.Exit(0)
@@ -68,4 +105,6 @@ var deployContractCmd = &cobra.Command{
 func init() {
 	SolidityCmd.AddCommand(deployContractCmd)
 	deployContractCmd.Flags().Int("gas-limit", 2_000_000, "GasLimit to be used to deploy the transaction")
+	deployContractCmd.Flags().String("abi", "", "ABI file if the contract has a contronstructor that needs params")
+	deployContractCmd.Flags().StringSliceVarP(&params, "params", "p", []string{}, "A list of params. If the param is an address, prefix with `a:0x123...`")
 }

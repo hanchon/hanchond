@@ -93,7 +93,7 @@ func NewDameon(
 		ValidatorInitialSupply: "100000000000000000000000000",
 
 		// Maybe move this to just evmos
-		GasLimit: "10000000",
+		GasLimit: "1000000000",
 		BaseFee:  "1000000000",
 
 		Ports: nil,
