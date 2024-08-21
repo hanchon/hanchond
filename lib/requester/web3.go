@@ -1,13 +1,17 @@
 package requester
 
 import (
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"math/big"
 	"strconv"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	coretypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
 	web3types "github.com/hanchon/hanchond/lib/types/web3"
 )
 
@@ -152,6 +156,23 @@ func (c *Client) EthCode(address string, height string) ([]byte, error) {
 		[]byte(`{"method":"eth_getCode","params":["`+address+`","`+heightString+`"],"id":1,"jsonrpc":"2.0"}`),
 		c.Web3Auth,
 	)
+}
+
+func (c *Client) EthCodeHash(address string, height string) (string, error) {
+	codeResp, err := c.EthCode(address, height)
+	if err != nil {
+		return "", err
+	}
+
+	type code struct {
+		Result string `json:"result"`
+	}
+	var m code
+	if err := json.Unmarshal(codeResp, &m); err != nil {
+		return "", fmt.Errorf("failed to get the eth code:%s", err.Error())
+	}
+
+	return hex.EncodeToString(crypto.Keccak256(common.Hex2Bytes(m.Result[2:]))), nil
 }
 
 func heigthToQueryParam(height string) (string, error) {
