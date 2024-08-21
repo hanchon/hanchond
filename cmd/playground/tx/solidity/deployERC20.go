@@ -14,8 +14,8 @@ import (
 
 // deployERC20Cmd represents the deploy command
 var deployERC20Cmd = &cobra.Command{
-	Use:   "deploy-erc20 [name] [symbol] [initial_amount]",
-	Args:  cobra.ExactArgs(3),
+	Use:   "deploy-erc20 [name] [symbol]",
+	Args:  cobra.ExactArgs(2),
 	Short: "Deploy an erc20 contract",
 	Run: func(cmd *cobra.Command, args []string) {
 		queries := sql.InitDBFromCmd(cmd)
@@ -31,9 +31,14 @@ var deployERC20Cmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		initialAmount, err := cmd.Flags().GetString("initial-amount")
+		if err != nil {
+			fmt.Println("incorrect initial-amount")
+			os.Exit(1)
+		}
+
 		name := args[0]
 		symbol := args[1]
-		initialAmount := args[2]
 
 		// TODO: allow mainnet as a valid endpoint
 		e := evmos.NewEvmosFromDB(queries, nodeID)
@@ -58,8 +63,24 @@ var deployERC20Cmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		// Create the contract
-		contract := solidity.GenerateERC20Contract(path, name, symbol, initialAmount)
+		isWrapped, err := cmd.Flags().GetBool("is-wrapped-coin")
+		if err != nil {
+			fmt.Println("incorrect wrapped flag")
+			os.Exit(1)
+		}
+
+		contract := ""
+		solcVersion := "0.8.25"
+		switch isWrapped {
+		case false:
+			// Normal ERC20
+			contract = solidity.GenerateERC20Contract(path, name, symbol, initialAmount)
+		case true:
+			// Wrapping base denom, use WETH9
+			contract = solidity.GenerateWrappedCoinContract(name, symbol, "18")
+			solcVersion = "0.4.18"
+		}
+
 		contractPath := filesmanager.GetBranchFolder(folderName) + "/mycontract.sol"
 		if err := filesmanager.SaveFile([]byte(contract), contractPath); err != nil {
 			fmt.Println("could not save the contract file:", err.Error())
@@ -67,7 +88,7 @@ var deployERC20Cmd = &cobra.Command{
 		}
 
 		// Compile the contract
-		err = solidity.CompileWithSolc("0.8.25", contractPath, filesmanager.GetBranchFolder(folderName))
+		err = solidity.CompileWithSolc(solcVersion, contractPath, filesmanager.GetBranchFolder(folderName))
 		if err != nil {
 			fmt.Println("could not compile the erc20 contract:", err.Error())
 			os.Exit(1)
@@ -110,4 +131,6 @@ var deployERC20Cmd = &cobra.Command{
 func init() {
 	SolidityCmd.AddCommand(deployERC20Cmd)
 	deployERC20Cmd.Flags().Int("gas-limit", 2_000_000, "GasLimit to be used to deploy the transaction")
+	deployERC20Cmd.Flags().String("initial-amount", "1000000", "Initial amout of coins sent to the deployer address")
+	deployERC20Cmd.Flags().Bool("is-wrapped-coin", false, "Flag used to indenfity if the contract is representing the base denom. It uses WETH9 instead of OpenZeppelin contracts")
 }

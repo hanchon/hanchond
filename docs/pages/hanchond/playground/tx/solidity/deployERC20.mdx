@@ -10,11 +10,24 @@ Params:
 
 - Name
 - Symbol
-- Initial Amount (will be sent to the deployer)
+
+Optional:
+
+- Initial Amount (will be sent to the deployer) `--initial-amount`
+- IsWrappedCoin (if it's wrapping the base denom) `--is-wrapped-coin`. This requires `solc v0.4.18`
+
+:::warning
+If you are creating a network with Evmos v19+, the Wrapped Evmos will be automatically generated.
+:::
 
 ```sh
 hanchond playground tx solidity deploy-erc20 Hanchon HCH 10000000
 {"contract_address":"0xe38de16950d3f1048f940268f80ef80bdd10d750", "tx_hash":"0x0ba8e69c71013345f28d7514125c7f323464b4179a68b2a8c28defcf2e96ef3a"}
+```
+
+```sh
+hanchond playground tx solidity deploy-erc20 WrappedEvmos WEVMOS --is-wrapped-coin
+{"contract_address":"0x0d5b94e15b5b6068e7cc4a9b6ee3a1cde89113ca", "tx_hash":"0x7eeda7ef271f64eb21aebfe64a9cac8e8631692d5201a1be63c4fbf001b5e84a"}
 ```
 
 :::info
