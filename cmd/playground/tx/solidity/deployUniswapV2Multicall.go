@@ -17,7 +17,7 @@ var deployUniswapV2MulticallyCmd = &cobra.Command{
 	Use:   "deploy-uniswap-v2-multicall",
 	Args:  cobra.ExactArgs(0),
 	Short: "Deploy uniswap v2 multicall",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		queries := sql.InitDBFromCmd(cmd)
 		nodeID, err := cmd.Flags().GetString("node")
 		if err != nil {
