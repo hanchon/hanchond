@@ -2,9 +2,12 @@ package solidity
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"os"
 
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/hanchon/hanchond/lib/smartcontract"
 	"github.com/hanchon/hanchond/playground/evmos"
 	"github.com/hanchon/hanchond/playground/filesmanager"
@@ -119,7 +122,26 @@ var deployUniswapV2FactoryCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		fmt.Printf("{\"contract_address\":\"%s\", \"tx_hash\":\"%s\"}\n", receipt.Result.ContractAddress, txHash)
+		codeHash, err := e.NewRequester().EthCode(receipt.Result.ContractAddress, "latest")
+		if err != nil {
+			fmt.Println("failed to get the eth code:", err.Error())
+			os.Exit(1)
+		}
+		type code struct {
+			Result string `json:"result"`
+		}
+		var c code
+		if err := json.Unmarshal(codeHash, &c); err != nil {
+			fmt.Println("failed to get the eth code:", err.Error())
+			os.Exit(1)
+		}
+
+		// Perform keccak256 hashing
+		hash := crypto.Keccak256(common.Hex2Bytes(c.Result[2:]))
+		// Convert hash to hexadecimal string for display
+		hashHex := hex.EncodeToString(hash)
+
+		fmt.Printf("{\"contract_address\":\"%s\", \"code_hash\":\"%s\", \"tx_hash\":\"%s\"}\n", receipt.Result.ContractAddress, "0x"+hashHex, txHash)
 
 		// Clean up files
 		if err := filesmanager.CleanUpTempFolder(); err != nil {
