@@ -16,3 +16,15 @@ hanchond playground tx solidity deploy-uniswap-v2-factory 0x492bb9bb9a0b5a564307
 :::info
 The flag `gas-limit` can be set to use custom gas. It defaults to 2_000_000.
 :::
+
+## Deploy the Router
+
+Params:
+
+- Factory Address
+- WrappedCoin Address
+
+```sh
+hanchond playground tx solidity deploy-uniswap-v2-router 0xbb48d7604b522abcbb2f2302d4c18d907c12fd31 0x491bacc7ec4569468f0c21b7ae3629cd9fa6aa39
+{"contract_address":"0xd6c873ad9f220279259609ec52fe17702bc47bf8", "code_hash":"0xfffa7b2f489b21362d74fd4ff2c3462d845afc0d0d8170785496d28bb1e568b0", "tx_hash":"0x09df30323ceaa33d5167e31a2faf834b3d253602626d2b256b76bb57a82ad33d"}
+```

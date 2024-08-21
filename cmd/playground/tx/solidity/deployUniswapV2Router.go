@@ -2,13 +2,10 @@ package solidity
 
 import (
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"os"
 	"regexp"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/hanchon/hanchond/lib/smartcontract"
 	"github.com/hanchon/hanchond/playground/evmos"
 	"github.com/hanchon/hanchond/playground/filesmanager"
@@ -67,7 +64,10 @@ var deployUniswapV2RouteryCmd = &cobra.Command{
 
 		regex := regexp.MustCompile(`hex".{3,}"`)
 		libFile = regex.ReplaceAll(libFile, []byte(fmt.Sprintf("hex'%s'", factoryCodeHash)))
-		filesmanager.SaveFile(libFile, path)
+		if err := filesmanager.SaveFile(libFile, path); err != nil {
+			fmt.Println("error saving the router file:", err.Error())
+			os.Exit(1)
+		}
 
 		// Set up temp folder
 		if err := filesmanager.CleanUpTempFolder(); err != nil {

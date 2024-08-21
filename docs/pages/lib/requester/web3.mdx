@@ -94,3 +94,11 @@ Gets the smartcontract bytecode at the given height
 ```go
 resp, err := client.EthCode(contract, height)
 ```
+
+## Eth_code Hash
+
+Gets the smartcontract bytecode hash at the latest height.
+
+```go
+hash, err := client.EthCodeHash(contract, height)
+```
