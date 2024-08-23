@@ -85,7 +85,7 @@ var deployUniswapV2MulticallyCmd = &cobra.Command{
 
 		contractAddress, err := e.NewRequester().GetContractAddress(txHash)
 		if err != nil {
-			fmt.Printf(err.Error())
+			fmt.Println(err.Error())
 			os.Exit(1)
 		}
 

@@ -204,3 +204,20 @@ func (c *Client) GetContractAddress(txHash string) (string, error) {
 	}
 	return receipt.Result.ContractAddress, nil
 }
+
+func (c *Client) GetBlockNumber() (int64, error) {
+	// NOTE: the GasPrice result is the same format as the BlockNumber
+	var resp web3types.GasPriceResponse
+	if err := c.SendPostRequestEasyJSON(
+		c.Web3Endpoint,
+		[]byte(`{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}`),
+		&resp,
+		c.Web3Auth,
+	); err != nil {
+		return 0, err
+	}
+
+	supply := new(big.Int)
+	supply.SetString(resp.Result[2:], 16)
+	return supply.Int64(), nil
+}

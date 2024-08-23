@@ -57,7 +57,7 @@ func main() {
 	erc20sAddress := []string{}
 
 	// Create some erc20s. Every deployment will wait until the tx is included in a block to ensure the correct deployment of the contract
-	for range 2 {
+	for range 15 {
 		initialAmount := "1000000"
 		txHash, err := solidity.BuildAndDeployERC20Contract(randString(7), randString(3), initialAmount, false, valWallet.TxBuilder, 1_000_000)
 		if err != nil {
@@ -80,7 +80,7 @@ func main() {
 
 		if _, err := valWallet.TxBuilder.SendCoins(
 			w.Address.Hex(),
-			big.NewInt(1_000_000_000_000_000_000),
+			big.NewInt(9_000_000_000_000_000_000),
 		); err != nil {
 			fmt.Println(err.Error())
 			os.Exit(1)
@@ -100,10 +100,22 @@ func main() {
 			}
 		}
 	}
+	fmt.Printf("finished initializing the %d wallets\n", totalWallets)
 
-	for {
-		// TODO: add height counter
-		txHash, _ := sendRandomTransaction(erc20sAddress, wallets)
-		fmt.Println(txHash)
+	startingHeight, err := client.GetBlockNumber()
+	if err != nil {
+		fmt.Println("could not get the current height:", err.Error())
+		os.Exit(1)
 	}
+	fmt.Println("starting height:", startingHeight)
+	heigth := startingHeight
+	for heigth < startingHeight+100 {
+		_, _ = sendRandomTransaction(erc20sAddress, wallets)
+		heigth, err = client.GetBlockNumber()
+		if err != nil {
+			fmt.Println("could not get the current height:", err.Error())
+			os.Exit(1)
+		}
+	}
+	fmt.Println("stop height:", heigth)
 }

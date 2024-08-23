@@ -13,6 +13,14 @@ supply, err := c.GetTotalSupply(contractAddress, height)
 balance, err := c.GetBalanceERC20(contractAddress, wallet, height)
 ```
 
+## Get Block Number
+
+Returns the current height of the network
+
+```go
+height, err := c.GetBlockNumber()
+```
+
 ## GetBlockByNumber
 
 Sending the height and whether you need the transactions or not will return the block data.
