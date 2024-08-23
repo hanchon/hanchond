@@ -139,6 +139,11 @@ func (d *Daemon) setFeeMarket(genesis map[string]interface{}) {
 					// Evmos FeeMarket
 					if _, ok := v["base_fee"]; ok {
 						appState["feemarket"].(map[string]interface{})["params"].(map[string]interface{})["base_fee"] = d.BaseFee
+						//
+						appState["feemarket"].(map[string]interface{})["params"].(map[string]interface{})["base_fee_change_denominator"] = 1
+						appState["feemarket"].(map[string]interface{})["params"].(map[string]interface{})["elasticity_multiplier"] = 1
+						appState["feemarket"].(map[string]interface{})["params"].(map[string]interface{})["min_gas_multiplier"] = "0.0"
+
 					}
 					// SDK FeeMarket
 					if _, ok := v["fee_denom"]; ok {

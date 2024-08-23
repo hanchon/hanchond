@@ -84,20 +84,13 @@ var deployContractCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		receipt, err := e.NewRequester().GetTransactionReceiptWithRetry(txHash, 15)
+		contractAddress, err := e.NewRequester().GetContractAddress(txHash)
 		if err != nil {
-			fmt.Printf("error getting the tx receipt:%s\n", err.Error())
-		}
-		trace, err := e.NewRequester().GetTransactionTrace(txHash)
-		if err != nil {
-			fmt.Printf("error getting the tx trace:%s\n", err.Error())
-		}
-		if trace.Result.Error != "" {
-			fmt.Println("failed to execute the transaction:", trace.Result.Error)
+			fmt.Println(err.Error())
 			os.Exit(1)
 		}
 
-		fmt.Printf("{\"contract_address\":\"%s\", \"tx_hash\":\"%s\"}\n", receipt.Result.ContractAddress, txHash)
+		fmt.Printf("{\"contract_address\":\"%s\", \"tx_hash\":\"%s\"}\n", contractAddress, txHash)
 		os.Exit(0)
 	},
 }
