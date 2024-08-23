@@ -55,12 +55,13 @@ var deployERC20Cmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		receipt, err := e.NewRequester().GetTransactionReceiptWithRetry(txHash, 15)
+		contractAddress, err := e.NewRequester().GetContractAddress(txHash)
 		if err != nil {
-			fmt.Printf("error getting the tx receipt:%s\n", err.Error())
+			fmt.Printf(err.Error())
+			os.Exit(1)
 		}
 
-		fmt.Printf("{\"contract_address\":\"%s\", \"tx_hash\":\"%s\"}\n", receipt.Result.ContractAddress, txHash)
+		fmt.Printf("{\"contract_address\":\"%s\", \"tx_hash\":\"%s\"}\n", contractAddress, txHash)
 
 		// Clean up files
 		if err := filesmanager.CleanUpTempFolder(); err != nil {

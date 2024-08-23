@@ -134,27 +134,19 @@ var deployUniswapV2RouteryCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		receipt, err := e.NewRequester().GetTransactionReceiptWithRetry(txHash, 15)
+		contractAddress, err := e.NewRequester().GetContractAddress(txHash)
 		if err != nil {
-			fmt.Printf("error getting the tx receipt:%s\n", err.Error())
-		}
-
-		trace, err := e.NewRequester().GetTransactionTrace(txHash)
-		if err != nil {
-			fmt.Printf("error getting the tx trace:%s\n", err.Error())
-		}
-		if trace.Result.Error != "" {
-			fmt.Println("failed to execute the transaction:", trace.Result.Error)
+			fmt.Printf(err.Error())
 			os.Exit(1)
 		}
 
-		codeHash, err := e.NewRequester().EthCodeHash(receipt.Result.ContractAddress, "latest")
+		codeHash, err := e.NewRequester().EthCodeHash(contractAddress, "latest")
 		if err != nil {
 			fmt.Println("failed to get the eth code:", err.Error())
 			os.Exit(1)
 		}
 
-		fmt.Printf("{\"contract_address\":\"%s\", \"code_hash\":\"%s\", \"tx_hash\":\"%s\"}\n", receipt.Result.ContractAddress, "0x"+codeHash, txHash)
+		fmt.Printf("{\"contract_address\":\"%s\", \"code_hash\":\"%s\", \"tx_hash\":\"%s\"}\n", contractAddress, "0x"+codeHash, txHash)
 
 		// Clean up files
 		if err := filesmanager.CleanUpTempFolder(); err != nil {
