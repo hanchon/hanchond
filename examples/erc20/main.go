@@ -14,14 +14,30 @@ import (
 	"golang.org/x/exp/rand"
 )
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+// REQUIREMENTS: solc0.8.25. `hanchond p build-solc --version 0.8.25`
+
+const letters = "abcdefghijklmnopqrstuvwxyz"
 
 func randString(n int) string {
 	b := make([]byte, n)
 	for i := range b {
-		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+		b[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(b)
+}
+
+func sendRandomTransaction(erc20Address []string, wallets []*txbuilder.SimpleWeb3Wallet) (string, error) {
+	from := wallets[rand.Intn(len(wallets))]
+	toWallet := wallets[rand.Intn(len(wallets))]
+	erc20 := erc20Address[rand.Intn(len(erc20Address))]
+
+	callData, err := solidity.ERC20TransferCallData(toWallet.Address.Hex(), "1")
+	if err != nil {
+		return "", err
+	}
+
+	to := common.HexToAddress(erc20)
+	return from.TxBuilder.SendTx(from.Address, &to, big.NewInt(0), 200_000, callData, from.PrivKey)
 }
 
 func main() {
@@ -90,18 +106,4 @@ func main() {
 		txHash, _ := sendRandomTransaction(erc20sAddress, wallets)
 		fmt.Println(txHash)
 	}
-}
-
-func sendRandomTransaction(erc20Address []string, wallets []*txbuilder.SimpleWeb3Wallet) (string, error) {
-	from := wallets[rand.Intn(len(wallets))]
-	toWallet := wallets[rand.Intn(len(wallets))]
-	erc20 := erc20Address[rand.Intn(len(erc20Address))]
-
-	callData, err := solidity.ERC20TransferCallData(toWallet.Address.Hex(), "1")
-	if err != nil {
-		return "", err
-	}
-
-	to := common.HexToAddress(erc20)
-	return from.TxBuilder.SendTx(from.Address, &to, big.NewInt(0), 200_000, callData, from.PrivKey)
 }
