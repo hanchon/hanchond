@@ -188,7 +188,6 @@ func heigthToQueryParam(height string) (string, error) {
 	return heightString, nil
 }
 
-// TODO: add docs for this function
 func (c *Client) GetContractAddress(txHash string) (string, error) {
 	receipt, err := c.GetTransactionReceiptWithRetry(txHash, 15)
 	if err != nil {

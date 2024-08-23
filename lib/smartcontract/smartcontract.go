@@ -45,7 +45,7 @@ func StringsToABIArguments(args []string) ([]interface{}, error) {
 			// Numbers
 			num := new(big.Int)
 			_, valid := num.SetString(value[1], 10)
-			if valid == false {
+			if !valid {
 				return []interface{}{}, fmt.Errorf("error converting the number")
 			}
 			callArgs = append(callArgs, num)

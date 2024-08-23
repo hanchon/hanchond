@@ -5,14 +5,26 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/hanchon/hanchond/lib/smartcontract"
 	"github.com/hanchon/hanchond/lib/txbuilder"
 	"github.com/hanchon/hanchond/playground/filesmanager"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
 
-// BuildDeployERC20Contract will save the temp usings using the filesmanager. Init the home folder before running the function
-func BuildDeployERC20Contract(name, symbol, initialAmount string, isWrapped bool, builder *txbuilder.TxBuilder, gasLimit int) (string, error) {
+const erc20TransferABI = `[{ "constant": false, "inputs": [ { "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" } ], "name": "transfer", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }]`
+
+func ERC20TransferCallData(address string, amount string) ([]byte, error) {
+	params := []string{"a:" + address, "n:" + amount}
+	callArgs, err := smartcontract.StringsToABIArguments(params)
+	if err != nil {
+		return []byte{}, err
+	}
+	return smartcontract.ABIPackRaw([]byte(erc20TransferABI), "transfer", callArgs...)
+}
+
+// BuildAndDeployERC20Contract will save the temp usings using the filesmanager. Init the home folder before running the function
+func BuildAndDeployERC20Contract(name, symbol, initialAmount string, isWrapped bool, builder *txbuilder.TxBuilder, gasLimit int) (string, error) {
 	// Clone openzeppelin if needed
 	path, err := DownloadDep("https://github.com/OpenZeppelin/openzeppelin-contracts", "v5.0.2", "openzeppelin")
 	if err != nil {

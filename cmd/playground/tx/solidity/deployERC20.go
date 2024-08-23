@@ -49,7 +49,7 @@ var deployERC20Cmd = &cobra.Command{
 		e := evmos.NewEvmosFromDB(queries, nodeID)
 		builder := e.NewTxBuilder(uint64(gasLimit))
 
-		txHash, err := solidity.BuildDeployERC20Contract(name, symbol, initialAmount, isWrapped, builder, gasLimit)
+		txHash, err := solidity.BuildAndDeployERC20Contract(name, symbol, initialAmount, isWrapped, builder, gasLimit)
 		if err != nil {
 			fmt.Println(err.Error())
 			os.Exit(1)
