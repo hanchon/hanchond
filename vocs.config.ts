@@ -239,6 +239,10 @@ export default defineConfig({
               collapsed: true,
               items: [
                 {
+                  text: "Spam the network with Web3 Txns (v0.4.0)",
+                  link: "/hanchond/playground/examples/spamTheNetwork",
+                },
+                {
                   text: "Debug eth_code (v0.3.0)",
                   link: "/hanchond/playground/examples/debugEthCode",
                 },
@@ -350,7 +354,11 @@ export default defineConfig({
           collapsed: false,
           items: [
             {
-              text: "ERC20 Example",
+              text: "Spam the network with Web3 Txns (v0.4.0)",
+              link: "/hanchond/playground/examples/spamTheNetwork",
+            },
+            {
+              text: "ERC20 Example (v0.1.0)",
               link: "/lib/examples/erc20",
             },
           ],

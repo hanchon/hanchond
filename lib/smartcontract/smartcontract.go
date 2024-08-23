@@ -3,6 +3,7 @@ package smartcontract
 import (
 	"encoding/hex"
 	"fmt"
+	"math/big"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -38,7 +39,16 @@ func StringsToABIArguments(args []string) ([]interface{}, error) {
 		value := strings.Split(v, ":")
 		switch value[0] {
 		case "a":
+			// Address
 			callArgs = append(callArgs, common.HexToAddress(value[1]))
+		case "n":
+			// Numbers
+			num := new(big.Int)
+			_, valid := num.SetString(value[1], 10)
+			if !valid {
+				return []interface{}{}, fmt.Errorf("error converting the number")
+			}
+			callArgs = append(callArgs, num)
 		default:
 			return callArgs, fmt.Errorf("invalid param type")
 		}

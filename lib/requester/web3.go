@@ -187,3 +187,37 @@ func heigthToQueryParam(height string) (string, error) {
 	}
 	return heightString, nil
 }
+
+func (c *Client) GetContractAddress(txHash string) (string, error) {
+	receipt, err := c.GetTransactionReceiptWithRetry(txHash, 15)
+	if err != nil {
+		return "", fmt.Errorf("error getting the tx receipt:%s", err.Error())
+	}
+
+	trace, err := c.GetTransactionTrace(txHash)
+	if err != nil {
+		return "", fmt.Errorf("error getting the tx trace:%s", err.Error())
+	}
+
+	if trace.Result.Error != "" {
+		return "", fmt.Errorf("failed to execute the transaction:%s", trace.Result.Error)
+	}
+	return receipt.Result.ContractAddress, nil
+}
+
+func (c *Client) GetBlockNumber() (int64, error) {
+	// NOTE: the GasPrice result is the same format as the BlockNumber
+	var resp web3types.GasPriceResponse
+	if err := c.SendPostRequestEasyJSON(
+		c.Web3Endpoint,
+		[]byte(`{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}`),
+		&resp,
+		c.Web3Auth,
+	); err != nil {
+		return 0, err
+	}
+
+	supply := new(big.Int)
+	supply.SetString(resp.Result[2:], 16)
+	return supply.Int64(), nil
+}

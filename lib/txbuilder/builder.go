@@ -33,3 +33,13 @@ func NexTxBuilder(
 		requester: requester,
 	}
 }
+
+func NewSimpleTxBuilder(mnemonic string, web3Endpoint string) *TxBuilder {
+	return NexTxBuilder(
+		map[string]Contract{},
+		mnemonic,
+		map[string]uint64{},
+		100_000,
+		requester.NewClient().WithUnsecureWeb3Endpoint(web3Endpoint),
+	)
+}

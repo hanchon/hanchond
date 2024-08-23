@@ -21,3 +21,11 @@ builder :=  NexTxBuilder(
 :::
 
 After having the builder instantiated, you can send [transactions](/lib/txbuilder/transaction)
+
+## Simple Constructor
+
+If you just need the `SendTx` method, instead of creating a `TxBuilder` with the contracts information, you can use the `NewSimpleTxBuilder` function.
+
+```go
+builder := txbuilder.NewSimpleTxBuilder(mnemonic, web3Endpoint)
+```

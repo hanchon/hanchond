@@ -1,0 +1,57 @@
+# Spam the Network
+
+To simulate network usage, we are going to deploy a couple of erc20 tokens and move them between accounts.
+
+## Init the network
+
+```bash
+hanchond p remove-data && hanchond p init-chain 1 --version v18.1.0 && hanchond p start-chain 1
+```
+
+## Get the node info
+
+```bash
+hanchond p get-node 1
+
+Node: 1
+General Configuration:
+    - Binary: evmosdv18.1.0
+    - ChainID: evmos_9001-1
+Process:
+    - IsRunning: 1
+    - ProcessID: 3932
+    Keys:
+        - KeyName: validator-key-1-0
+        - Mnemonic: crush tone naive tobacco expect deliver inflict ten gate ride used thought guide defense gather nuclear sniff achieve notice labor maid torch sword piano
+    Ports:
+    - 8545(web3): 53864
+    - 26657(cli/tendermint): 53868
+    - 1317(cosmos rest): 53860
+```
+
+We need the mnemonic and the web3 port from that list.
+
+## Send the transactions
+
+```go
+go run examples/erc20/main.go "crush tone naive tobacco expect deliver inflict ten gate ride used thought guide defense gather nuclear sniff achieve notice labor maid torch sword piano" "http://localhost:53864" "/Users/hanchon/.hanchond"
+
+contract deployed: 0x0fbbc319d1b1d48e6e30f6046bdc04a06436365c
+contract deployed: 0x0c0e8ac46998ea62b1ae2a0d501c7a3445141139
+contract deployed: 0x7bf33993b9c49370cb69f201b63f48dfb57f30b0
+contract deployed: 0x896209a56d3cd1ee236283a3f60deba1acd52be8
+contract deployed: 0x74fdddeb4393b97f8f428d64678e45a70a23a7b5
+contract deployed: 0xb1d9f06299fc23fbd14e61acf7ebc9f734f439e4
+contract deployed: 0x764c112e9957dc21147695c50fc868bdc22b85ca
+contract deployed: 0xeb3aa9bc3b138ba608754e85bc5ce66af54a9121
+contract deployed: 0xc3aba9d5c66c7f01113694df12ed4833d475c6e5
+contract deployed: 0x35a312eb356506f3e8b9b3f0777c79bc1c7a5ac9
+contract deployed: 0x06fb73d22b6b3ea2e2fe8de1631b2c8548bdd687
+contract deployed: 0x7411704da13f8765c4b0f671f0b7b277dbb7badb
+contract deployed: 0x9f575aef62ade76d04ae59bf86edf12fc521b70f
+contract deployed: 0x3d91c3926392791f93022d09f8f22a7552ade483
+contract deployed: 0xf2d72392e23b29fbbd87618d0c32ae8e90be9f55
+finished initializing the 100 wallets
+starting height: 37
+stop height: 137
+```

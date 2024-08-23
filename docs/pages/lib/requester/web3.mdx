@@ -13,6 +13,14 @@ supply, err := c.GetTotalSupply(contractAddress, height)
 balance, err := c.GetBalanceERC20(contractAddress, wallet, height)
 ```
 
+## Get Block Number
+
+Returns the current height of the network
+
+```go
+height, err := c.GetBlockNumber()
+```
+
 ## GetBlockByNumber
 
 Sending the height and whether you need the transactions or not will return the block data.
@@ -101,4 +109,16 @@ Gets the smartcontract bytecode hash at the latest height.
 
 ```go
 hash, err := client.EthCodeHash(contract, height)
+```
+
+## GetContractAddress
+
+Helper function that will try for 15 seconds to get the transaction receipt of the given transaction hash.
+
+The transaction has must be on transaction that created a contract.
+
+The helper function will also get the trace of the give transaction to ensure that there were not errors while deploying the contract.
+
+```go
+address, err := client.GetContractAddress(txHash)
 ```

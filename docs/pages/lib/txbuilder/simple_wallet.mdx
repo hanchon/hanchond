@@ -1,0 +1,50 @@
+# SimpleWeb3Wallet
+
+When you need to just use the `SendTx` function from the transaction builder, you can use the `SimpleWeb3Wallet`.
+
+:::warning
+If you send an incorrect mnemonic the function will panic!
+:::
+
+## Structure
+
+```go
+type SimpleWeb3Wallet struct {
+    Mnemonic string
+    Address common.Address
+    PrivKey *ecdsa.PrivateKey
+    TxBuilder *TxBuilder
+}
+```
+
+## New Simple Wallet
+
+```go
+simpleWallet := NewSimpleWeb3WalletFromMnemonic(web3Endpoint)
+```
+
+## From Mnemonic
+
+```go
+simpleWallet := NewSimpleWeb3WalletFromMnemonic(mnemonic, web3Endpoint)
+```
+
+## Examples
+
+### Send Coins
+
+```go
+txHash, err := simpleWallet.TxBuilder.SendCoins(w.Address.Hex(), big.NewInt(1_000_000_000_000_000_000))
+```
+
+### Interact with contract
+
+```go
+callData, err := solidity.ERC20TransferCallData(dst.Address.Hex(), "100000")
+if err != nil {
+    return err
+}
+
+to := common.HexToAddress(erc20Contract)
+txHash, err := simpleWallet.TxBuilder.SendTx(simpleWallet.Address, &to, big.NewInt(0), 200_000, callData, simpleWallet.PrivKey)
+```
