@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/hanchon/hanchond/cmd/playground/query"
+	"github.com/hanchon/hanchond/cmd/playground/relayer"
 	"github.com/hanchon/hanchond/cmd/playground/tx"
 	"github.com/hanchon/hanchond/playground/filesmanager"
 	"github.com/spf13/cobra"
@@ -34,4 +35,5 @@ var PlaygroundCmd = &cobra.Command{
 func init() {
 	PlaygroundCmd.AddCommand(tx.TxCmd)
 	PlaygroundCmd.AddCommand(query.QueryCmd)
+	PlaygroundCmd.AddCommand(relayer.RelayerCmd)
 }
