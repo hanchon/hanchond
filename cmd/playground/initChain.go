@@ -36,7 +36,7 @@ var initChainCmd = &cobra.Command{
 		}
 		chainID, err := cmd.Flags().GetString("chainid")
 		if err != nil {
-			fmt.Println("version flag was not set")
+			fmt.Println("chainid flag was not set")
 			os.Exit(1)
 		}
 
