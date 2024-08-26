@@ -111,7 +111,7 @@ export default defineConfig({
               collapsed: true,
               items: [
                 {
-                  text: "Add a New Channel",
+                  text: "Add a New Channel (only local networks)",
                   link: "/hanchond/playground/hermesAddChannel",
                 },
                 {
@@ -121,6 +121,20 @@ export default defineConfig({
                 {
                   text: "Hermes Stop",
                   link: "/hanchond/playground/hermesStop",
+                },
+              ],
+            },
+            {
+              text: "Relayer",
+              collapsed: true,
+              items: [
+                {
+                  text: "Add a Chain Configuration",
+                  link: "/hanchond/playground/relayer/addChainConfig.mdx",
+                },
+                {
+                  text: "Create a Channel",
+                  link: "/hanchond/playground/relayer/createChannel.mdx",
                 },
               ],
             },

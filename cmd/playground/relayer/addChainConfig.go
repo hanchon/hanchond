@@ -11,7 +11,7 @@ import (
 
 // represents the addChainConfigCmd command
 var addChainConfigCmd = &cobra.Command{
-	Use:   "addChainConfig",
+	Use:   "add-chain-config",
 	Args:  cobra.ExactArgs(0),
 	Short: "Add chain config to hermes, it is ignored if the chain id already exists",
 	Run: func(cmd *cobra.Command, _ []string) {
