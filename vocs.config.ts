@@ -130,11 +130,11 @@ export default defineConfig({
               items: [
                 {
                   text: "Add a Chain Configuration",
-                  link: "/hanchond/playground/relayer/addChainConfig.mdx",
+                  link: "/hanchond/playground/relayer/addChainConfig",
                 },
                 {
                   text: "Create a Channel",
-                  link: "/hanchond/playground/relayer/createChannel.mdx",
+                  link: "/hanchond/playground/relayer/createChannel",
                 },
               ],
             },
