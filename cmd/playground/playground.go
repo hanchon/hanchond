@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/hanchon/hanchond/cmd/playground/explorer"
 	"github.com/hanchon/hanchond/cmd/playground/query"
 	"github.com/hanchon/hanchond/cmd/playground/tx"
 	"github.com/hanchon/hanchond/playground/filesmanager"
@@ -34,4 +35,5 @@ var PlaygroundCmd = &cobra.Command{
 func init() {
 	PlaygroundCmd.AddCommand(tx.TxCmd)
 	PlaygroundCmd.AddCommand(query.QueryCmd)
+	PlaygroundCmd.AddCommand(explorer.ExplorerCmd)
 }

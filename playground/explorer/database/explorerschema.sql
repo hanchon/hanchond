@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS blocks(
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    height BIGINT UNIQUE NOT NULL,
+    time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    txcount INTEGER NOT NULL,
+    totalValue NUMERIC(65, 0) NOT NULL,
+    proposer TEXT NOT NULL,
+    gasused NUMERIC(65, 0) NOT NULL,
+    gaslimit NUMERIC(65, 0) NOT NULL,
+    basefee NUMERIC(65, 0) NOT NULL,
+    hash TEXT NOT NULL,
+    parenthash TEXT NOT NULL
+);
+
+

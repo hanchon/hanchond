@@ -1,0 +1,9 @@
+version: "2"
+sql:
+  - engine: "sqlite"
+    queries: "explorerquery.sql"
+    schema: "explorerschema.sql"
+    gen:
+      go:
+        package: "database"
+        out: "./"
