@@ -34,6 +34,11 @@ var initChainCmd = &cobra.Command{
 			fmt.Println("version flag was not set")
 			os.Exit(1)
 		}
+		chainID, err := cmd.Flags().GetString("chainid")
+		if err != nil {
+			fmt.Println("chainid flag was not set")
+			os.Exit(1)
+		}
 
 		amountOfValidators, err := strconv.ParseInt(args[0], 10, 64)
 		if err != nil {
@@ -55,7 +60,9 @@ var initChainCmd = &cobra.Command{
 		nodes := make([]*cosmosdaemon.Daemon, amountOfValidators)
 		switch strings.ToLower(strings.TrimSpace(client)) {
 		case "evmos":
-			chainID := fmt.Sprintf("evmos_9001-%d", chainNumber)
+			if chainID == "" {
+				chainID = fmt.Sprintf("evmos_9001-%d", chainNumber)
+			}
 			for k := range nodes {
 				if filesmanager.IsNodeHomeFolderInitialized(int64(chainNumber), int64(k)) {
 					fmt.Printf("the home folder already exists: %d-%d\n", chainNumber, k)
@@ -72,7 +79,9 @@ var initChainCmd = &cobra.Command{
 				).Daemon
 			}
 		case "gaia":
-			chainID := fmt.Sprintf("cosmoshub-%d", chainNumber)
+			if chainID == "" {
+				chainID = fmt.Sprintf("cosmoshub-%d", chainNumber)
+			}
 			for k := range nodes {
 				if filesmanager.IsNodeHomeFolderInitialized(int64(chainNumber), int64(k)) {
 					fmt.Printf("the home folder already exists: %d-%d\n", chainNumber, k)
@@ -92,13 +101,13 @@ var initChainCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		chainID, err := cosmosdaemon.InitMultiNodeChain(nodes, queries)
+		dbID, err := cosmosdaemon.InitMultiNodeChain(nodes, queries)
 		if err != nil {
 			fmt.Printf("error: %s\n", err.Error())
 			os.Exit(1)
 		}
 
-		fmt.Println("New chain created with id:", chainID)
+		fmt.Println("New chain created with id:", dbID)
 	},
 }
 
@@ -106,4 +115,5 @@ func init() {
 	PlaygroundCmd.AddCommand(initChainCmd)
 	initChainCmd.Flags().String("client", "evmos", "Client that you want to use. Options: evmos, gaia")
 	initChainCmd.Flags().StringP("version", "v", "local", "Version of the Evmos node that you want to use, defaults to local. Tag names are supported. If selected node is gaia, the flag is ignored.")
+	initChainCmd.Flags().StringP("chainid", "c", "", "Chain-ID to be used when creating the genesis file, it defaults to `evmos_9001-X` or `cosmoshub-X`, depending on the client.")
 }
