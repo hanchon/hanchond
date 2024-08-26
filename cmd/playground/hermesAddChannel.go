@@ -62,8 +62,8 @@ var hermesAddChannelCmd = &cobra.Command{
 				fmt.Println("Adding gaia chain")
 				if err := h.AddCosmosChain(
 					v.ChainID_2,
-					v.P26657,
-					v.P9090,
+					hermes.LocalEndpoint(v.P26657),
+					hermes.LocalEndpoint(v.P9090),
 					v.ValidatorKeyName,
 					v.ValidatorKey,
 					v.Prefix,
@@ -76,10 +76,12 @@ var hermesAddChannelCmd = &cobra.Command{
 				fmt.Println("Adding evmos chain")
 				if err := h.AddEvmosChain(
 					v.ChainID_2,
-					v.P26657,
-					v.P9090,
+					hermes.LocalEndpoint(v.P26657),
+					hermes.LocalEndpoint(v.P9090),
 					v.ValidatorKeyName,
 					v.ValidatorKey,
+					v.Prefix,
+					v.Denom,
 				); err != nil {
 					fmt.Println("error adding first chain to the relayer:", err.Error())
 					os.Exit(1)

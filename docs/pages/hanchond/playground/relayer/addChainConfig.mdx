@@ -1,0 +1,33 @@
+# Add Chain Configuration
+
+To run a relayer between two chains, first you need to set up the configuration for both chains.
+
+If you are running with just local chains, the `hermesAddChannel` command takes care of everything. But if you need to communicate with chains that are outside the networks created by `hanchond`, you need to manually add both chains and call the `create-channel` command.
+
+## Parameters
+
+To add a configuration you must send the following parameters as flags:
+
+- `chainid`: Chain-id, i.e., `evmos_9001-2`
+- `p26657`: Endpoint where the port 26657 is exposed, i.e., `http://localhost:26657`
+- `p9090`: Endpoint where the port 9090 is exposed, i.e., `http://localhost:9090`
+- `keyname`: Key name, it's used to identify the files inside Hermes, i.e., `relayerkey`
+- `keymnemonic`: Key mnemonic, mnemonic for the wallet
+- `prefix`: Prefix for the bech32 address, i.e, `osmo`
+- `denom`: Denomination of the base token, i.e, `aevmos`
+- `is-evm`: If the chain is EVM compatible, this is used to determinate the type of wallet.
+
+```bash
+hanchond playground relayer add-chain-config \
+    --chainid=evmos_9001-2 \
+    --p26657=http://localhost:26657 \
+    --p9090=http://localhost:9090 \
+    --keyname=evmosrelayer \
+    --keymnemonic="attend recipe own funny garden fiber glad inherit loud skull kangaroo swing license visual learn explain economy best news sibling float video disorder prepare" \
+    --prefix="evmos" \
+    --denom="aevmos" \
+    --is-evm=true
+
+Relayer initialized
+Adding a EVM chain
+```
