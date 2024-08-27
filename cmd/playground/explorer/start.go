@@ -27,7 +27,6 @@ var startCmd = &cobra.Command{
 
 		fmt.Println(e.Ports.P8545)
 		fmt.Println(e.Ports.P1317)
-
 	},
 }
 

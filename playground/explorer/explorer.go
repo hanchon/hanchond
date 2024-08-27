@@ -31,5 +31,4 @@ func NewLocalExplorerClient(web3Port, cosmosPort int, dataPath string) *Explorer
 }
 
 func (e *ExplorerClient) ProcessBlocks() {
-
 }

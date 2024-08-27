@@ -7,18 +7,22 @@ import (
 	"github.com/hanchon/hanchond/playground/filesmanager"
 )
 
+func LocalEndpoint(port int64) string {
+	return fmt.Sprintf("http://127.0.0.1:%d", port)
+}
+
 func (h *Hermes) GetConfigFile() string {
 	// If the dir already existed it will return error, but that is fine
 	_ = filesmanager.CreateHermesFolder()
 	return filesmanager.GetHermesPath() + "/config.toml"
 }
 
-func (h *Hermes) AddCosmosChain(chainID string, p26657 int64, p9090 int64, keyname string, mnemonic string, accountPrefix string, denom string) error {
+func (h *Hermes) AddCosmosChain(chainID string, p26657 string, p9090 string, keyname string, mnemonic string, accountPrefix string, denom string) error {
 	values := fmt.Sprintf(`
 [[chains]]
 id = '%s'
-rpc_addr = 'http://127.0.0.1:%d'
-grpc_addr = 'http://127.0.0.1:%d'
+rpc_addr = '%s'
+grpc_addr = '%s'
 event_source = { mode = 'pull', interval = '1s' }
 rpc_timeout = '10s'
 account_prefix = '%s'
@@ -60,15 +64,14 @@ trust_threshold = { numerator = '1', denominator = '3' }
 	return nil
 }
 
-func (h *Hermes) AddEvmosChain(chainID string, p26657 int64, p9090 int64, keyname string, mnemonic string) error {
+func (h *Hermes) AddEvmosChain(chainID string, p26657 string, p9090 string, keyname string, mnemonic string, prefix string, denom string) error {
 	values := fmt.Sprintf(`
 [[chains]]
 id = '%s'
-rpc_addr = 'http://127.0.0.1:%d'
-grpc_addr = 'http://127.0.0.1:%d'
+rpc_addr = '%s'
+grpc_addr = '%s'
 event_source = { mode = 'pull', interval = '1s' }
 rpc_timeout = '10s'
-account_prefix = 'evmos'
 key_name = '%s'
 key_store_folder = '%s'
 store_prefix = 'ibc'
@@ -78,9 +81,10 @@ clock_drift = '15s'
 max_block_time = '10s'
 trusting_period = '14days'
 trust_threshold = { numerator = '1', denominator = '3' }
-gas_price = { price = 800000000, denom = 'aevmos' }
+account_prefix = '%s'
+gas_price = { price = 800000000, denom = '%s' }
 address_type = { derivation = 'ethermint', proto_type = { pk_type = '/ethermint.crypto.v1.ethsecp256k1.PubKey' } }
-`, chainID, p26657, p9090, keyname, filesmanager.GetHermesPath()+"/keyring"+chainID)
+`, chainID, p26657, p9090, keyname, filesmanager.GetHermesPath()+"/keyring"+chainID, prefix, denom)
 
 	configFile, err := filesmanager.ReadFile(h.GetConfigFile())
 	if err != nil {
