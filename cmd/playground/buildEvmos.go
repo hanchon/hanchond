@@ -18,6 +18,12 @@ var buildEvmosCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		_ = filesmanager.SetHomeFolderFromCobraFlags(cmd)
 
+		// Create build folder if needed
+		if err := filesmanager.CreateBuildsDir(); err != nil {
+			fmt.Println("could not create build folder:" + err.Error())
+			os.Exit(1)
+		}
+
 		path, err := cmd.Flags().GetString("path")
 		// Local build
 		if err == nil && path != "" {
