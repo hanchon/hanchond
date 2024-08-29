@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/hanchon/hanchond/playground/evmos"
+	"github.com/hanchon/hanchond/playground/explorer"
 	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
@@ -25,8 +26,8 @@ var startCmd = &cobra.Command{
 		// TODO: move the newFromDB to cosmos daemon
 		e := evmos.NewEvmosFromDB(queries, nodeID)
 
-		fmt.Println(e.Ports.P8545)
-		fmt.Println(e.Ports.P1317)
+		ex := explorer.NewLocalExplorerClient(e.Ports.P8545, e.Ports.P1317, e.HomeDir)
+		ex.ProcessBlocks()
 	},
 }
 

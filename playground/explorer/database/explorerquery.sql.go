@@ -19,7 +19,7 @@ func (q *Queries) DeleteBlockByID(ctx context.Context, id interface{}) error {
 }
 
 const getLatestBlock = `-- name: GetLatestBlock :one
-SELECT id, height, time, txcount, totalvalue, proposer, gasused, gaslimit, basefee, hash, parenthash FROM blocks ORDER BY height DESC LIMIT 1
+SELECT id, height, txcount, hash, parenthash FROM blocks ORDER BY height DESC LIMIT 1
 `
 
 func (q *Queries) GetLatestBlock(ctx context.Context) (Block, error) {
@@ -28,37 +28,93 @@ func (q *Queries) GetLatestBlock(ctx context.Context) (Block, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Height,
-		&i.Time,
 		&i.Txcount,
-		&i.Totalvalue,
-		&i.Proposer,
-		&i.Gasused,
-		&i.Gaslimit,
-		&i.Basefee,
 		&i.Hash,
 		&i.Parenthash,
 	)
 	return i, err
 }
 
+const getLimitedTransactions = `-- name: GetLimitedTransactions :many
+SELECT id, cosmoshash, ethhash, content, sender, blockheight FROM transactions ORDER BY id DESC LIMIT ?
+`
+
+func (q *Queries) GetLimitedTransactions(ctx context.Context, limit int64) ([]Transaction, error) {
+	rows, err := q.db.QueryContext(ctx, getLimitedTransactions, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Transaction
+	for rows.Next() {
+		var i Transaction
+		if err := rows.Scan(
+			&i.ID,
+			&i.Cosmoshash,
+			&i.Ethhash,
+			&i.Content,
+			&i.Sender,
+			&i.Blockheight,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getTransactions = `-- name: GetTransactions :many
+SELECT id, cosmoshash, ethhash, content, sender, blockheight FROM transactions
+`
+
+func (q *Queries) GetTransactions(ctx context.Context) ([]Transaction, error) {
+	rows, err := q.db.QueryContext(ctx, getTransactions)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Transaction
+	for rows.Next() {
+		var i Transaction
+		if err := rows.Scan(
+			&i.ID,
+			&i.Cosmoshash,
+			&i.Ethhash,
+			&i.Content,
+			&i.Sender,
+			&i.Blockheight,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const insertBlock = `-- name: InsertBlock :one
 INSERT INTO blocks(
-    height, time, txcount, totalValue, proposer, gasused, gaslimit, basefee, hash, parenthash
+    height,  txcount,  hash, parenthash
 ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?
 )
 RETURNING id
 `
 
 type InsertBlockParams struct {
 	Height     int64
-	Time       interface{}
 	Txcount    int64
-	Totalvalue interface{}
-	Proposer   string
-	Gasused    interface{}
-	Gaslimit   interface{}
-	Basefee    interface{}
 	Hash       string
 	Parenthash string
 }
@@ -66,15 +122,39 @@ type InsertBlockParams struct {
 func (q *Queries) InsertBlock(ctx context.Context, arg InsertBlockParams) (interface{}, error) {
 	row := q.db.QueryRowContext(ctx, insertBlock,
 		arg.Height,
-		arg.Time,
 		arg.Txcount,
-		arg.Totalvalue,
-		arg.Proposer,
-		arg.Gasused,
-		arg.Gaslimit,
-		arg.Basefee,
 		arg.Hash,
 		arg.Parenthash,
+	)
+	var id interface{}
+	err := row.Scan(&id)
+	return id, err
+}
+
+const insertTransaction = `-- name: InsertTransaction :one
+INSERT INTO transactions(
+    cosmoshash, ethhash, content, sender, blockheight
+) VALUES (
+    ?, ?, ?, ?, ?
+)
+RETURNING id
+`
+
+type InsertTransactionParams struct {
+	Cosmoshash  string
+	Ethhash     string
+	Content     string
+	Sender      string
+	Blockheight int64
+}
+
+func (q *Queries) InsertTransaction(ctx context.Context, arg InsertTransactionParams) (interface{}, error) {
+	row := q.db.QueryRowContext(ctx, insertTransaction,
+		arg.Cosmoshash,
+		arg.Ethhash,
+		arg.Content,
+		arg.Sender,
+		arg.Blockheight,
 	)
 	var id interface{}
 	err := row.Scan(&id)

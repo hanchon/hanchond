@@ -7,13 +7,16 @@ package database
 type Block struct {
 	ID         interface{}
 	Height     int64
-	Time       interface{}
 	Txcount    int64
-	Totalvalue interface{}
-	Proposer   string
-	Gasused    interface{}
-	Gaslimit   interface{}
-	Basefee    interface{}
 	Hash       string
 	Parenthash string
+}
+
+type Transaction struct {
+	ID          interface{}
+	Cosmoshash  string
+	Ethhash     string
+	Content     string
+	Sender      string
+	Blockheight int64
 }
