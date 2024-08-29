@@ -45,6 +45,6 @@ var buildGaiadCmd = &cobra.Command{
 
 func init() {
 	PlaygroundCmd.AddCommand(buildGaiadCmd)
-	buildGaiadCmd.PersistentFlags().StringP("version", "v", "v18.1.0", "Gaiad version to download")
+	buildGaiadCmd.PersistentFlags().StringP("version", "v", "v19.1.0", "Gaiad version to download")
 	buildGaiadCmd.PersistentFlags().Bool("is-darwin", true, "Is the system MacOS arm?")
 }

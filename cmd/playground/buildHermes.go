@@ -14,6 +14,7 @@ var buildHermesCmd = &cobra.Command{
 	Short: "Build the Hermes relayer binary",
 	Long:  `It builds the relayer from source, it accepts a version flag to specify any tag. It defaults to: v1.9.0.`,
 	Run: func(cmd *cobra.Command, _ []string) {
+		// TODO: download from release page instead of building from source
 		_ = filesmanager.SetHomeFolderFromCobraFlags(cmd)
 		version, err := cmd.Flags().GetString("version")
 		if err != nil {
@@ -53,5 +54,5 @@ var buildHermesCmd = &cobra.Command{
 
 func init() {
 	PlaygroundCmd.AddCommand(buildHermesCmd)
-	buildHermesCmd.PersistentFlags().StringP("version", "v", "v1.9.0", "Hermes version to build")
+	buildHermesCmd.PersistentFlags().StringP("version", "v", "v1.10.3", "Hermes version to build")
 }
