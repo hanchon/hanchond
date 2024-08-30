@@ -6,15 +6,15 @@ DELETE FROM blocks WHERE id = ?;
 
 -- name: InsertBlock :one
 INSERT INTO blocks(
-    height,  txcount,  hash, parenthash
+    height,  txcount,  hash
 ) VALUES (
-    ?, ?, ?, ?
+    ?, ?, ?
 )
 RETURNING id;
 
 -- name: InsertTransaction :one
 INSERT INTO transactions(
-    cosmoshash, ethhash, content, sender, blockheight
+    cosmoshash, ethhash, typeurl, sender, blockheight
 ) VALUES (
     ?, ?, ?, ?, ?
 )

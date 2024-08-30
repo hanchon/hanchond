@@ -24,11 +24,14 @@ func (d *Daemon) SaveNodeToDB(chain database.Chain, queries *database.Queries) (
 		Moniker:          d.Moniker,
 		ValidatorKey:     d.ValMnemonic,
 		ValidatorKeyName: d.ValKeyName,
+		ValidatorWallet:  d.ValWallet,
+		KeyType:          string(d.KeyType),
 		BinaryVersion:    d.BinaryName,
-		ProcessID:        0,
-		IsValidator:      1,
-		IsArchive:        0,
-		IsRunning:        0,
+
+		ProcessID:   0,
+		IsValidator: 1,
+		IsArchive:   0,
+		IsRunning:   0,
 	})
 	if err != nil {
 		return 0, err

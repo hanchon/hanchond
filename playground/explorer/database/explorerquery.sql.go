@@ -19,7 +19,7 @@ func (q *Queries) DeleteBlockByID(ctx context.Context, id interface{}) error {
 }
 
 const getLatestBlock = `-- name: GetLatestBlock :one
-SELECT id, height, txcount, hash, parenthash FROM blocks ORDER BY height DESC LIMIT 1
+SELECT id, height, txcount, hash FROM blocks ORDER BY height DESC LIMIT 1
 `
 
 func (q *Queries) GetLatestBlock(ctx context.Context) (Block, error) {
@@ -30,13 +30,12 @@ func (q *Queries) GetLatestBlock(ctx context.Context) (Block, error) {
 		&i.Height,
 		&i.Txcount,
 		&i.Hash,
-		&i.Parenthash,
 	)
 	return i, err
 }
 
 const getLimitedTransactions = `-- name: GetLimitedTransactions :many
-SELECT id, cosmoshash, ethhash, content, sender, blockheight FROM transactions ORDER BY id DESC LIMIT ?
+SELECT id, cosmoshash, ethhash, typeurl, sender, blockheight FROM transactions ORDER BY id DESC LIMIT ?
 `
 
 func (q *Queries) GetLimitedTransactions(ctx context.Context, limit int64) ([]Transaction, error) {
@@ -52,7 +51,7 @@ func (q *Queries) GetLimitedTransactions(ctx context.Context, limit int64) ([]Tr
 			&i.ID,
 			&i.Cosmoshash,
 			&i.Ethhash,
-			&i.Content,
+			&i.Typeurl,
 			&i.Sender,
 			&i.Blockheight,
 		); err != nil {
@@ -70,7 +69,7 @@ func (q *Queries) GetLimitedTransactions(ctx context.Context, limit int64) ([]Tr
 }
 
 const getTransactions = `-- name: GetTransactions :many
-SELECT id, cosmoshash, ethhash, content, sender, blockheight FROM transactions
+SELECT id, cosmoshash, ethhash, typeurl, sender, blockheight FROM transactions
 `
 
 func (q *Queries) GetTransactions(ctx context.Context) ([]Transaction, error) {
@@ -86,7 +85,7 @@ func (q *Queries) GetTransactions(ctx context.Context) ([]Transaction, error) {
 			&i.ID,
 			&i.Cosmoshash,
 			&i.Ethhash,
-			&i.Content,
+			&i.Typeurl,
 			&i.Sender,
 			&i.Blockheight,
 		); err != nil {
@@ -105,27 +104,21 @@ func (q *Queries) GetTransactions(ctx context.Context) ([]Transaction, error) {
 
 const insertBlock = `-- name: InsertBlock :one
 INSERT INTO blocks(
-    height,  txcount,  hash, parenthash
+    height,  txcount,  hash
 ) VALUES (
-    ?, ?, ?, ?
+    ?, ?, ?
 )
 RETURNING id
 `
 
 type InsertBlockParams struct {
-	Height     int64
-	Txcount    int64
-	Hash       string
-	Parenthash string
+	Height  int64
+	Txcount int64
+	Hash    string
 }
 
 func (q *Queries) InsertBlock(ctx context.Context, arg InsertBlockParams) (interface{}, error) {
-	row := q.db.QueryRowContext(ctx, insertBlock,
-		arg.Height,
-		arg.Txcount,
-		arg.Hash,
-		arg.Parenthash,
-	)
+	row := q.db.QueryRowContext(ctx, insertBlock, arg.Height, arg.Txcount, arg.Hash)
 	var id interface{}
 	err := row.Scan(&id)
 	return id, err
@@ -133,7 +126,7 @@ func (q *Queries) InsertBlock(ctx context.Context, arg InsertBlockParams) (inter
 
 const insertTransaction = `-- name: InsertTransaction :one
 INSERT INTO transactions(
-    cosmoshash, ethhash, content, sender, blockheight
+    cosmoshash, ethhash, typeurl, sender, blockheight
 ) VALUES (
     ?, ?, ?, ?, ?
 )
@@ -143,7 +136,7 @@ RETURNING id
 type InsertTransactionParams struct {
 	Cosmoshash  string
 	Ethhash     string
-	Content     string
+	Typeurl     string
 	Sender      string
 	Blockheight int64
 }
@@ -152,7 +145,7 @@ func (q *Queries) InsertTransaction(ctx context.Context, arg InsertTransactionPa
 	row := q.db.QueryRowContext(ctx, insertTransaction,
 		arg.Cosmoshash,
 		arg.Ethhash,
-		arg.Content,
+		arg.Typeurl,
 		arg.Sender,
 		arg.Blockheight,
 	)

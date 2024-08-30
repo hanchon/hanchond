@@ -2,7 +2,6 @@ package explorer
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -12,7 +11,7 @@ import (
 	"github.com/hanchon/hanchond/lib/requester"
 	"github.com/hanchon/hanchond/playground/explorer/database"
 
-	evmtypes "github.com/evmos/evmos/v18/x/evm/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 type Client struct {
@@ -60,45 +59,46 @@ func (e *Client) ProcessBlocks() {
 
 	// TODO: if network height < current sleep and retry
 	if networkHeight > initBlockHeight {
-		networkHeight = 474
-		a, err := e.client.GetBlockCosmos(fmt.Sprintf("0x%x", networkHeight))
+		height := 2332
+		blockData, err := e.client.GetBlockCosmos(fmt.Sprintf("0x%x", height))
 		if err != nil {
-			fmt.Println(err.Error())
-			os.Exit(1)
+			panic(err)
 		}
-		v, err := json.Marshal(a)
+		blockHash, err := converter.Base64ToHexString(blockData.BlockID.Hash)
 		if err != nil {
-			os.Exit(1)
+			panic(err)
 		}
-		fmt.Println(string(v))
-		blockHash, err := converter.Base64ToHexString(a.BlockID.Hash)
-		if err != nil {
-			os.Exit(1)
-		}
-		fmt.Println(blockHash)
 
-		for _, txBase64 := range a.Block.Data.Txs {
+		data := NewBlock(int64(height), int64(len(blockData.Block.Data.Txs)), blockHash)
+
+		for i, txBase64 := range blockData.Block.Data.Txs {
 			tx, err := codec.Base64ToTx(txBase64)
 			if err != nil {
-				os.Exit(1)
+				panic(err)
 			}
-			fmt.Println(tx.AuthInfo.Fee.Payer)
-			fmt.Println(tx.Body.Messages[0].TypeUrl)
-			txHash, err := converter.GenerateCosmosTxHashWithBase64(txBase64)
-			if err != nil {
-				os.Exit(1)
-			}
-			fmt.Println(txHash)
-			if tx.Body.Messages[0].TypeUrl == "/ethermint.evm.v1.MsgEthereumTx" {
-				var m evmtypes.MsgEthereumTx
-				err := codec.Encoder.Unmarshal(tx.Body.Messages[0].Value, &m)
-				if err != nil {
-					panic(err)
-				}
-				fmt.Println(m.AsTransaction().Hash().Hex())
 
+			sender := sdk.AccAddress(tx.AuthInfo.GetSignerInfos()[0].PublicKey.Value).String()
+			if len(tx.Body.Messages) == 0 {
+				panic(err)
 			}
+
+			typeURL := tx.Body.Messages[0].TypeUrl
+			cosmosTxHash, err := converter.GenerateCosmosTxHashWithBase64(txBase64)
+			if err != nil {
+				panic(err)
+			}
+
+			ethTxHash := ""
+			ethTx, from, err := codec.ConvertEvmosTxToEthTx(txBase64)
+			if err == nil {
+				ethTxHash = ethTx.Hash().Hex()
+				sender = from.String()
+			}
+
+			sender, _ = converter.Bech32ToHex(sender)
+			data.AddTransaction(i, cosmosTxHash, ethTxHash, typeURL, sender)
 		}
+		fmt.Println(data)
 		os.Exit(0)
 	}
 }

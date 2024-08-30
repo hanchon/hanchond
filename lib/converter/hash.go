@@ -25,7 +25,7 @@ func GenerateEthTxHash(txBytes []byte) (string, error) {
 }
 
 func GenerateEthTxHashFromEvmosTx(txBase64 string) (string, error) {
-	tx, err := codec.ConvertEvmosTxToEthTx(txBase64)
+	tx, _, err := codec.ConvertEvmosTxToEthTx(txBase64)
 	if err != nil {
 		return "", err
 	}
