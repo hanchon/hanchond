@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS blocks(
-    id BIGSERIAL NOT NULL PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
     height BIGINT UNIQUE NOT NULL,
     txcount INTEGER NOT NULL,
     hash TEXT NOT NULL
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS blocks(
 CREATE INDEX IF NOT EXISTS blocksindex on blocks (height);
 
 CREATE TABLE IF NOT EXISTS transactions(
-    id BIGSERIAL NOT NULL PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
     cosmoshash TEXT NOT NULL,
     ethhash TEXT NOT NULL,
     typeurl TEXT NOT NULL,

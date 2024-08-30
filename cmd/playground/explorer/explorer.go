@@ -20,7 +20,5 @@ var ExplorerCmd = &cobra.Command{
 }
 
 func init() {
-	// ExplorerCmd.AddCommand(erc20.ERC20Cmd)
-	// ExplorerCmd.AddCommand(evmos.EvmosCmd)
 	ExplorerCmd.PersistentFlags().StringP("node", "n", "1", "Playground node used to get the information")
 }

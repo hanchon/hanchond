@@ -13,7 +13,7 @@ const deleteBlockByID = `-- name: DeleteBlockByID :exec
 DELETE FROM blocks WHERE id = ?
 `
 
-func (q *Queries) DeleteBlockByID(ctx context.Context, id interface{}) error {
+func (q *Queries) DeleteBlockByID(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, deleteBlockByID, id)
 	return err
 }
@@ -117,9 +117,9 @@ type InsertBlockParams struct {
 	Hash    string
 }
 
-func (q *Queries) InsertBlock(ctx context.Context, arg InsertBlockParams) (interface{}, error) {
+func (q *Queries) InsertBlock(ctx context.Context, arg InsertBlockParams) (int64, error) {
 	row := q.db.QueryRowContext(ctx, insertBlock, arg.Height, arg.Txcount, arg.Hash)
-	var id interface{}
+	var id int64
 	err := row.Scan(&id)
 	return id, err
 }
@@ -141,7 +141,7 @@ type InsertTransactionParams struct {
 	Blockheight int64
 }
 
-func (q *Queries) InsertTransaction(ctx context.Context, arg InsertTransactionParams) (interface{}, error) {
+func (q *Queries) InsertTransaction(ctx context.Context, arg InsertTransactionParams) (int64, error) {
 	row := q.db.QueryRowContext(ctx, insertTransaction,
 		arg.Cosmoshash,
 		arg.Ethhash,
@@ -149,7 +149,7 @@ func (q *Queries) InsertTransaction(ctx context.Context, arg InsertTransactionPa
 		arg.Sender,
 		arg.Blockheight,
 	)
-	var id interface{}
+	var id int64
 	err := row.Scan(&id)
 	return id, err
 }

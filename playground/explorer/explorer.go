@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/hanchon/hanchond/lib/converter"
 	"github.com/hanchon/hanchond/lib/protoencoder/codec"
@@ -31,61 +30,62 @@ func NewLocalExplorerClient(web3Port, cosmosPort int, homeFolder string) *Client
 		log.Fatal(err.Error())
 	}
 
-	e := &Client{
+	c := &Client{
 		web3Endpoint:   fmt.Sprintf("http://localhost:%d", web3Port),
 		cosmosEndpoint: fmt.Sprintf("http://localhost:%d", cosmosPort),
 		ctx:            context.Background(),
 	}
-	e.db = NewDatabase(e.ctx, queries)
-	e.client = requester.NewClient().WithUnsecureWeb3Endpoint(e.web3Endpoint).WithUnsecureRestEndpoint(e.cosmosEndpoint)
+	c.db = NewDatabase(c.ctx, queries)
+	c.client = requester.NewClient().WithUnsecureWeb3Endpoint(c.web3Endpoint).WithUnsecureRestEndpoint(c.cosmosEndpoint)
 
-	return e
+	return c
 }
 
-func (e *Client) ProcessBlocks() {
-	// TODO: Delete the last bock in case the last execution was not completed
-	block, err := e.db.GetLatestBlock()
+func (c *Client) ProcessMissingBlocks(startBlock int64) error {
+	blocksData := []Block{}
+	currentBlockDB := startBlock
 
-	initBlockHeight := int64(0)
+	// TODO: Delete the last bock in case the last execution was not completed
+	block, err := c.db.GetLatestBlock()
 	if err == nil {
-		initBlockHeight = block.Height + 1
+		if block.Height > startBlock {
+			currentBlockDB = block.Height + 1
+		}
 	}
 
-	networkHeight, err := e.client.GetBlockNumber()
+	networkHeight, err := c.client.GetBlockNumber()
 	if err != nil {
-		fmt.Println("error getting latest block")
-		os.Exit(1)
+		return fmt.Errorf("error getting latest block: %s", err.Error())
 	}
 
 	// TODO: if network height < current sleep and retry
-	if networkHeight > initBlockHeight {
-		height := 2332
-		blockData, err := e.client.GetBlockCosmos(fmt.Sprintf("0x%x", height))
+	for networkHeight > currentBlockDB {
+		blockData, err := c.client.GetBlockCosmos(fmt.Sprintf("0x%x", currentBlockDB))
 		if err != nil {
-			panic(err)
+			return fmt.Errorf("error getting cosmos block: %s", err.Error())
 		}
 		blockHash, err := converter.Base64ToHexString(blockData.BlockID.Hash)
 		if err != nil {
-			panic(err)
+			return fmt.Errorf("error getting cosmos block hash: %s", err.Error())
 		}
 
-		data := NewBlock(int64(height), int64(len(blockData.Block.Data.Txs)), blockHash)
+		data := NewBlock(currentBlockDB, int64(len(blockData.Block.Data.Txs)), blockHash)
 
 		for i, txBase64 := range blockData.Block.Data.Txs {
 			tx, err := codec.Base64ToTx(txBase64)
 			if err != nil {
-				panic(err)
+				return fmt.Errorf("error decoding cosmos tx: %s", err.Error())
 			}
 
 			sender := sdk.AccAddress(tx.AuthInfo.GetSignerInfos()[0].PublicKey.Value).String()
 			if len(tx.Body.Messages) == 0 {
-				panic(err)
+				return fmt.Errorf("error decoding cosmos tx, no messages")
 			}
 
 			typeURL := tx.Body.Messages[0].TypeUrl
 			cosmosTxHash, err := converter.GenerateCosmosTxHashWithBase64(txBase64)
 			if err != nil {
-				panic(err)
+				return fmt.Errorf("error generating cosmos tx hash: %s", err.Error())
 			}
 
 			ethTxHash := ""
@@ -95,10 +95,16 @@ func (e *Client) ProcessBlocks() {
 				sender = from.String()
 			}
 
-			sender, _ = converter.Bech32ToHex(sender)
+			sender, err = converter.Bech32ToHex(sender)
+			if err != nil {
+				return fmt.Errorf("error converting sender address: %s", err.Error())
+			}
 			data.AddTransaction(i, cosmosTxHash, ethTxHash, typeURL, sender)
 		}
-		fmt.Println(data)
-		os.Exit(0)
+		currentBlockDB++
+		blocksData = append(blocksData, *data)
 	}
+
+	// Save it to the database
+	return c.db.AddBlocks(blocksData)
 }

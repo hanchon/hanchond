@@ -23,14 +23,24 @@ var startCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		startingHeight, err := cmd.Flags().GetInt("starting-height")
+		if err != nil {
+			fmt.Println("starting height not set")
+			os.Exit(1)
+		}
+
 		// TODO: move the newFromDB to cosmos daemon
 		e := evmos.NewEvmosFromDB(queries, nodeID)
 
 		ex := explorer.NewLocalExplorerClient(e.Ports.P8545, e.Ports.P1317, e.HomeDir)
-		ex.ProcessBlocks()
+		if err := ex.ProcessMissingBlocks(int64(startingHeight)); err != nil {
+			fmt.Println("error getting missing blocks: ", err.Error())
+			os.Exit(1)
+		}
 	},
 }
 
 func init() {
 	ExplorerCmd.AddCommand(startCmd)
+	startCmd.Flags().Int("starting-height", 1, "Starting height to index the chain.")
 }

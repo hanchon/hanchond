@@ -5,14 +5,14 @@
 package database
 
 type Block struct {
-	ID      interface{}
+	ID      int64
 	Height  int64
 	Txcount int64
 	Hash    string
 }
 
 type Transaction struct {
-	ID          interface{}
+	ID          int64
 	Cosmoshash  string
 	Ethhash     string
 	Typeurl     string
