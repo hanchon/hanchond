@@ -15,7 +15,7 @@ var startCmd = &cobra.Command{
 	Use:   "start",
 	Args:  cobra.ExactArgs(0),
 	Short: "Start the node explorer",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		queries := sql.InitDBFromCmd(cmd)
 		nodeID, err := cmd.Flags().GetString("node")
 		if err != nil {

@@ -15,7 +15,7 @@ import (
 	evmtypes "github.com/evmos/evmos/v18/x/evm/types"
 )
 
-type ExplorerClient struct {
+type Client struct {
 	web3Endpoint   string
 	cosmosEndpoint string
 
@@ -26,13 +26,13 @@ type ExplorerClient struct {
 	db *Database
 }
 
-func NewLocalExplorerClient(web3Port, cosmosPort int, homeFolder string) *ExplorerClient {
+func NewLocalExplorerClient(web3Port, cosmosPort int, homeFolder string) *Client {
 	queries, err := database.InitExplorerDatabase(context.Background(), homeFolder+"/explorer.db")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	e := &ExplorerClient{
+	e := &Client{
 		web3Endpoint:   fmt.Sprintf("http://localhost:%d", web3Port),
 		cosmosEndpoint: fmt.Sprintf("http://localhost:%d", cosmosPort),
 		ctx:            context.Background(),
@@ -43,7 +43,7 @@ func NewLocalExplorerClient(web3Port, cosmosPort int, homeFolder string) *Explor
 	return e
 }
 
-func (e *ExplorerClient) ProcessBlocks() {
+func (e *Client) ProcessBlocks() {
 	// TODO: Delete the last bock in case the last execution was not completed
 	block, err := e.db.GetLatestBlock()
 
@@ -67,8 +67,14 @@ func (e *ExplorerClient) ProcessBlocks() {
 			os.Exit(1)
 		}
 		v, err := json.Marshal(a)
+		if err != nil {
+			os.Exit(1)
+		}
 		fmt.Println(string(v))
 		blockHash, err := converter.Base64ToHexString(a.BlockID.Hash)
+		if err != nil {
+			os.Exit(1)
+		}
 		fmt.Println(blockHash)
 
 		for _, txBase64 := range a.Block.Data.Txs {
@@ -79,13 +85,15 @@ func (e *ExplorerClient) ProcessBlocks() {
 			fmt.Println(tx.AuthInfo.Fee.Payer)
 			fmt.Println(tx.Body.Messages[0].TypeUrl)
 			txHash, err := converter.GenerateCosmosTxHashWithBase64(txBase64)
+			if err != nil {
+				os.Exit(1)
+			}
 			fmt.Println(txHash)
 			if tx.Body.Messages[0].TypeUrl == "/ethermint.evm.v1.MsgEthereumTx" {
 				var m evmtypes.MsgEthereumTx
 				err := codec.Encoder.Unmarshal(tx.Body.Messages[0].Value, &m)
 				if err != nil {
 					panic(err)
-
 				}
 				fmt.Println(m.AsTransaction().Hash().Hex())
 
@@ -93,5 +101,4 @@ func (e *ExplorerClient) ProcessBlocks() {
 		}
 		os.Exit(0)
 	}
-
 }

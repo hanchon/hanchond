@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 
+	"github.com/hanchon/hanchond/lib/protoencoder/codec"
 	"golang.org/x/crypto/sha3"
 )
 
@@ -21,6 +22,14 @@ func GenerateEthTxHash(txBytes []byte) (string, error) {
 	}
 	buf := hash.Sum(nil)
 	return hex.EncodeToString(buf), nil
+}
+
+func GenerateEthTxHashFromEvmosTx(txBase64 string) (string, error) {
+	tx, err := codec.ConvertEvmosTxToEthTx(txBase64)
+	if err != nil {
+		return "", err
+	}
+	return tx.Hash().Hex(), nil
 }
 
 func GenerateCosmosTxHashWithBase64(txInBase64 string) (string, error) {
