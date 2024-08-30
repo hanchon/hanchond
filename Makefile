@@ -12,6 +12,9 @@ build-docs:
 generate:
 	@sqlc generate
 
+generate-explorer:
+	@sqlc generate -f ./playground/explorer/database/sqlc.yaml
+
 install-deps:
 	@go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 

@@ -15,7 +15,7 @@ hash, _ := converter.Base64ToHexString(val.BlockID.Hash)
 
 ## Generate Transaction Hash
 
-When reading the API response for a Cosmos Block, you will get every tranasction included the block.
+When reading the API response for a Cosmos Block, you will get every transaction included the block.
 
 The transaction list is just the content of the transaction encoded using `base64`.
 
@@ -27,7 +27,7 @@ If you already have the transactions bytes, the `GenerateCosmosTxHash` function 
 hash := converter.GenerateCosmosTxHash(txBytes)
 ```
 
-If the transaction is in `base64`, you can use the function `GenerateCosmosTxHashWithBase64`
+When the transaction is in `base64` format, you can use the function `GenerateCosmosTxHashWithBase64`
 
 ```go
 hash, err := converter.GenerateCosmosTxHashWithBase64(txBytes)
@@ -36,6 +36,22 @@ hash, err := converter.GenerateCosmosTxHashWithBase64(txBytes)
 :::info
 Note that if you send the transaction in `base64`, the function can error while changing the encoding, so that is why it also returns a possible error
 :::
+
+## Generate Ethereum Transaction Hash
+
+The `GenerateEthTxHash` hashes the given bytes (signed Ethereum transaction) and returns the transaction hash.
+
+```go
+hash, err := converter.GenerateEthTxHash(txBytes)
+```
+
+When the Ethereum transaction was received using the cosmos endpoints, it will be wrapped inside a protobuf `any` object.
+
+To get the Ethereum transaction hash, the `GenerateEthTxHashFromEvmosTx` function will `unmarshall` the protobuf object and return the hash:
+
+```go
+txHash, err := converter.GenerateEthTxHashFromEvmosTx(txBase64)
+```
 
 ## Remove 0x Prefix from Address
 

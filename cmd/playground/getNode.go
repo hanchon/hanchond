@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/hanchon/hanchond/lib/converter"
 	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
@@ -44,6 +45,12 @@ var getNodeCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		hexWallet, err := converter.Bech32ToHex(node.ValidatorWallet)
+		if err != nil {
+			fmt.Println("could not convert validator wallet to eth:", err.Error())
+			os.Exit(1)
+		}
+
 		fmt.Printf(`Node: %d
 General Configuration:
     - Binary: %s
@@ -54,6 +61,8 @@ Process:
 Keys:
     - KeyName: %s
     - Mnemonic: %s
+    - Wallet: %s
+    - Wallet(hex): %s
 Ports:
     - 8545(web3): %d
     - 26657(cli/tendermint): %d
@@ -66,6 +75,8 @@ Ports:
 			node.ProcessID,
 			node.ValidatorKeyName,
 			node.ValidatorKey,
+			node.ValidatorWallet,
+			hexWallet,
 			ports.P8545,
 			ports.P26657,
 			ports.P1317,

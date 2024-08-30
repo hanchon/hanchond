@@ -26,3 +26,19 @@ If you go the transaction using the Rest endpoint, it will be encoded in `base64
 ```go
 tx, err := codec.Base64ToTx(txInBase64)
 ```
+
+## Convert a Cosmos Transaction to Ethereum Transaction
+
+When the Ethereum transaction was received using the cosmos endpoints, it will be wrapped inside a protobuf `any` object.
+
+The protobuf object needs to `unmarshalled` to read the signed Ethereum transaction info.
+
+The `ConvertEvmosTxToEthTx` can be used to convert the protobuf object to an Ethereum transaction.
+
+```go
+tx, err := codec.ConvertEvmosTxToEthTx(txInBase64)
+if err != nil{
+    return err
+}
+txHash, err := tx.Hash().Hex()
+```
