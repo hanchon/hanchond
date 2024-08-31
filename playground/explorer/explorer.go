@@ -25,7 +25,7 @@ type Client struct {
 }
 
 func NewLocalExplorerClient(web3Port, cosmosPort int, homeFolder string) *Client {
-	queries, err := database.InitExplorerDatabase(context.Background(), homeFolder+"/explorer.db")
+	db, queries, err := database.InitExplorerDatabase(context.Background(), homeFolder+"/explorer.db")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -35,7 +35,7 @@ func NewLocalExplorerClient(web3Port, cosmosPort int, homeFolder string) *Client
 		cosmosEndpoint: fmt.Sprintf("http://localhost:%d", cosmosPort),
 		ctx:            context.Background(),
 	}
-	c.db = NewDatabase(c.ctx, queries)
+	c.db = NewDatabase(c.ctx, db, queries)
 	c.client = requester.NewClient().WithUnsecureWeb3Endpoint(c.web3Endpoint).WithUnsecureRestEndpoint(c.cosmosEndpoint)
 
 	return c
@@ -77,7 +77,6 @@ func (c *Client) ProcessMissingBlocks(startBlock int64) error {
 				return fmt.Errorf("error decoding cosmos tx: %s", err.Error())
 			}
 
-			sender := sdk.AccAddress(tx.AuthInfo.GetSignerInfos()[0].PublicKey.Value).String()
 			if len(tx.Body.Messages) == 0 {
 				return fmt.Errorf("error decoding cosmos tx, no messages")
 			}
@@ -88,11 +87,16 @@ func (c *Client) ProcessMissingBlocks(startBlock int64) error {
 				return fmt.Errorf("error generating cosmos tx hash: %s", err.Error())
 			}
 
+			sender := ""
 			ethTxHash := ""
 			ethTx, from, err := codec.ConvertEvmosTxToEthTx(txBase64)
 			if err == nil {
+				// Eth Transaction
 				ethTxHash = ethTx.Hash().Hex()
 				sender = from.String()
+			} else if len(tx.AuthInfo.GetSignerInfos()) != 0 {
+				// If the transaction was not an Eth Transaction, the sender is in the cosmos signer info
+				sender = sdk.AccAddress(tx.AuthInfo.GetSignerInfos()[0].PublicKey.Value).String()
 			}
 
 			sender, err = converter.Bech32ToHex(sender)

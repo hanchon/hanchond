@@ -2,6 +2,7 @@ package explorer
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"sync"
 
@@ -9,13 +10,15 @@ import (
 )
 
 type Database struct {
+	db      *sql.DB
 	queries *database.Queries
 	mutex   *sync.Mutex
 	ctx     context.Context
 }
 
-func NewDatabase(ctx context.Context, queries *database.Queries) *Database {
+func NewDatabase(ctx context.Context, db *sql.DB, queries *database.Queries) *Database {
 	return &Database{
+		db:      db,
 		queries: queries,
 		mutex:   &sync.Mutex{},
 		ctx:     ctx,
@@ -40,8 +43,16 @@ func (d *Database) AddBlocks(blocks []Block) error {
 func (d *Database) AddBlock(b Block) error {
 	d.mutex.Lock()
 	defer d.mutex.Unlock()
-	// TODO: move this to a sql transaction
-	if _, err := d.queries.InsertBlock(d.ctx, database.InsertBlockParams{
+	// SQL Transaction: to avoid corrupting the db when closing the program
+	tx, err := d.db.Begin()
+	if err != nil {
+		return err
+	}
+	//nolint: errcheck
+	defer tx.Rollback()
+
+	q := d.queries.WithTx(tx)
+	if _, err := q.InsertBlock(d.ctx, database.InsertBlockParams{
 		Height:  b.height,
 		Txcount: b.txcount,
 		Hash:    b.hash,
@@ -50,7 +61,7 @@ func (d *Database) AddBlock(b Block) error {
 	}
 
 	for _, tx := range b.txns {
-		if _, err := d.queries.InsertTransaction(d.ctx, database.InsertTransactionParams{
+		if _, err := q.InsertTransaction(d.ctx, database.InsertTransactionParams{
 			Cosmoshash:  tx.cosmoshash,
 			Ethhash:     tx.ethhash,
 			Typeurl:     tx.typeURL,
@@ -61,5 +72,5 @@ func (d *Database) AddBlock(b Block) error {
 		}
 	}
 
-	return nil
+	return tx.Commit()
 }
