@@ -248,6 +248,10 @@ export default defineConfig({
                       text: "Smart-Contract Bytecode",
                       link: "/hanchond/playground/queries/evmos/ethCode",
                     },
+                    {
+                      text: "Eth Transaction Receipt",
+                      link: "/hanchond/playground/queries/evmos/ethReceipt",
+                    },
                   ],
                 },
               ],
