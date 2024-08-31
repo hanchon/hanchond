@@ -1,0 +1,25 @@
+# Eth Trace
+
+The command `eth-trace` returns the trace of an Ethereum transaction.
+
+```sh
+hanchond playground query evmos eth-trace 0x2a1d79fa17b252cf96fdb031bd3d3000770f64a6d9711b5871321fbdb0062434 | jq .
+{
+  "from": "0xf45ebe00d47a941776faa42c5bc819166a75775c",
+  "gas": "0x2b908",
+  "gasUsed": "0x1f7c",
+  "input": "0xa9059cbb000000000000000000000000f45ebe00d47a941776faa42c5bc819166a75775c0000000000000000000000000000000000000000000000000000000000000001",
+  "output": "0x0000000000000000000000000000000000000000000000000000000000000001",
+  "to": "0x13abd22cb7d1636a92c997bab22b99c7e9c85083",
+  "type": "CALL",
+  "value": "0x0",
+  "error": "",
+  "calls": null
+}
+```
+
+:::info
+The flag `url` can be used to change the URL provider.
+
+The flag `mainnet` can be used to query Evmos Mainnet data. (This flag overwrites the `node` and `url` flag with the default Mainnet URL)
+:::
