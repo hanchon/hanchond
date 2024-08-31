@@ -48,6 +48,7 @@ func (d *Database) AddBlock(b Block) error {
 	if err != nil {
 		return err
 	}
+	//nolint: errcheck
 	defer tx.Rollback()
 
 	q := d.queries.WithTx(tx)

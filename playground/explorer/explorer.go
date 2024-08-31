@@ -94,11 +94,9 @@ func (c *Client) ProcessMissingBlocks(startBlock int64) error {
 				// Eth Transaction
 				ethTxHash = ethTx.Hash().Hex()
 				sender = from.String()
-			} else {
+			} else if len(tx.AuthInfo.GetSignerInfos()) != 0 {
 				// If the transaction was not an Eth Transaction, the sender is in the cosmos signer info
-				if len(tx.AuthInfo.GetSignerInfos()) != 0 {
-					sender = sdk.AccAddress(tx.AuthInfo.GetSignerInfos()[0].PublicKey.Value).String()
-				}
+				sender = sdk.AccAddress(tx.AuthInfo.GetSignerInfos()[0].PublicKey.Value).String()
 			}
 
 			sender, err = converter.Bech32ToHex(sender)
