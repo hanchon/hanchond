@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/hanchon/hanchond/playground/evmos"
+	"github.com/hanchon/hanchond/lib/requester"
+	"github.com/hanchon/hanchond/playground/cosmosdaemon"
 	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
@@ -16,19 +17,19 @@ var ethCodeCmd = &cobra.Command{
 	Short: "Get the smartcontract registered eth code",
 	Run: func(cmd *cobra.Command, args []string) {
 		queries := sql.InitDBFromCmd(cmd)
-		nodeID, err := cmd.Flags().GetString("node")
-		if err != nil {
-			fmt.Println("node not set")
-			os.Exit(1)
-		}
+
 		height, err := cmd.Flags().GetString("height")
 		if err != nil {
 			fmt.Println("error getting the request height:", err.Error())
 			os.Exit(1)
 		}
 
-		e := evmos.NewEvmosFromDB(queries, nodeID)
-		client := e.NewRequester()
+		endpoint, err := cosmosdaemon.GetWeb3Endpoint(queries, cmd)
+		if err != nil {
+			fmt.Printf("error generting web3 endpoint: %s\n", err.Error())
+			os.Exit(1)
+		}
+		client := requester.NewClient().WithUnsecureWeb3Endpoint(endpoint)
 
 		code, err := client.EthCode(args[0], height)
 		if err != nil {
