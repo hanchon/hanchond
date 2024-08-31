@@ -190,6 +190,10 @@ export default defineConfig({
                       text: "Deploy UniswapV2",
                       link: "/hanchond/playground/tx/solidity/deployUniswapV2",
                     },
+                    {
+                      text: "ERC20 Transfer",
+                      link: "/hanchond/playground/tx/solidity/erc20Transfer",
+                    },
                   ],
                 },
               ],
@@ -329,6 +333,10 @@ export default defineConfig({
             {
               text: "Wallet",
               link: "/lib/txbuilder/wallet",
+            },
+            {
+              text: "Simple Web3 Wallet",
+              link: "/lib/txbuilder/simple_wallet",
             },
             {
               text: "Mnemonic",
