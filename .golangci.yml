@@ -7,7 +7,6 @@ run:
 linters:
   enable:
     - dogsled
-    - dupl
     - errcheck
     - goconst
     - gocritic

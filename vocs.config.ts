@@ -252,6 +252,10 @@ export default defineConfig({
                       text: "Eth Transaction Receipt",
                       link: "/hanchond/playground/queries/evmos/ethReceipt",
                     },
+                    {
+                      text: "Eth Transaction Trace",
+                      link: "/hanchond/playground/queries/evmos/ethTrace",
+                    },
                   ],
                 },
               ],
