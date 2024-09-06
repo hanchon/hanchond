@@ -14,7 +14,7 @@ type model struct {
 	width  int
 	height int
 
-	activeList int // Index of the currently active list
+	activeList int
 	lists      []list.Model
 	viewport   viewport.Model
 }
@@ -39,30 +39,7 @@ func (m model) View() string {
 	// log.Info(m.height)
 	// log.Info(m.width)
 
-	temp := `# Hello World
-
-This is a simple example of Markdown rendering with Glamour!
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
-
-Bye!
-
-`
+	temp := ``
 	r, _ := glamour.NewTermRenderer(
 		// detect background color and pick either the default dark or light theme
 		glamour.WithAutoStyle(),
@@ -76,7 +53,7 @@ Bye!
 		lipgloss.Top,
 		explorer.Header(m.width-4),
 		explorer.ChainHeightFrame(m.width-4, 10000, 5000),
-		explorer.BotContainer(m.width-4, m.lists[0].View(), m.lists[1].View(), m.viewport.View()),
+		explorer.BotContainer(m.width-4, m.lists[0].View(), m.lists[1].View(), m.viewport.View(), m.activeList),
 	)
 
 	style := lipgloss.NewStyle().
