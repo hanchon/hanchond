@@ -30,9 +30,28 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.height = msg.(tea.WindowSizeMsg).Height
 		m.width = msg.(tea.WindowSizeMsg).Width - 2
 	case tea.KeyMsg:
-		// Exit on any key press
-		return m, tea.Quit
+		key := msg.(tea.KeyMsg).String()
+		if key == "ctrl+c" {
+			return m, tea.Quit
+		}
+		if key == "tab" {
+			m.activeList = (m.activeList + 1) % 3
+			return m, nil
+		}
 	}
+	var cmd tea.Cmd
+	switch m.activeList {
+	case 0:
+		m.lists[0], cmd = m.lists[0].Update(msg)
+		return m, cmd
+	case 1:
+		m.lists[1], cmd = m.lists[1].Update(msg)
+		return m, cmd
+	case 2:
+		m.viewport, cmd = m.viewport.Update(msg)
+		return m, cmd
+	}
+
 	return m, nil
 }
 func (m model) View() string {
