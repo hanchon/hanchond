@@ -10,6 +10,8 @@ import (
 	// "github.com/charmbracelet/log"
 )
 
+var mdValues = ``
+
 type model struct {
 	width  int
 	height int
@@ -38,6 +40,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.activeList = (m.activeList + 1) % 3
 			return m, nil
 		}
+		if key == "enter" {
+			switch m.activeList {
+			case 0:
+				selectedItem := m.lists[0].SelectedItem()
+				mdValues = selectedItem.(block).text
+				return m, nil
+			case 1:
+				selectedItem := m.lists[1].SelectedItem()
+				mdValues = selectedItem.(txn).ethHash
+				return m, nil
+			}
+		}
 	}
 	var cmd tea.Cmd
 	switch m.activeList {
@@ -58,14 +72,13 @@ func (m model) View() string {
 	// log.Info(m.height)
 	// log.Info(m.width)
 
-	temp := ``
 	r, _ := glamour.NewTermRenderer(
 		// detect background color and pick either the default dark or light theme
 		glamour.WithAutoStyle(),
 		// wrap output at specific width (default is 80)
 		glamour.WithWordWrap(78),
 	)
-	info, _ := r.Render(temp)
+	info, _ := r.Render(mdValues)
 	m.viewport.SetContent(info)
 
 	value := lipgloss.JoinVertical(
