@@ -2,7 +2,9 @@ package ui
 
 import (
 	"github.com/charmbracelet/bubbles/list"
+	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/hanchon/hanchond/cmd/ui/explorer"
 	// "github.com/charmbracelet/log"
@@ -14,6 +16,7 @@ type model struct {
 
 	activeList int // Index of the currently active list
 	lists      []list.Model
+	viewport   viewport.Model
 }
 
 func (m model) Init() tea.Cmd {
@@ -36,11 +39,44 @@ func (m model) View() string {
 	// log.Info(m.height)
 	// log.Info(m.width)
 
+	temp := `# Hello World
+
+This is a simple example of Markdown rendering with Glamour!
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+Check out the [other examples](https://github.com/charmbracelet/glamour/tree/master/examples) too.
+
+Bye!
+
+`
+	r, _ := glamour.NewTermRenderer(
+		// detect background color and pick either the default dark or light theme
+		glamour.WithAutoStyle(),
+		// wrap output at specific width (default is 80)
+		glamour.WithWordWrap(78),
+	)
+	info, _ := r.Render(temp)
+	m.viewport.SetContent(info)
+
 	value := lipgloss.JoinVertical(
 		lipgloss.Top,
 		explorer.Header(m.width-4),
 		explorer.ChainHeightFrame(m.width-4, 10000, 5000),
-		explorer.BotContainer(m.width-4, m.lists[0].View(), m.lists[1].View()),
+		explorer.BotContainer(m.width-4, m.lists[0].View(), m.lists[1].View(), m.viewport.View()),
 	)
 
 	style := lipgloss.NewStyle().
@@ -68,5 +104,8 @@ func CreateExplorerTUI() *tea.Program {
 	list2.SetHeight(23)
 	m.lists = append(m.lists, list1)
 	m.lists = append(m.lists, list2)
+
+	m.viewport = viewport.New(78, 23)
+
 	return tea.NewProgram(m)
 }
