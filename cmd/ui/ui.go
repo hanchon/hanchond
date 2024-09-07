@@ -11,7 +11,6 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/hanchon/hanchond/cmd/ui/explorer"
 	explorerClient "github.com/hanchon/hanchond/playground/explorer"
-	// "github.com/charmbracelet/log"
 )
 
 var mdRendered *glamour.TermRenderer
@@ -39,7 +38,6 @@ type model struct {
 }
 
 func (m model) Init() tea.Cmd {
-	// No initial command
 	return nil
 }
 
@@ -89,26 +87,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			switch m.activeList {
 			case 0:
 				selectedItem := m.lists[0].SelectedItem().(block)
-				// blockData, err := m.client.Client.GetBlockCosmos(fmt.Sprintf("%d", selectedItem.height))
-				// if err != nil {
-				// 	m.mdValues = "# Error getting block info\n\n" + err.Error()
-				// } else {
-				// 	data, err := json.MarshalIndent(blockData, "", "  ")
-				// 	if err != nil {
-				// 		m.mdValues = "# Error getting block info\n\n" + err.Error()
-				// 	} else {
-				// 		m.mdValues = fmt.Sprintf("# Block %d\n\n```json\n%s\n```", selectedItem.height, string(data))
-				// 	}
-				// }
 				info, _ := mdRendered.Render(RenderBlock(selectedItem, m.client))
 				m.viewport.SetContent(info)
 				m.viewport.Height = 23
 				m.viewport.Width = 78
-				// return m, viewport.Sync(m.viewport)
 				return m, nil
 			case 1:
-				selectedItem := m.lists[1].SelectedItem()
-				m.mdValues = selectedItem.(txn).ethHash
+				selectedItem := m.lists[1].SelectedItem().(txn)
+				info, _ := mdRendered.Render(RenderTx(selectedItem, m.client))
+				m.viewport.SetContent(info)
+				m.viewport.Height = 23
+				m.viewport.Width = 78
 				return m, nil
 			}
 		}

@@ -3,6 +3,7 @@ package ui
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/lipgloss"
@@ -71,16 +72,11 @@ type txn struct {
 func (i txn) Title() string {
 	if i.ethHash != "" {
 		return i.ethHash
-		// style := lipgloss.NewStyle().Foreground(lipgloss.Color("203"))
-		// return style.Render(i.ethHash)
 	}
-	// return lipgloss.NewStyle().Foreground(lipgloss.Color("35")).Render(i.cosmosHash)
 	return i.cosmosHash
 }
 
 func (i txn) Description() string {
-	// style := lipgloss.NewStyle().Foreground(lipgloss.Color("75"))
-	// return style.Render(i.typeURL)
 	return i.typeURL
 }
 
@@ -116,4 +112,46 @@ func BDTxToItem(txns []database.Transaction) []list.Item {
 	return res
 }
 
-// []database.Block, []database.Transaction, error
+func RenderTx(b txn, client *explorer.Client) string {
+	cosmosTX, err := client.Client.GetCosmosTx(b.cosmosHash)
+	if err != nil {
+		return "# Error getting cosmos tx\n\n" + err.Error()
+	}
+
+	data, err := json.MarshalIndent(cosmosTX, "", "  ")
+	if err != nil {
+		return "# Error getting cosmos tx\n\n" + err.Error()
+	}
+
+	if !strings.Contains(b.typeURL, "ethermint.evm.v1.MsgEthereumTx") {
+		return fmt.Sprintf("# Transaction Details\n\n## Cosmos TX:\n- TxHash: %s\n```json\n%s\n```", b.cosmosHash, string(data))
+	}
+
+	ethReceipt, err := client.Client.GetTransactionReceipt(b.ethHash)
+	if err != nil {
+		return "# Error getting eth receipt\n\n" + err.Error()
+	}
+
+	ethReceiptString, err := json.MarshalIndent(ethReceipt.Result, "", "  ")
+	if err != nil {
+		return "# Error getting eth receipt\n\n" + err.Error()
+	}
+
+	ethTrace, err := client.Client.GetTransactionTrace(b.ethHash)
+	if err != nil {
+		return "# Error getting eth trace\n\n" + err.Error()
+	}
+
+	ethTraceString, err := json.MarshalIndent(ethTrace.Result, "", "  ")
+	if err != nil {
+		return "# Error getting eth trace\n\n" + err.Error()
+	}
+
+	return fmt.Sprintf("# Transaction Details\n\n## Ethereum Transaction:\n- TxHash: %s\n ### Receipt:\n```json\n%s\n```\n### Trace:\n```json\n%s\n```\n## Cosmos Transaction:\n- TxHash: %s\n```json\n%s\n```",
+		b.ethHash,
+		string(ethReceiptString),
+		string(ethTraceString),
+		b.cosmosHash,
+		string(data),
+	)
+}
