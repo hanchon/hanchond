@@ -12,6 +12,10 @@ var botContainerStyle = lipgloss.NewStyle().
 	BorderTop(false).
 	BorderForeground(ColorHighlight)
 
+var test = lipgloss.NewStyle().
+	Foreground(ColorLowPink).
+	Align(lipgloss.Center)
+
 var blocksFrame = lipgloss.NewStyle().Border(lipgloss.NormalBorder(), true).Height(24)
 var txFrame = lipgloss.NewStyle().Border(lipgloss.NormalBorder(), true).Height(24)
 var infoFrame = lipgloss.NewStyle().Border(lipgloss.NormalBorder(), true).Height(24)
@@ -37,7 +41,14 @@ func BotContainer(width int, list1, list2 string, infoText string, activeFrame i
 	)
 
 	return botContainerStyle.
+		Height(26).
 		Width(width).
-		Render(temp)
+		Render(
+			lipgloss.JoinVertical(
+				lipgloss.Center,
+				test.Render("\"tab\": to change panels <=> \"enter\": to select"),
+				temp,
+			),
+		)
 
 }

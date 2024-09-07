@@ -44,7 +44,7 @@ func (m model) Init() tea.Cmd {
 type tickMsg struct{}
 
 func tickCmd() tea.Cmd {
-	return tea.Tick(100*time.Millisecond, func(t time.Time) tea.Msg {
+	return tea.Tick(300*time.Millisecond, func(t time.Time) tea.Msg {
 		return tickMsg{}
 	})
 }
@@ -81,6 +81,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		if key == "tab" {
 			m.activeList = (m.activeList + 1) % 3
+			return m, nil
+		}
+
+		if key == "shift+tab" {
+			m.activeList = (m.activeList - 1) % 3
 			return m, nil
 		}
 		if key == "enter" {
