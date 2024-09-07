@@ -52,7 +52,7 @@ func (d *Database) GetDisplayInfo(limit int) ([]database.Block, []database.Trans
 		return []database.Block{}, []database.Transaction{}, err
 	}
 
-	d.cache.valid = false
+	d.cache.valid = true
 	d.cache.blocks = blocks
 	d.cache.txns = txns
 

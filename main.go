@@ -5,6 +5,5 @@ import (
 )
 
 func main() {
-	// Headless code with cobra-cli
 	cmd.Execute()
 }
