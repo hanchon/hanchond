@@ -44,7 +44,7 @@ func RenderBlock(b Block, client *explorer.Client) string {
 		return "# Error getting block info\n\n" + err.Error()
 	}
 
-	cosmosBlock := fmt.Sprintf("# Block %d\n\n## Cosmos Block\n\n```json\n%s\n```", b.height, string(data))
+	cosmosBlock := fmt.Sprintf("# Block %d\n\n## Cosmos Block\n\n```json\n%s\n```", b.height, processJSON(string(data)))
 
 	ethBlock, err := client.Client.GetBlockByNumber(fmt.Sprintf("%d", b.height), true)
 	if err != nil {
@@ -56,5 +56,5 @@ func RenderBlock(b Block, client *explorer.Client) string {
 		return "# Error getting block info\n\n" + err.Error()
 	}
 
-	return cosmosBlock + fmt.Sprintf("\n\n## Ethereum Block\n\n```json\n%s\n```", string(data))
+	return cosmosBlock + fmt.Sprintf("\n\n## Ethereum Block\n\n```json\n%s\n```", processJSON(string(data)))
 }

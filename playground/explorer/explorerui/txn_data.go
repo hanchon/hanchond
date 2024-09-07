@@ -58,7 +58,7 @@ func RenderTx(b Txn, client *explorer.Client) string {
 	}
 
 	if !strings.Contains(b.typeURL, "ethermint.evm.v1.MsgEthereumTx") {
-		return fmt.Sprintf("# Transaction Details\n\n## Cosmos TX:\n- TxHash: %s\n```json\n%s\n```", b.cosmosHash, string(data))
+		return fmt.Sprintf("# Transaction Details\n\n## Cosmos TX:\n- Status: %v\n- TxHash: %s\n```json\n%s\n```", cosmosTX.TxResponse.Code == 0, b.cosmosHash, string(data))
 	}
 
 	ethReceipt, err := client.Client.GetTransactionReceipt(b.ethHash)
@@ -81,11 +81,13 @@ func RenderTx(b Txn, client *explorer.Client) string {
 		return "# Error getting eth trace\n\n" + err.Error()
 	}
 
-	return fmt.Sprintf("# Transaction Details\n\n## Ethereum Transaction:\n- TxHash: %s\n ### Receipt:\n```json\n%s\n```\n### Trace:\n```json\n%s\n```\n## Cosmos Transaction:\n- TxHash: %s\n```json\n%s\n```",
+	return fmt.Sprintf("# Transaction Details\n\n## Ethereum Transaction:\n- Status: %v\n- TxHash: %s\n ### Receipt:\n```json\n%s\n```\n### Trace:\n```json\n%s\n```\n## Cosmos Transaction:\n- Status: %v\n- TxHash: %s\n```json\n%s\n```",
+		ethReceipt.Result.Status == "0x1",
 		b.ethHash,
-		string(ethReceiptString),
-		string(ethTraceString),
+		processJSON(string(ethReceiptString)),
+		processJSON(string(ethTraceString)),
+		cosmosTX.TxResponse.Code == 0,
 		b.cosmosHash,
-		string(data),
+		processJSON(string(data)),
 	)
 }
