@@ -38,7 +38,7 @@ func CreateExplorerTUI(startHeight int, client *explorerClient.Client) *tea.Prog
 	m.viewport = viewport.New(78, 23)
 	m.startingHeight = int64(startHeight)
 
-	go client.ProcessMissingBlocks(int64(startHeight))
+	go client.ProcessMissingBlocks(int64(startHeight)) //nolint: errcheck
 
 	return tea.NewProgram(m)
 }

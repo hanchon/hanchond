@@ -43,16 +43,16 @@ func (m explorerModel) Init() tea.Cmd {
 type tickMsg struct{}
 
 func indexerTickerCmd() tea.Cmd {
-	return tea.Tick(300*time.Millisecond, func(t time.Time) tea.Msg {
+	return tea.Tick(300*time.Millisecond, func(_ time.Time) tea.Msg {
 		return tickMsg{}
 	})
 }
 
 func (m explorerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg.(type) {
+	switch v := msg.(type) {
 	case tickMsg:
 		// If it is already running it will return a no-op
-		go m.client.ProcessMissingBlocks(m.startingHeight)
+		go m.client.ProcessMissingBlocks(m.startingHeight) //nolint: errcheck
 		b, t, err := m.client.DB.GetDisplayInfo(50)
 		if err == nil {
 			m.lists[0].SetItems(BDBlockToItem(b))
@@ -60,8 +60,8 @@ func (m explorerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m, indexerTickerCmd()
 	case tea.WindowSizeMsg:
-		m.height = msg.(tea.WindowSizeMsg).Height
-		m.width = msg.(tea.WindowSizeMsg).Width - 2
+		m.height = v.Height
+		m.width = v.Width - 2
 		m.mdValues = fmt.Sprintf("%d %d", msg.(tea.WindowSizeMsg).Height, msg.(tea.WindowSizeMsg).Width)
 		basicStyle = basicStyle.
 			Width(m.width - 2).
@@ -74,7 +74,7 @@ func (m explorerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m, indexerTickerCmd()
 	case tea.KeyMsg:
-		key := msg.(tea.KeyMsg).String()
+		key := v.String()
 		if key == "ctrl+c" || key == "q" {
 			return m, tea.Quit
 		}
@@ -119,6 +119,7 @@ func (m explorerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	return m, nil
 }
+
 func (m explorerModel) View() string {
 	if m.resolutionError {
 		return lipgloss.NewStyle().

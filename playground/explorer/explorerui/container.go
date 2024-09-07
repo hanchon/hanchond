@@ -16,9 +16,11 @@ var test = lipgloss.NewStyle().
 	Foreground(ColorLowPink).
 	Align(lipgloss.Center)
 
-var blocksFrame = lipgloss.NewStyle().Border(lipgloss.NormalBorder(), true).Height(24)
-var txFrame = lipgloss.NewStyle().Border(lipgloss.NormalBorder(), true).Height(24)
-var infoFrame = lipgloss.NewStyle().Border(lipgloss.NormalBorder(), true).Height(24)
+var (
+	blocksFrame = lipgloss.NewStyle().Border(lipgloss.NormalBorder(), true).Height(24)
+	txFrame     = lipgloss.NewStyle().Border(lipgloss.NormalBorder(), true).Height(24)
+	infoFrame   = lipgloss.NewStyle().Border(lipgloss.NormalBorder(), true).Height(24)
+)
 
 func BotContainer(width int, list1, list2 string, infoText string, activeFrame int) string {
 	blocks := blocksFrame.Width(20)
@@ -50,5 +52,4 @@ func BotContainer(width int, list1, list2 string, infoText string, activeFrame i
 				temp,
 			),
 		)
-
 }

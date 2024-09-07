@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/bubbles/list"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/hanchon/hanchond/playground/explorer"
 	"github.com/hanchon/hanchond/playground/explorer/database"
 )
@@ -32,21 +31,6 @@ func (i Txn) Description() string {
 
 // TODO: this should filter by everything
 func (i Txn) FilterValue() string { return strings.ToLower(i.typeURL) }
-
-var style = lipgloss.NewStyle().Foreground(lipgloss.Color("201"))
-
-var items2 = []list.Item{
-	Txn{
-		ethHash:    "0x61b7f582cfe2ee3b9d31dcbf99e5036b1c68713ede8ce7ed13930f2e02470588",
-		cosmosHash: "0x61b7...0588",
-		typeURL:    "MsgEthereum",
-	},
-	Txn{
-		ethHash:    "",
-		cosmosHash: "0x71b7...0588",
-		typeURL:    "MsgVote",
-	},
-}
 
 func BDTxToItem(txns []database.Transaction) []list.Item {
 	res := make([]list.Item, len(txns))

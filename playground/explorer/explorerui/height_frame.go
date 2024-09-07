@@ -18,8 +18,10 @@ var chainFramStyleText = lipgloss.NewStyle().
 	Height(1).
 	Align(lipgloss.Left)
 
-var graphModel = progress.New(progress.WithDefaultGradient())
-var graphModelWidth = graphModel.Width
+var (
+	graphModel      = progress.New(progress.WithDefaultGradient())
+	graphModelWidth = graphModel.Width
+)
 
 var heightFrameStyle = lipgloss.NewStyle().
 	Padding(0, 3).
