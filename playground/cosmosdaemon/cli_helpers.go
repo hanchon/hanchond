@@ -177,3 +177,31 @@ func GetWeb3Endpoint(queries *database.Queries, cmd *cobra.Command) (string, err
 	}
 	return endpoint, nil
 }
+
+func GetCosmosEndpoint(queries *database.Queries, cmd *cobra.Command) (string, error) {
+	endpoint := ""
+	mainnet, _ := cmd.Flags().GetBool("mainnet")
+	if mainnet {
+		return "https://proxy.evmos.org/cosmos", nil
+	}
+
+	url, _ := cmd.Flags().GetString("url")
+	if url != "" {
+		endpoint = url
+	} else {
+		nodeID, err := cmd.Flags().GetString("node")
+		if err != nil {
+			return "", fmt.Errorf("node not set")
+		}
+		validatorID, err := strconv.ParseInt(nodeID, 10, 64)
+		if err != nil {
+			return "", err
+		}
+		ports, err := queries.GetNodePorts(context.Background(), validatorID)
+		if err != nil {
+			return "", err
+		}
+		endpoint = fmt.Sprintf("http://localhost:%d", ports.P1317)
+	}
+	return endpoint, nil
+}
