@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sync"
 
 	"github.com/hanchon/hanchond/lib/converter"
 	"github.com/hanchon/hanchond/lib/protoencoder/codec"
@@ -14,14 +15,18 @@ import (
 )
 
 type Client struct {
+	mutex          sync.Mutex
 	web3Endpoint   string
 	cosmosEndpoint string
 
-	client *requester.Client
+	Client *requester.Client
 
 	ctx context.Context
 
-	db *Database
+	DB *Database
+
+	NetworkHeight int
+	DBHeight      int
 }
 
 func NewLocalExplorerClient(web3Port, cosmosPort int, homeFolder string) *Client {
@@ -31,36 +36,55 @@ func NewLocalExplorerClient(web3Port, cosmosPort int, homeFolder string) *Client
 	}
 
 	c := &Client{
+		mutex:          sync.Mutex{},
 		web3Endpoint:   fmt.Sprintf("http://localhost:%d", web3Port),
 		cosmosEndpoint: fmt.Sprintf("http://localhost:%d", cosmosPort),
 		ctx:            context.Background(),
+		NetworkHeight:  0,
+		DBHeight:       0,
 	}
-	c.db = NewDatabase(c.ctx, db, queries)
-	c.client = requester.NewClient().WithUnsecureWeb3Endpoint(c.web3Endpoint).WithUnsecureRestEndpoint(c.cosmosEndpoint)
+	c.DB = NewDatabase(c.ctx, db, queries)
+	c.Client = requester.NewClient().WithUnsecureWeb3Endpoint(c.web3Endpoint).WithUnsecureRestEndpoint(c.cosmosEndpoint)
 
 	return c
 }
 
+// ProcessMissingBlocks process up to 500 blocks at the time
 func (c *Client) ProcessMissingBlocks(startBlock int64) error {
+	if !c.mutex.TryLock() {
+		return nil
+	}
+	defer c.mutex.Unlock()
 	blocksData := []Block{}
-	currentBlockDB := startBlock
+	nextBlockToIndex := startBlock
 
-	// TODO: Delete the last bock in case the last execution was not completed
-	block, err := c.db.GetLatestBlock()
+	block, err := c.DB.GetLatestBlock()
 	if err == nil {
 		if block.Height > startBlock {
-			currentBlockDB = block.Height + 1
+			nextBlockToIndex = block.Height + 1
 		}
 	}
 
-	networkHeight, err := c.client.GetBlockNumber()
+	networkHeight, err := c.Client.GetBlockNumber()
 	if err != nil {
 		return fmt.Errorf("error getting latest block: %s", err.Error())
 	}
 
-	// TODO: if network height < current sleep and retry
-	for networkHeight > currentBlockDB {
-		blockData, err := c.client.GetBlockCosmos(fmt.Sprintf("0x%x", currentBlockDB))
+	c.DBHeight = int(block.Height)
+	c.NetworkHeight = int(networkHeight)
+
+	if networkHeight < nextBlockToIndex {
+		// We are up to date
+		return nil
+	}
+
+	if networkHeight-500 > nextBlockToIndex {
+		// Batch no more than 500 blocks
+		networkHeight = nextBlockToIndex + 500
+	}
+
+	for networkHeight >= nextBlockToIndex {
+		blockData, err := c.Client.GetBlockCosmos(fmt.Sprintf("0x%x", nextBlockToIndex))
 		if err != nil {
 			return fmt.Errorf("error getting cosmos block: %s", err.Error())
 		}
@@ -69,7 +93,7 @@ func (c *Client) ProcessMissingBlocks(startBlock int64) error {
 			return fmt.Errorf("error getting cosmos block hash: %s", err.Error())
 		}
 
-		data := NewBlock(currentBlockDB, int64(len(blockData.Block.Data.Txs)), blockHash)
+		data := NewBlock(nextBlockToIndex, int64(len(blockData.Block.Data.Txs)), blockHash)
 
 		for i, txBase64 := range blockData.Block.Data.Txs {
 			tx, err := codec.Base64ToTx(txBase64)
@@ -105,10 +129,16 @@ func (c *Client) ProcessMissingBlocks(startBlock int64) error {
 			}
 			data.AddTransaction(i, cosmosTxHash, ethTxHash, typeURL, sender)
 		}
-		currentBlockDB++
+		nextBlockToIndex++
 		blocksData = append(blocksData, *data)
 	}
 
 	// Save it to the database
-	return c.db.AddBlocks(blocksData)
+	err = c.DB.AddBlocks(blocksData)
+	if err != nil {
+		return err
+	}
+
+	c.DBHeight = int(nextBlockToIndex)
+	return nil
 }

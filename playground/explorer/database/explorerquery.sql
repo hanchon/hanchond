@@ -26,3 +26,6 @@ SELECT * FROM transactions;
 -- name: GetLimitedTransactions :many
 SELECT * FROM transactions ORDER BY id DESC LIMIT ?;
 
+-- name: GetLimitedBlocks :many
+SELECT * FROM blocks ORDER BY id DESC LIMIT ?;
+
