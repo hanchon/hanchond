@@ -261,6 +261,16 @@ export default defineConfig({
               ],
             },
             {
+              text: "Indexer",
+              collapsed: true,
+              items: [
+                {
+                  text: "Block Explorer",
+                  link: "/hanchond/playground/explorer/ui",
+                },
+              ],
+            },
+            {
               text: "Examples",
               collapsed: true,
               items: [

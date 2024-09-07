@@ -34,6 +34,38 @@ func (q *Queries) GetLatestBlock(ctx context.Context) (Block, error) {
 	return i, err
 }
 
+const getLimitedBlocks = `-- name: GetLimitedBlocks :many
+SELECT id, height, txcount, hash FROM blocks ORDER BY id DESC LIMIT ?
+`
+
+func (q *Queries) GetLimitedBlocks(ctx context.Context, limit int64) ([]Block, error) {
+	rows, err := q.db.QueryContext(ctx, getLimitedBlocks, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Block
+	for rows.Next() {
+		var i Block
+		if err := rows.Scan(
+			&i.ID,
+			&i.Height,
+			&i.Txcount,
+			&i.Hash,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getLimitedTransactions = `-- name: GetLimitedTransactions :many
 SELECT id, cosmoshash, ethhash, typeurl, sender, blockheight FROM transactions ORDER BY id DESC LIMIT ?
 `
