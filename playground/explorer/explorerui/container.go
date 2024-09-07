@@ -1,4 +1,4 @@
-package explorer
+package explorerui
 
 import (
 	"github.com/charmbracelet/lipgloss"
@@ -46,7 +46,7 @@ func BotContainer(width int, list1, list2 string, infoText string, activeFrame i
 		Render(
 			lipgloss.JoinVertical(
 				lipgloss.Center,
-				test.Render("\"tab\": to change panels <=> \"enter\": to select"),
+				test.Render("\"tab\": to change panels || \"enter\": to select || \"q\": to quit"),
 				temp,
 			),
 		)

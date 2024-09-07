@@ -1,4 +1,4 @@
-package explorer
+package explorerui
 
 import "github.com/charmbracelet/lipgloss"
 

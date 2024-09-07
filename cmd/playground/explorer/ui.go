@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/hanchon/hanchond/cmd/ui"
 	"github.com/hanchon/hanchond/playground/evmos"
 	"github.com/hanchon/hanchond/playground/explorer"
+	"github.com/hanchon/hanchond/playground/explorer/explorerui"
 	"github.com/hanchon/hanchond/playground/sql"
 	"github.com/spf13/cobra"
 )
@@ -32,9 +32,10 @@ var uiCmd = &cobra.Command{
 
 		// TODO: move the newFromDB to cosmos daemon
 		e := evmos.NewEvmosFromDB(queries, nodeID)
+		// TODO: support mainnet and testnet endpoints
 		ex := explorer.NewLocalExplorerClient(e.Ports.P8545, e.Ports.P1317, e.HomeDir)
 
-		p := ui.CreateExplorerTUI(startingHeight, ex)
+		p := explorerui.CreateExplorerTUI(startingHeight, ex)
 		if _, err := p.Run(); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)

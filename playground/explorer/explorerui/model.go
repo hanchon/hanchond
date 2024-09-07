@@ -1,4 +1,4 @@
-package ui
+package explorerui
 
 import (
 	"fmt"
@@ -9,7 +9,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/hanchon/hanchond/cmd/ui/explorer"
 	explorerClient "github.com/hanchon/hanchond/playground/explorer"
 )
 
@@ -21,7 +20,7 @@ var basicStyle = lipgloss.NewStyle().
 	AlignVertical(lipgloss.Center).
 	AlignHorizontal(lipgloss.Center)
 
-type model struct {
+type explorerModel struct {
 	width  int
 	height int
 
@@ -37,19 +36,19 @@ type model struct {
 	resolutionError bool
 }
 
-func (m model) Init() tea.Cmd {
+func (m explorerModel) Init() tea.Cmd {
 	return nil
 }
 
 type tickMsg struct{}
 
-func tickCmd() tea.Cmd {
+func indexerTickerCmd() tea.Cmd {
 	return tea.Tick(300*time.Millisecond, func(t time.Time) tea.Msg {
 		return tickMsg{}
 	})
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m explorerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg.(type) {
 	case tickMsg:
 		// If it is already running it will return a no-op
@@ -59,7 +58,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.lists[0].SetItems(BDBlockToItem(b))
 			m.lists[1].SetItems(BDTxToItem(t))
 		}
-		return m, tickCmd()
+		return m, indexerTickerCmd()
 	case tea.WindowSizeMsg:
 		m.height = msg.(tea.WindowSizeMsg).Height
 		m.width = msg.(tea.WindowSizeMsg).Width - 2
@@ -73,7 +72,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		} else {
 			m.resolutionError = false
 		}
-		return m, tickCmd()
+		return m, indexerTickerCmd()
 	case tea.KeyMsg:
 		key := msg.(tea.KeyMsg).String()
 		if key == "ctrl+c" || key == "q" {
@@ -91,18 +90,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if key == "enter" {
 			switch m.activeList {
 			case 0:
-				selectedItem := m.lists[0].SelectedItem().(block)
+				selectedItem := m.lists[0].SelectedItem().(Block)
 				info, _ := mdRendered.Render(RenderBlock(selectedItem, m.client))
 				m.viewport.SetContent(info)
-				m.viewport.Height = 23
-				m.viewport.Width = 78
+				_ = m.viewport.GotoTop()
 				return m, nil
 			case 1:
-				selectedItem := m.lists[1].SelectedItem().(txn)
+				selectedItem := m.lists[1].SelectedItem().(Txn)
 				info, _ := mdRendered.Render(RenderTx(selectedItem, m.client))
 				m.viewport.SetContent(info)
-				m.viewport.Height = 23
-				m.viewport.Width = 78
+				_ = m.viewport.GotoTop()
 				return m, nil
 			}
 		}
@@ -122,12 +119,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	return m, nil
 }
-func (m model) View() string {
+func (m explorerModel) View() string {
 	if m.resolutionError {
 		return lipgloss.NewStyle().
 			Width(m.width).
 			Height(m.height).
-			Foreground(explorer.ColorHighPink).
+			Foreground(ColorHighPink).
 			Align(lipgloss.Center).
 			AlignVertical(lipgloss.Center).
 			Render("Your resolution is too low, please reduce the zoom to display the dashboard")
@@ -135,43 +132,10 @@ func (m model) View() string {
 
 	value := lipgloss.JoinVertical(
 		lipgloss.Top,
-		explorer.Header(m.width-4),
-		explorer.ChainHeightFrame(m.width-4, m.client.NetworkHeight, m.client.DBHeight),
-		explorer.BotContainer(m.width-4, m.lists[0].View(), m.lists[1].View(), m.viewport.View(), m.activeList),
+		Header(m.width-4),
+		ChainHeightFrame(m.width-4, m.client.NetworkHeight, m.client.DBHeight),
+		BotContainer(m.width-4, m.lists[0].View(), m.lists[1].View(), m.viewport.View(), m.activeList),
 	)
 
 	return basicStyle.Render(value)
-}
-
-func CreateExplorerTUI(startHeight int, client *explorerClient.Client) *tea.Program {
-	mdRendered, _ = glamour.NewTermRenderer(
-		glamour.WithAutoStyle(),
-		glamour.WithWordWrap(78),
-	)
-
-	m := model{
-		client:   client,
-		mdValues: "",
-	}
-
-	list1 := list.New([]list.Item{}, list.NewDefaultDelegate(), 20, 14)
-	list1.Title = "Latest Blocks"
-	list1.SetWidth(20)
-	list1.SetHeight(23)
-	list1.Styles.TitleBar.Align(lipgloss.Center)
-
-	list2 := list.New([]list.Item{}, list.NewDefaultDelegate(), 20, 14)
-	list2.Title = "Latest Transactions"
-	list2.SetWidth(80)
-	list2.SetHeight(23)
-
-	m.lists = append(m.lists, list1)
-	m.lists = append(m.lists, list2)
-
-	m.viewport = viewport.New(78, 23)
-	m.startingHeight = int64(startHeight)
-
-	go client.ProcessMissingBlocks(int64(startHeight))
-
-	return tea.NewProgram(m)
 }

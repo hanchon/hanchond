@@ -1,4 +1,4 @@
-package ui
+package explorerui
 
 import (
 	"encoding/json"
@@ -11,57 +11,7 @@ import (
 	"github.com/hanchon/hanchond/playground/explorer/database"
 )
 
-type block struct {
-	text   string
-	desc   string
-	hash   string
-	height int64
-}
-
-func (i block) Title() string       { return i.text }
-func (i block) Description() string { return i.desc }
-func (i block) FilterValue() string { return i.text }
-
-func BDBlockToItem(blocks []database.Block) []list.Item {
-	res := make([]list.Item, len(blocks))
-	for k := range res {
-		res[k] = block{
-			text:   fmt.Sprintf("%d", blocks[k].Height),
-			desc:   fmt.Sprintf("%s...%s", blocks[k].Hash[0:4], blocks[k].Hash[len(blocks[k].Hash)-5:]),
-			height: blocks[k].Height,
-			hash:   blocks[k].Hash,
-		}
-	}
-	return res
-}
-
-func RenderBlock(b block, client *explorer.Client) string {
-	blockData, err := client.Client.GetBlockCosmos(fmt.Sprintf("%d", b.height))
-	if err != nil {
-		return "# Error getting block info\n\n" + err.Error()
-	}
-
-	data, err := json.MarshalIndent(blockData, "", "  ")
-	if err != nil {
-		return "# Error getting block info\n\n" + err.Error()
-	}
-
-	cosmosBlock := fmt.Sprintf("# Block %d\n\n## Cosmos Block\n\n```json\n%s\n```", b.height, string(data))
-
-	ethBlock, err := client.Client.GetBlockByNumber(fmt.Sprintf("%d", b.height), true)
-	if err != nil {
-		return "# Error getting eth block info\n\n" + err.Error()
-	}
-
-	data, err = json.MarshalIndent(ethBlock.Result, "", "  ")
-	if err != nil {
-		return "# Error getting block info\n\n" + err.Error()
-	}
-
-	return cosmosBlock + fmt.Sprintf("\n\n## Ethereum Block\n\n```json\n%s\n```", string(data))
-}
-
-type txn struct {
+type Txn struct {
 	cosmosHash  string
 	ethHash     string
 	typeURL     string
@@ -69,29 +19,29 @@ type txn struct {
 	blockHeight int
 }
 
-func (i txn) Title() string {
+func (i Txn) Title() string {
 	if i.ethHash != "" {
 		return i.ethHash
 	}
 	return i.cosmosHash
 }
 
-func (i txn) Description() string {
+func (i Txn) Description() string {
 	return i.typeURL
 }
 
 // TODO: this should filter by everything
-func (i txn) FilterValue() string { return i.ethHash }
+func (i Txn) FilterValue() string { return strings.ToLower(i.typeURL) }
 
 var style = lipgloss.NewStyle().Foreground(lipgloss.Color("201"))
 
 var items2 = []list.Item{
-	txn{
+	Txn{
 		ethHash:    "0x61b7f582cfe2ee3b9d31dcbf99e5036b1c68713ede8ce7ed13930f2e02470588",
 		cosmosHash: "0x61b7...0588",
 		typeURL:    "MsgEthereum",
 	},
-	txn{
+	Txn{
 		ethHash:    "",
 		cosmosHash: "0x71b7...0588",
 		typeURL:    "MsgVote",
@@ -101,7 +51,7 @@ var items2 = []list.Item{
 func BDTxToItem(txns []database.Transaction) []list.Item {
 	res := make([]list.Item, len(txns))
 	for k := range res {
-		res[k] = txn{
+		res[k] = Txn{
 			cosmosHash:  txns[k].Cosmoshash,
 			ethHash:     txns[k].Ethhash,
 			typeURL:     txns[k].Typeurl,
@@ -112,7 +62,7 @@ func BDTxToItem(txns []database.Transaction) []list.Item {
 	return res
 }
 
-func RenderTx(b txn, client *explorer.Client) string {
+func RenderTx(b Txn, client *explorer.Client) string {
 	cosmosTX, err := client.Client.GetCosmosTx(b.cosmosHash)
 	if err != nil {
 		return "# Error getting cosmos tx\n\n" + err.Error()
