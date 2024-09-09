@@ -67,6 +67,7 @@ Ports:
     - 8545(web3): %d
     - 26657(cli/tendermint): %d
     - 1317(cosmos rest): %d
+    - 9090(grpc): %d
 `,
 			idNumber,
 			node.BinaryVersion,
@@ -80,6 +81,7 @@ Ports:
 			ports.P8545,
 			ports.P26657,
 			ports.P1317,
+			ports.P9090,
 		)
 	},
 }
