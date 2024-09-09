@@ -8,7 +8,7 @@ import (
 	"os"
 
 	// blank import to support sqlite3
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 
 	"github.com/hanchon/hanchond/playground/database"
 	"github.com/hanchon/hanchond/playground/filesmanager"
