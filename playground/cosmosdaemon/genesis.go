@@ -1,7 +1,5 @@
 package cosmosdaemon
 
-import "fmt"
-
 func (d *Daemon) UpdateGenesisFile() error {
 	genesis, err := d.OpenGenesisFile()
 	if err != nil {
@@ -136,7 +134,6 @@ func (d *Daemon) setConsensusParams(genesis map[string]interface{}) {
 		if v, ok := v.(map[string]interface{}); ok {
 			if _, ok := v["max_gas"]; ok {
 				consensusParams["block"].(map[string]interface{})["max_gas"] = d.GasLimit
-				fmt.Println("editing the max gas")
 			}
 		}
 	}
