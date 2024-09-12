@@ -19,7 +19,7 @@ import (
 var ddl string
 
 func InitDatabase(ctx context.Context, path string) (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", path)
+	db, err := sql.Open("sqlite", path)
 	if err != nil {
 		return nil, err
 	}
