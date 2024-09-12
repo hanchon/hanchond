@@ -24,7 +24,7 @@ var deployERC20Cmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		gasLimit, err := cmd.Flags().GetInt("gas-limit")
+		gasLimit, err := cmd.Flags().GetUint64("gas-limit")
 		if err != nil {
 			fmt.Println("incorrect gas limit")
 			os.Exit(1)
@@ -47,7 +47,7 @@ var deployERC20Cmd = &cobra.Command{
 
 		// TODO: allow mainnet as a valid endpoint
 		e := evmos.NewEvmosFromDB(queries, nodeID)
-		builder := e.NewTxBuilder(uint64(gasLimit))
+		builder := e.NewTxBuilder(gasLimit)
 
 		txHash, err := solidity.BuildAndDeployERC20Contract(name, symbol, initialAmount, isWrapped, builder, gasLimit)
 		if err != nil {
