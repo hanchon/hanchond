@@ -24,7 +24,7 @@ func ERC20TransferCallData(address string, amount string) ([]byte, error) {
 }
 
 // BuildAndDeployERC20Contract will save the temp usings using the filesmanager. Init the home folder before running the function
-func BuildAndDeployERC20Contract(name, symbol, initialAmount string, isWrapped bool, builder *txbuilder.TxBuilder, gasLimit int) (string, error) {
+func BuildAndDeployERC20Contract(name, symbol, initialAmount string, isWrapped bool, builder *txbuilder.TxBuilder, gasLimit uint64) (string, error) {
 	// Clone openzeppelin if needed
 	path, err := DownloadDep("https://github.com/OpenZeppelin/openzeppelin-contracts", "v5.0.2", "openzeppelin")
 	if err != nil {
@@ -74,7 +74,7 @@ func BuildAndDeployERC20Contract(name, symbol, initialAmount string, isWrapped b
 		return "", fmt.Errorf("error converting bytecode to []byte:%s", err.Error())
 	}
 
-	txHash, err := builder.DeployContract(0, bytecode, uint64(gasLimit))
+	txHash, err := builder.DeployContract(0, bytecode, gasLimit)
 	if err != nil {
 		return "", fmt.Errorf("error sending the transaction:%s", err.Error())
 	}
