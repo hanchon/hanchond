@@ -1,7 +1,5 @@
 package cosmosdaemon
 
-import "fmt"
-
 func (d *Daemon) UpdateGenesisFile() error {
 	genesis, err := d.OpenGenesisFile()
 	if err != nil {
