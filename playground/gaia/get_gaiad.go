@@ -2,38 +2,34 @@ package gaia
 
 import (
 	"fmt"
-	"github.com/hanchon/hanchond/playground/filesmanager"
 	"io"
 	"net/http"
 	"os"
 	"runtime"
+
+	"github.com/hanchon/hanchond/playground/filesmanager"
 )
 
-func main() {
-	err := GetGaiadBinary(false, "v19.2.0")
-	if err != nil {
-		return
-	}
-}
-
 func GetGaiadBinary(isDarwin bool, version string) error {
-	url := "https://github.com/cosmos/gaia/releases/download/" + version + "/gaiad-" + version + "-linux-amd64"
 	arch := runtime.GOARCH
-	if isDarwin {
-		if arch == "arm64" {
-			url = "https://github.com/cosmos/gaia/releases/download/" + version + "/gaiad-" + version + "-darwin-arm64"
-		} else {
-			url = "https://github.com/cosmos/gaia/releases/download/" + version + "/gaiad-" + version + "-darwin-amd64"
-		}
-	} else {
-		if arch == "arm64" {
-			url = "https://github.com/cosmos/gaia/releases/download/" + version + "/gaiad-" + version + "-linux-arm64"
-		} else {
-			url = "https://github.com/cosmos/gaia/releases/download/" + version + "/gaiad-" + version + "-linux-amd64"
-		}
+	if arch != "arm64" {
+		arch = "amd64"
 	}
+	systemOS := "darwin"
+	if !isDarwin {
+		systemOS = "linux"
+	}
+
+	url := fmt.Sprintf("https://github.com/cosmos/gaia/releases/download/%s/gaiad-%s-%s-%s", version, version, systemOS, arch)
+
 	path := filesmanager.GetGaiadPath()
-	resp, err := http.Get(url)
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return err
+	}
+
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to download Gaia: %s", err)
 	}
@@ -54,7 +50,7 @@ func GetGaiadBinary(isDarwin bool, version string) error {
 		return fmt.Errorf("failed to save gaiad binary: %s", err)
 	}
 
-	err = os.Chmod(path, 0755)
+	err = os.Chmod(path, 0o755)
 	if err != nil {
 		return fmt.Errorf("failed to set file permissions: %s", err)
 	}
