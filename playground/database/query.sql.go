@@ -7,6 +7,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 )
 
 const getAllChainNodes = `-- name: GetAllChainNodes :many
@@ -103,6 +104,11 @@ func (q *Queries) GetAllChainNodes(ctx context.Context, chainID int64) ([]GetAll
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
+
+	if len(items) == 0 {
+		return nil, fmt.Errorf("no nodes set up for chain %d\n", chainID)
+	}
+	
 	return items, nil
 }
 
