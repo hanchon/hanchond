@@ -35,14 +35,14 @@ var hermesAddChannelCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		chains := make([]database.GetAllChainNodesRow, 2)
-		nodesChainOne, err := queries.GetAllChainNodes(context.Background(), int64(chainOneID))
+		nodesChainOne, err := queries.GetAllNodesForChainID(context.Background(), int64(chainOneID))
 		if err != nil {
 			fmt.Println("could not find nodes for chain:", chainOne)
 			os.Exit(1)
 		}
 		chains[0] = nodesChainOne[0]
 
-		nodesChainTwo, err := queries.GetAllChainNodes(context.Background(), int64(chainTwoID))
+		nodesChainTwo, err := queries.GetAllNodesForChainID(context.Background(), int64(chainTwoID))
 		if err != nil {
 			fmt.Println("could not find nodes for chain:", chainTwo)
 			os.Exit(1)
