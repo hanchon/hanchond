@@ -10,7 +10,6 @@ Hanchon's web3 toolkit
 
 - `git` to clone the repositories that needs to be build locally
 - `go` to build the Evmos client
-- `wget` to download the Cosmos-Hub client
 - `cargo/rust` to build Hermes
 
 ## TODOs:
