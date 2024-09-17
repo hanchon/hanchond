@@ -39,7 +39,7 @@ var changeVersionCmd = &cobra.Command{
 				os.Exit(1)
 			}
 
-			nodes, err := queries.GetAllChainNodes(context.Background(), idNumber)
+			nodes, err := queries.GetAllNodesForChainID(context.Background(), idNumber)
 			if err != nil {
 				fmt.Println("could not get chain nodes:", err.Error())
 				os.Exit(1)

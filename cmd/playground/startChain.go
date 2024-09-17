@@ -28,7 +28,7 @@ var startChainCmd = &cobra.Command{
 			fmt.Println("invalid chain id:", err.Error())
 			os.Exit(1)
 		}
-		nodes, err := queries.GetAllChainNodes(context.Background(), int64(chainNumber))
+		nodes, err := queries.GetAllNodesForChainID(context.Background(), int64(chainNumber))
 		if err != nil {
 			fmt.Println("could not find the chain:", err.Error())
 			os.Exit(1)
