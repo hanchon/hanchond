@@ -1,4 +1,4 @@
-FROM node:20.16-alpine as builder
+FROM node:22.9-alpine as builder
 RUN apk update && apk add git
 WORKDIR /app
 COPY package-lock.json package.json ./
