@@ -308,6 +308,16 @@ export default defineConfig({
             },
           ],
         },
+        {
+          text: "Repo",
+          collapsed: false,
+          items: [
+            {
+              text: "Bump Go Module Version",
+              link: "/hanchond/repo/bump-module-version",
+            },
+          ],
+        },
       ],
     },
     {
