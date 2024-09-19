@@ -1,0 +1,28 @@
+# Go Module Bump Version
+
+Bump a go project module version.
+
+This command replaces the current version with the one given by the user and then updates all the internal files using the dependency automatically.
+
+## Usage
+
+```sh
+hanchond repo bump-module-version [path] [version]
+```
+
+## Example
+
+```sh
+hanchond repo bump-module-version /Users/hanchon/devel/evmos/evmos v21
+
+using go.mod path as: /Users/hanchon/devel/evmos/evmos/go.mod
+the current version is: github.com/evmos/evmos/v20
+the new version is: github.com/evmos/evmos/v21
+updating file: /Users/hanchon/devel/evmos/evmos/.github/workflows/consensuswarn.yml
+updating file: /Users/hanchon/devel/evmos/evmos/api/ethermint/evm/v1/access_list_tx.go
+updating file: /Users/hanchon/devel/evmos/evmos/api/ethermint/evm/v1/dynamic_fee_tx.go
+updating file: /Users/hanchon/devel/evmos/evmos/api/ethermint/evm/v1/legacy_tx.go
+updating file: /Users/hanchon/devel/evmos/evmos/app/ante/cosmos/authz_test.go
+updating file: /Users/hanchon/devel/evmos/evmos/app/ante/cosmos/eip712.go
+...
+```

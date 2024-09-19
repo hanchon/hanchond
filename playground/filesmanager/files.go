@@ -3,6 +3,7 @@ package filesmanager
 import (
 	"errors"
 	"io"
+	"io/fs"
 	"os"
 )
 
@@ -16,7 +17,11 @@ func ReadFile(path string) ([]byte, error) {
 }
 
 func SaveFile(data []byte, path string) error {
-	return os.WriteFile(path, data, 0o600)
+	return SaveFileWithMode(data, path, 0o600)
+}
+
+func SaveFileWithMode(data []byte, path string, mode fs.FileMode) error {
+	return os.WriteFile(path, data, mode)
 }
 
 func DoesFileExist(path string) bool {
