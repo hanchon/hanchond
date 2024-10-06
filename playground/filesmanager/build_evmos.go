@@ -21,8 +21,9 @@ func BuildEvmos(path string) error {
 		return err
 	}
 
-	cmd = exec.Command("make", "build")
-	_, err := cmd.CombinedOutput()
+	cmd = exec.Command("make", "build", "COSMOS_BUILD_OPTIONS=nooptimization,nostrip")
+	out, err := cmd.CombinedOutput()
+	fmt.Println(string(out))
 	return err
 }
 
