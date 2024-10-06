@@ -26,7 +26,7 @@ var deployERC20Cmd = &cobra.Command{
 
 		gasLimit, err := cmd.Flags().GetUint64("gas-limit")
 		if err != nil {
-			fmt.Println("incorrect gas limit")
+			fmt.Println("incorrect gas limit", err.Error())
 			os.Exit(1)
 		}
 
@@ -74,7 +74,7 @@ var deployERC20Cmd = &cobra.Command{
 
 func init() {
 	SolidityCmd.AddCommand(deployERC20Cmd)
-	deployERC20Cmd.Flags().Int("gas-limit", 2_000_000, "GasLimit to be used to deploy the transaction")
+	deployERC20Cmd.Flags().Uint64("gas-limit", 2_000_000, "GasLimit to be used to deploy the transaction")
 	deployERC20Cmd.Flags().String("initial-amount", "1000000", "Initial amout of coins sent to the deployer address")
 	deployERC20Cmd.Flags().Bool("is-wrapped-coin", false, "Flag used to indenfity if the contract is representing the base denom. It uses WETH9 instead of OpenZeppelin contracts")
 }

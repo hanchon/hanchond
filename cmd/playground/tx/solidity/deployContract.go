@@ -29,7 +29,7 @@ var deployContractCmd = &cobra.Command{
 
 		gasLimit, err := cmd.Flags().GetInt("gas-limit")
 		if err != nil {
-			fmt.Println("incorrect gas limit")
+			fmt.Println("incorrect gas limit", err.Error())
 			os.Exit(1)
 		}
 
