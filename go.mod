@@ -16,7 +16,7 @@ require (
 	github.com/miguelmota/go-ethereum-hdwallet v0.1.1
 	github.com/spf13/cobra v1.8.1
 	github.com/valyala/fasthttp v1.56.0
-	golang.org/x/crypto v0.27.0
+	golang.org/x/crypto v0.28.0
 	golang.org/x/exp v0.0.0-20231108232855-2478ac86f678
 	golang.org/x/text v0.19.0
 	modernc.org/sqlite v1.33.0
@@ -177,8 +177,8 @@ require (
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/net v0.29.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.25.0 // indirect
-	golang.org/x/term v0.24.0 // indirect
+	golang.org/x/sys v0.26.0 // indirect
+	golang.org/x/term v0.25.0 // indirect
 	google.golang.org/genproto v0.0.0-20240123012728-ef4313101c80 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240123012728-ef4313101c80 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240123012728-ef4313101c80 // indirect
