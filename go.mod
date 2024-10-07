@@ -18,7 +18,7 @@ require (
 	github.com/valyala/fasthttp v1.56.0
 	golang.org/x/crypto v0.27.0
 	golang.org/x/exp v0.0.0-20231108232855-2478ac86f678
-	golang.org/x/text v0.18.0
+	golang.org/x/text v0.19.0
 	modernc.org/sqlite v1.33.0
 )
 
