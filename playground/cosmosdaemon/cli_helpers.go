@@ -108,6 +108,9 @@ func JoinGenesisTransactions(nodes []*Daemon, queries *database.Queries) error {
 			return err
 		}
 	}
+
+	// Agrego authority
+	// agrego poa a los valida
 	return nil
 }
 

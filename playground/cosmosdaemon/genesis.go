@@ -27,12 +27,22 @@ func (d *Daemon) setStaking(genesis map[string]interface{}) {
 				if v, ok := v.(map[string]interface{}); ok {
 					// Base Denom
 					if _, ok := v["base_denom"]; ok {
-						appState["staking"].(map[string]interface{})["params"].(map[string]interface{})["bond_denom"] = d.BaseDenom
+						appState["staking"].(map[string]interface{})["params"].(map[string]interface{})["bond_denom"] = "poa"
 					}
 
 					// Bond denom
 					if _, ok := v["bond_denom"]; ok {
-						appState["staking"].(map[string]interface{})["params"].(map[string]interface{})["bond_denom"] = d.BaseDenom
+						appState["staking"].(map[string]interface{})["params"].(map[string]interface{})["bond_denom"] = "poa"
+					}
+
+					// min_commision_rate
+					if _, ok := v["min_commission_rate"]; ok {
+						appState["staking"].(map[string]interface{})["params"].(map[string]interface{})["min_commission_rate"] = "1.000000000000000000"
+					}
+
+					// unbonding_time
+					if _, ok := v["unbonding_time"]; ok {
+						appState["staking"].(map[string]interface{})["params"].(map[string]interface{})["unbonding_time"] = "60s"
 					}
 				}
 			}

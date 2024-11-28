@@ -14,7 +14,7 @@ func (d *Daemon) AddGenesisAccount(validatorAddr string) error {
 	args := []string{
 		"add-genesis-account",
 		validatorAddr,
-		d.ValidatorInitialSupply + d.BaseDenom,
+		d.ValidatorInitialSupply + "poa," + d.ValidatorInitialSupply + d.BaseDenom,
 		"--keyring-backend",
 		d.KeyringBackend,
 		"--home",
@@ -40,7 +40,9 @@ func (d *Daemon) ValidatorGenTx() error {
 	args := []string{
 		"gentx",
 		d.ValKeyName,
-		d.ValidatorInitialSupply[0:len(d.ValidatorInitialSupply)-4] + d.BaseDenom,
+		d.ValidatorInitialSupply + "poa",
+		"--commission-max-rate=1.00",
+		"--commission-rate=1.00",
 		"--gas-prices",
 		d.BaseFee + d.BaseDenom,
 		"--chain-id",
