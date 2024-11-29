@@ -97,6 +97,9 @@ func (d *Daemon) setInflation(genesis map[string]interface{}) {
 					if _, ok := v["mint_denom"]; ok {
 						appState["inflation"].(map[string]interface{})["params"].(map[string]interface{})["mint_denom"] = d.BaseDenom
 					}
+					if _, ok := v["enable_inflation"]; ok {
+						appState["inflation"].(map[string]interface{})["params"].(map[string]interface{})["enable_inflation"] = false
+					}
 				}
 			}
 		}
