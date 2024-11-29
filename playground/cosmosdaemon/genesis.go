@@ -28,7 +28,7 @@ func (d *Daemon) setStaking(genesis map[string]interface{}) {
 				if v, ok := v.(map[string]interface{}); ok {
 					// Base Denom
 					if _, ok := v["base_denom"]; ok {
-						appState["staking"].(map[string]interface{})["params"].(map[string]interface{})["bond_denom"] = "poa"
+						appState["staking"].(map[string]interface{})["params"].(map[string]interface{})["base_denom"] = "poa"
 					}
 
 					// Bond denom

@@ -109,8 +109,11 @@ func JoinGenesisTransactions(nodes []*Daemon, queries *database.Queries) error {
 		}
 	}
 
+	authority := "evmos10jmp6sgh4cc6zt3e8gw05wavvejgr5pwjnpcky"
 	// Agrego authority
-	// agrego poa a los valida
+	if err := nodes[0].AddAuthorityAccount(authority); err != nil {
+		return err
+	}
 	return nil
 }
 

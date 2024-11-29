@@ -36,11 +36,37 @@ func (d *Daemon) AddGenesisAccount(validatorAddr string) error {
 	return err
 }
 
+func (d *Daemon) AddAuthorityAccount(validatorAddr string) error {
+	args := []string{
+		"add-genesis-account",
+		validatorAddr,
+		"1000000000000000000000000" + "poa," + d.ValidatorInitialSupply + d.BaseDenom,
+		"--keyring-backend",
+		d.KeyringBackend,
+		"--home",
+		d.HomeDir,
+	}
+	if d.SDKVersion == GaiaSDK {
+		args = append([]string{"genesis"}, args...)
+	}
+
+	command := exec.Command( //nolint:gosec
+		d.BinaryPath,
+		args...,
+	)
+
+	out, err := command.CombinedOutput()
+	if err != nil {
+		err = fmt.Errorf("error %s: %s", err.Error(), string(out))
+	}
+	return err
+}
+
 func (d *Daemon) ValidatorGenTx() error {
 	args := []string{
 		"gentx",
 		d.ValKeyName,
-		d.ValidatorInitialSupply[0:len(d.ValidatorInitialSupply)-4] + "poa",
+		d.ValidatorInitialSupply + "poa",
 		"--commission-max-rate=1.00",
 		"--commission-rate=1.00",
 		"--gas-prices",
