@@ -40,7 +40,7 @@ func (d *Daemon) ValidatorGenTx() error {
 	args := []string{
 		"gentx",
 		d.ValKeyName,
-		d.ValidatorInitialSupply + "poa",
+		d.ValidatorInitialSupply[0:len(d.ValidatorInitialSupply)-4] + "poa",
 		"--commission-max-rate=1.00",
 		"--commission-rate=1.00",
 		"--gas-prices",
