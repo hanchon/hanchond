@@ -7,6 +7,7 @@ func (d *Daemon) UpdateGenesisFile() error {
 	}
 	// Update the genesis
 	d.setStaking(genesis)
+	d.setSlashing(genesis)
 	d.setEvm(genesis)
 	d.setInflation(genesis)
 	d.setCrisis(genesis)
@@ -44,6 +45,28 @@ func (d *Daemon) setStaking(genesis map[string]interface{}) {
 					if _, ok := v["unbonding_time"]; ok {
 						appState["staking"].(map[string]interface{})["params"].(map[string]interface{})["unbonding_time"] = "60s"
 					}
+				}
+			}
+		}
+	}
+}
+
+func (d *Daemon) setSlashing(genesis map[string]interface{}) {
+	appState := genesis["app_state"].(map[string]interface{})
+	if v, ok := appState["slashing"]; ok {
+		if v, ok := v.(map[string]interface{}); ok {
+			if v, ok := v["params"]; ok {
+				if v, ok := v.(map[string]interface{}); ok {
+					if _, ok := v["downtime_jail_duration"]; ok {
+						appState["slashing"].(map[string]interface{})["params"].(map[string]interface{})["downtime_jail_duration"] = "60s"
+					}
+					if _, ok := v["slash_fraction_double_sign"]; ok {
+						appState["slashing"].(map[string]interface{})["params"].(map[string]interface{})["slash_fraction_double_sign"] = "0.000000000000000000"
+					}
+					if _, ok := v["slash_fraction_downtime"]; ok {
+						appState["slashing"].(map[string]interface{})["params"].(map[string]interface{})["slash_fraction_downtime"] = "0.000000000000000000"
+					}
+
 				}
 			}
 		}
@@ -201,7 +224,8 @@ func (d *Daemon) setGovernance(genesis map[string]interface{}, fastProposals boo
 							if len(v) > 0 {
 								if v, ok := v[0].(map[string]interface{}); ok {
 									if _, ok := v["denom"]; ok {
-										appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["expedited_min_deposit"].([]interface{})[0].(map[string]interface{})["denom"] = d.BaseDenom
+										appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["expedited_min_deposit"].([]interface{})[0].(map[string]interface{})["denom"] = "poa"
+										appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["expedited_min_deposit"].([]interface{})[0].(map[string]interface{})["amount"] = "2"
 									}
 								}
 							}
@@ -214,7 +238,8 @@ func (d *Daemon) setGovernance(genesis map[string]interface{}, fastProposals boo
 							if len(v) > 0 {
 								if v, ok := v[0].(map[string]interface{}); ok {
 									if _, ok := v["denom"]; ok {
-										appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["min_deposit"].([]interface{})[0].(map[string]interface{})["denom"] = d.BaseDenom
+										appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["min_deposit"].([]interface{})[0].(map[string]interface{})["denom"] = "poa"
+										appState["gov"].(map[string]interface{})["params"].(map[string]interface{})["min_deposit"].([]interface{})[0].(map[string]interface{})["amount"] = "1"
 									}
 								}
 							}
