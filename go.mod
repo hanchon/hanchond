@@ -12,7 +12,7 @@ require (
 	github.com/cosmos/ibc-go/v7 v7.6.0
 	github.com/ethereum/go-ethereum v1.11.5
 	github.com/evmos/evmos/v18 v18.1.0
-	github.com/mailru/easyjson v0.7.7
+	github.com/mailru/easyjson v0.9.0
 	github.com/miguelmota/go-ethereum-hdwallet v0.1.1
 	github.com/spf13/cobra v1.8.1
 	github.com/valyala/fasthttp v1.56.0
